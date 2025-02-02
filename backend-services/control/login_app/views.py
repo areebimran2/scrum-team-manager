@@ -9,8 +9,9 @@ from rest_framework import status
 from .models import User
 from .serializers import *
 
-
 # Create your views here.
+
+#TODO should this be POST???
 @api_view(['POST'])
 def signup_handler(request):
     if request.method == 'POST':
@@ -29,18 +30,15 @@ def signup_handler(request):
                 response = requests.get(url + f"/user/{id}")
 
                 if response.status_code == 404: # Account does not exist
-                    # Send Data to UserService through ISCS
+                    # Send 404 back to frontend
+                    return Response(status=status.HTTP_404_NOT_FOUND)
 
-                    payload = request.data
-                    response = requests.post(url + f"/user", payload)
-
-                    # Send 201 back
-                    return Response(status=status.HTTP_201_CREATED)
                 
                 elif response.status_code == 200: # Account exists
-                    # Send 409 error back to frontend
+                    #TODO Check request data matches with response from get request
                     
-                    return Response(status=status.HTTP_409_CONFLICT)
+                    # If request data matches response data
+                    return Response(status=status.HTTP_200_OK)
 
                 else: # Error in accesing ISCS or UserService
                     attempts += 1

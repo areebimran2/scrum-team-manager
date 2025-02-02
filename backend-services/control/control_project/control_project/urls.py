@@ -16,9 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from signup_app import views
+from signup_app import views as views_signup
+from login_app import vies as views_login
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/signup/', views.signup_handler)
+    path('signup/', views_signup.signup_handler),
+    path('login/', views_login.login_handler)
 ]
