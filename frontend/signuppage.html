@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html> 
+<head>
+    <title> Sign up Page </title>
+    <link rel="stylesheet" type="text/css" href="signuppage.css">
+</head>
+<body>
+    <div id="signup">
+    <h1> Register</h1>
+    <!-- Location where the information goes to be added -->
+    <form action="" method="post">
+        <div class="container">
+            <input type="text" placeholder="Email" name="email" required>
+            <br>
+            <input type="text" placeholder="Username" name="username" required>
+            <br>
+            <input type="password" placeholder="Password" name="password" required>
+            <br>
+            <input type="password" placeholder="Confirm Password" name="password" required>
+            <br>
+            <!-- Error message if passwords do not match, default set to display: none. Add it dynamically using React.
+             Alternatively, grey out and make the button useless, in which case use #3A3B3C and don't forget to disable
+             the button hover colour change as well -->
+            <p id="passwordError">Passwords do not match</p>
+            <button type="submit">Register</button>
+            <br>
+            <!-- Might need to change this link depending on how the website works -->
+            <a href="loginpage.html">Already have an account? Login here</a>
+        </div>
+    </div>
+</body>
+</html>
