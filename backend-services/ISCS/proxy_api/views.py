@@ -8,8 +8,7 @@ import requests
 
 class ProxyAPIView(APIView):
     # Note: The current implementation uses a 'catch-all' url. The idea is that the path remains
-    # the same as the request travels from the frontend all the way down to the resource (not sure if this
-    # is how we planned it, but this was my tentative approach).
+    # the same as the request travels from the frontend all the way down to the resource.
 
     def get(self, request):
         # send a GET http request to the resource, repackage this response and return it to the control
@@ -26,19 +25,19 @@ class ProxyAPIView(APIView):
         # endpoint within the service
 
         # Relay request to resource and return the response
-        service = self._get_target_url() + request.path
+        service = self._get_target_url(request) + request.path
         service_response = requests.request(method, service, data=request.data, headers=request.headers)
         return service_response
 
-    def _get_target_url(self):
-        # TODO: Determine the correct service to forward this request to
-
-        # Not sure how this should be done as it somewhat depends on how information is received. Will the control
-        # provide extra info in the header about where the ISCS should route the request? Or maybe the ISCS decides
-        # itself by using the request path?
+    def _get_target_url(self, request):
+        # Tentative approach: Assumes the path remains unchanged from frontend -> control -> iscs -> resource.
+        # A 'catch-all' url is used to resolve the request from the control.
+        # The target url is determined from the path in this implementation, hence the reason it must be unchanged.
+        service = request.path.split('/')[0]
 
         # The '<host>:<port>' of each (resource) microservice is kept in a dictionary in settings.py
-        target_service = settings.MICROSERVICES.get()
+        # Currently assumes all services in MICROSERVICES are running
+        target_service = settings.MICROSERVICES.get(service)
         return target_service
 
 

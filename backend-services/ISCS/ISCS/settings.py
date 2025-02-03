@@ -125,5 +125,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MICROSERVICES = {
-    'user-service' : 'http://127.0.0.1:<port>',
+    'user' : 'http://127.0.0.1:8000',
 }
