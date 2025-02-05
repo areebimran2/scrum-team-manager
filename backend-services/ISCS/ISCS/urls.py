@@ -1,8 +1,7 @@
-"""
-URL configuration for control_project project.
+"""ISCS URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
+    https://docs.djangoproject.com/en/4.1/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -15,13 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from signup_app import views as views_signup
-from login_app import views as views_login
+from django.urls import path, re_path
 
+from proxy_api.views import ProxyAPIView
 
 urlpatterns = [
+    re_path(r'^.*/$', ProxyAPIView.as_view()),
     path('admin/', admin.site.urls),
-    path('signup/', views_signup.signup_handler),
-    path('login/', views_login.login_handler)
 ]
