@@ -1,176 +1,155 @@
-from django.http import JsonResponse
 from .models import ScrumUser
 import json
 from django.db.models import Q
-from django.core import serializers
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializer import ScrumUserSerializer
+
+"""
+Query database based on email. Returns list of users that matches
+
+"""
+@api_view(['GET'])
+def query(request, email):
+
+   if not email:
+      return Response({"error": "Email required"}, status=400)
+
+   # email = data.get("email")
+   # if email:
+   #    if case == "AND":
+   #       query &= Q(email__exact=email)
+   #    elif case == "OR":
+   #       query |= Q(email__exact=email)
+
+   # uid = data.get("uid")
+   # if uid:
+   #    if case == "AND":
+   #       query &= Q(email__exact=email)
+   #    elif case == "OR":
+   #       query |= Q(email__exact=email)
 
 
+   # assigned_tickets = data.get("assigned_tickets")
+   # if assigned_tickets:
+   #    if case == "AND":
+   #       query &= Q(assigned_tickets__contains=assigned_tickets)
+   #    elif case == "OR":
+   #       query |= Q(assigned_tickets__contains=assigned_tickets)
+
+
+   # display_name = data.get("display_name")
+   # if display_name:
+   #    if case == "AND":
+   #       query &= Q(display_name__exact=display_name)
+   #    elif case == "OR":
+   #       query |= Q(display_name__exact=display_name)
+   
+   # skills = data.get("skills")
+   # if skills:
+   #    if case == "AND":
+   #       query &= Q(skills__contains=skills)
+   #    elif case == "OR":
+   #       query |= Q(skills__contains=skills)
+
+
+
+
+   users = ScrumUser.objects.filter(email__exact=email)
+   serialized = ScrumUserSerializer(users, many=True)
+
+   return Response(serialized.data)
 
 
 """
-Query users based on paramaters (AND-case). 
-For skills, will query based containing ALL skills given (may contain more)
-Expects json payload
-
-Returns list of users
+add a new user to the database
 """
-@csrf_exempt
-def query_AND(request):
-   data = json.loads(request.body)
-   query = Q()
-
-   username = data.get("username")
-   if username:
-      query &= Q(username__exact=username)
-
-   email = data.get("email")
-   if email:
-      query &= Q(email__exact=email)
-
-   password = data.get("password")
-   if password:
-      query &= Q(password__exact=password)
-
-   desc = data.get("description")
-   if desc:
-      query &= Q(description__exact=desc)
-   nickname = data.get("nickname")
-   if nickname:
-      query &= Q(nickname__exact=nickname)
-   skills = data.get("skills")
-   if skills:
-      skills = skills.split(",")
-      query &= Q(skills__contains=skills)
-
-
-   users = ScrumUser.objects.filter(query)
-   serialized = serializers.serialize('json', users)
-
-   return JsonResponse(serialized, safe=False, status=200)
-
-
-"""
-Query users based on parameters (OR-case).
-For skills, will query basedon containing AT LEAST ONE skill given
-Expects json payload
-
-Returns list of users
-"""
-@csrf_exempt
-def query_OR(request):
-   data = json.loads(request.body)
-   query = Q()
-
-   username = data.get("username")
-   if username:
-      query |= Q(username__exact=username)
-
-   email = data.get("email")
-   if email:
-      query |= Q(email__exact=email)
-
-   password = data.get("password")
-   if password:
-      query |= Q(password__exact=password)
-
-   desc = data.get("description")
-   if desc:
-      query |= Q(description__exact=desc)
-   nickname = data.get("nickname")
-   if nickname:
-      query |= Q(nickname__exact=nickname)
-   skills = data.get("skills")
-   if skills:
-      skills = skills.split(",")
-      query |= Q(skills__overlap=skills)
-
-
-   users = list(ScrumUser.objects.filter(query))
-   serialized = serializers.serialize('json', users)
-   return JsonResponse(serialized, safe=False, status=200)
-
-
-
-"""
-Add user to database
-Description, Nickname, and skills are optional, but username, email, and password must be given
-Expects json payload
-"""
-@csrf_exempt
+@api_view(['POST'])
 def add_user(request):
-   data = json.loads(request.body)
-   username =  data.get("username")
+   try:
+      data = json.loads(request.body)
+   except json.decoder.JSONDecodeError:
+      return Response({"error":"Body required for this request"})
   
    email = data.get("email")
    
    password = data.get("password")
 
-   desc = data.get("description")
-   if not desc:
-      desc = ""
+   if (not password or not email):
+      return Response({"error": "missing username or email"}, status=400)
 
-   nickname = data.get("nickname")
-   if not nickname:
-      nickname = ""
+   display_name = data.get("display_name")
+   profile_picture = data.get("profile_picture")
 
-   skills = data.get("skills")
-   if not skills:
-      skills = "[]"
+   if (display_name and profile_picture):
+      new_user = ScrumUser(email=email, password=password, display_name = display_name, profile_picture = profile_picture)
+   elif (display_name):
+      new_user = ScrumUser(email=email, password=password, display_name = display_name, profile_picture = profile_picture)
+   elif profile_picture:
+      new_user = ScrumUser(email=email, password=password, profile_picture = profile_picture)
    else:
-      skills = skills
-
-   if (not username or not email or not password):
-      return JsonResponse({"error": "Invalid Creation Request: Missing Parameters"}, status=400)
+      new_user = ScrumUser(email=email, password=password, num_tickets=0)
    
-   new_user = ScrumUser(username=username, email=email, password=password, description=desc, nickname=nickname,skills=skills)
    new_user.save()
-   return JsonResponse({"message": "User created successfully"}, status=200)
+   serialized =ScrumUserSerializer(new_user)
+   return Response(serialized.data)
 
 
 """
-Update User with the same email address. 
-Email addresses are unique, meaning it should always be given
-Any additional parameters given will be used to update the user
-Expects json payload
+update a user based on its uid
 """
-@csrf_exempt
+@api_view(['POST'])
 def update_user(request):
-   data = json.loads(request.body)
-   email = data.get("email")
    try:
-      user = ScrumUser.objects.get(email__exact=email)
+      data = json.loads(request.body)
+   except json.decoder.JSONDecodeError:
+      return Response({"error":"Body required for this request"})
+   uid = data.get("uid")
+   if (not uid):
+      return Response({"error": "no identification give"}, status=400)
+ 
+
+   try:
+      user = ScrumUser.objects.get(uid=uid)
+
+      assigned_tickets = data.get("assigned_tickets")
+      if assigned_tickets:
+         user.assigned_tickets = assigned_tickets
+
+
+      project = data.get("project")
+      if project:
+         user.project = project
+      
+      
+      num_tickets = data.get("num_tickets")
+      if num_tickets:
+         user.num_tickets = num_tickets
+
+
+      email = data.get("email")
+      if email:
+         user.email = email
+
+      password = data.get("password")
+      if password:
+         user.password = password
+
+
+      display_name = data.get("display_name")
+      if display_name:
+         user.display_name= display_name
+
+      skills = data.get("skills")
+      if skills:
+         user.skills = skills
+
+      user.save()
+      serialized =ScrumUserSerializer(user)
+      return Response(serialized.data, status=200)
+
    except ScrumUser.DoesNotExist:
-      return JsonResponse({"error":"User not Found"}, status=404)
+      return Response({"error":"User not Found"}, status=404)
 
-   username =  data.get("username")
-   if username:
-     user.username = username
-
-   email = data.get("email")
-
-   password = data.get("password")
-   if password:
-      user.password = password
-
-   desc = data.get("description")
    
-   if desc:
-      user.description = desc
-
-
-   nickname = data.get("nickname")
-   if nickname:
-      user.nickname = nickname
-
-
-   skills = data.get("skills")
-   if skills:
-      user.skills = skills
-
-   user.save()
-
-   return JsonResponse(status=200)
-
-
 
