@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
-from .models import UserSignUpModel
 from .serializers import *
 
 
@@ -14,7 +13,7 @@ from .serializers import *
 @api_view(['POST'])
 def signup_handler(request):
     if request.method == 'POST':
-        serializer = UserSignInSerializer(data=request.data)
+        serializer = UserSignUpSerializer(data=request.data)
         if serializer.is_valid():
             
             # Check if user exists
@@ -22,7 +21,7 @@ def signup_handler(request):
             attempts = 0 # attempts to reach ISCS
             while attempts <= 5:
                 #TODO configure URL for ISCS
-                url = ""
+                url = "http://127.0.0.1:8001"
 
                 response = requests.get(url + f"/user/query/{serializer.validated_data["email"]}")
 
