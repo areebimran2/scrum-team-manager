@@ -92,7 +92,7 @@ class UserLoginRecoveryView(APIView):
             except SMTPException as e:
                 return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-            response = requests.post(url + "/update", data={"uid": user["uid"], "password": temp_password})
+            response = requests.post(url + "/user/update/", data={"uid": user["uid"], "password": temp_password})
 
             return Response({"response": "Recovery instructions email sent to {0}".format(user["email"])},
                             status=status.HTTP_200_OK)

@@ -128,5 +128,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # TODO: Configure a new gmail account to send recovery emails using gmail's smtp server
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = 'jirai.recovery@gmail.com'
+EMAIL_HOST_PASSWORD = 'xcjd swkm zfoa roai'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'JirAI Recovery'
