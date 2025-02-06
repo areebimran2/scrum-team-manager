@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import "../styles/login.css";
 
 
 export function Login() {
@@ -15,34 +16,33 @@ export function Login() {
             password : data.password 
         }
 
-        // let allowLogin = false;
+        let allowLogin = false;
 
-        // let response = fetch("http://127.0.0.1:10001/login", {
-        //     method: "POST",
-        //     headers : {
-        //         'Content-Type': 'application/json;charset=utf-8'
-        //     },
-        //     body: JSON.stringify(user)
-        // });
+        let response = fetch("http://127.0.0.1:10001/login", {
+            method: "POST",
+            headers : {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(user)
+        });
 
-        // response.then(Response => {
+        response.then(Response => {
 
-        //     if (Response.status == 401){
-        //         alert("Incorrect Password");
-        //     } else if (Response.status == 404){
-        //         alert("No User with that email");
-        //     } else if (Response.status == 400){
-        //         alert("Invalid Parameters")
-        //     } else if (Response.status == 200){
-        //         allowLogin = true;
-        //     } else {
-        //         alert("Unknown error, please try again later");
-        //     }
+            if (Response.status == 401){
+                alert("Incorrect Password");
+            } else if (Response.status == 404){
+                alert("No User with that email");
+            } else if (Response.status == 400){
+                alert("Invalid Parameters")
+            } else if (Response.status == 200){
+                allowLogin = true;
+            } else {
+                alert("Unknown error, please try again later");
+            }
 
-        // });
+        });
 
-        // if (allowLogin) {
-        if (user.email === "admin" && user.password === "password"){
+        if (allowLogin) {
             navigate("/dashboard", {replace: true});
         }
 
@@ -59,8 +59,8 @@ export function Login() {
                         <input type="password" placeholder="Password" name="password" required {...register("password")}/>
                         <br/>
                         <a href="">Forgot Password?</a>
-                        <br/>
                         <button type="submit">Login</button>
+                        <a href="signup">Don't have an account? Sign up here</a>
                     </div>
                 </form>
             </div>
