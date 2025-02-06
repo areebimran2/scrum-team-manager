@@ -26,7 +26,7 @@ def userprofile_handler(request):
                 return Response(status=status.HTTP_404_NOT_FOUND)
                     
             elif exists_response.status_code == 200: # Account exists
-                update_response = requests.post(url + 'user/update', serializer.validated_data)
+                update_response = requests.post(url + 'user/update', json=serializer.validated_data)
 
         else:
             # Data formatted wrong
@@ -46,6 +46,6 @@ def userprofile_handler(request):
             return Response(status=status.HTTP_404_NOT_FOUND)
                 
         elif response.status_code == 200: # Account exists
-            return Response(response.data, status=status.HTTP_200_OK)
+            return Response(response.json(), status=status.HTTP_200_OK)
     else:
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
