@@ -11,7 +11,6 @@ from .serializers import *
 
 # Create your views here.
 
-#TODO should this be POST???
 @api_view(['POST'])
 def login_handler(request):
     if request.method == 'POST':
@@ -22,9 +21,9 @@ def login_handler(request):
 
             attempts = 0 # attempts to reach ISCS
             while attempts <= 5:
-                #TODO configure URL for ISCS
-                url = ""
-                #TODO Confirm endpoint for Login/Sign-Up
+
+                url = "http://127.0.0.1:8001"
+
                 response = requests.get(url + f"/user/query/{serializer.validated_data["email"]}")
 
                 if response.status_code == 404: # Account does not exist
