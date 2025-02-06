@@ -10,10 +10,10 @@ Query database based on email. Returns list of users that matches
 
 """
 @api_view(['GET'])
-def query(request, email):
+def query(request, case, input):
 
-   if not email:
-      return Response({"error": "Email required"}, status=400)
+   if not case or not input:
+      return Response({"error": "Missing required parameters"}, status=400)
 
    # email = data.get("email")
    # if email:
@@ -53,9 +53,16 @@ def query(request, email):
    #       query |= Q(skills__contains=skills)
 
 
-
-
-   users = ScrumUser.objects.filter(email__exact=email)
+   if case == "EMAIL":
+      users = ScrumUser.objects.filter(email__exact=input)
+   elif case == "UID":
+      users = ScrumUser.objects.filter(uid__exact=input)
+   else:
+      return Response({"error": "Invalid Case"}, status=400)
+   
+   if len(list(users)) == 0:
+      return Response({"error": "User not Found"}, status=404)
+   
    serialized = ScrumUserSerializer(users, many=True)
 
    return Response(serialized.data)
@@ -69,7 +76,7 @@ def add_user(request):
    try:
       data = json.loads(request.body)
    except json.decoder.JSONDecodeError:
-      return Response({"error":"Body required for this request"})
+      return Response({"error":"Body required for this request"}, status=400)
   
    email = data.get("email")
    
@@ -103,7 +110,7 @@ def update_user(request):
    try:
       data = json.loads(request.body)
    except json.decoder.JSONDecodeError:
-      return Response({"error":"Body required for this request"})
+      return Response({"error":"Body required for this request"}, status=400)
    uid = data.get("uid")
    if (not uid):
       return Response({"error": "no identification give"}, status=400)
