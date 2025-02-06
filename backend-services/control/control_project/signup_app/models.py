@@ -4,5 +4,5 @@ from django.db import models
 
 class UserSignUpModel(models.Model):
     #TODO Max Length to be confirmed
-    email = models.EmailFieldField()
+    email = models.EmailField()
     password = models.CharField(max_length=100)
