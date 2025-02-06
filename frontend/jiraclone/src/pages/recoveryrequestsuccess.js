@@ -4,7 +4,7 @@ export function RecoveryRequestSuccess() {
     <div className={styles.outsideContainer}>
         <div className={styles.container}>
             <h1> Password Recovery </h1>
-            <p className={styles.text}>An email has been sent to your account.</p>
+            <p className={styles.text}>A temporary password has been sent to your email.</p>
         </div>
     </div>
   );
