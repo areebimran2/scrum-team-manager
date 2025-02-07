@@ -19,7 +19,7 @@ def userprofile_handler(request):
             url = ""
 
             #TODO configure endpoint URI
-            exists_response = requests.get(url + f'/user/{serializer.validated_data['uid']}')
+            exists_response = requests.get(url + '/user/{0}'.format(serializer.validated_data['uid']))
 
             if exists_response.status_code == 404: # Account does not exist
                 # Send 404 back to frontend

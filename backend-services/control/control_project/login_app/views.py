@@ -31,7 +31,7 @@ def login_handler(request):
               
                 url = "http://127.0.0.1:8001"
 
-                response = requests.get(url + f"/user/query/{serializer.validated_data["email"]}")
+                response = requests.get(url + "/user/query/{0}".format(serializer.validated_data["email"]))
 
                 if response.status_code == 404: # Account does not exist
                     # Send 404 back to frontend
