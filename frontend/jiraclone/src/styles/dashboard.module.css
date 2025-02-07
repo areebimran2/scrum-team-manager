@@ -1,0 +1,35 @@
+/**
+ background colour: #18191A
+ secondary colour: #242526
+ text colour: #E4E6EB
+ secondary text colour: #B0B3B8
+ accent colour: #8454D2
+ */
+
+.titleContainer {
+  width: 600px;
+  height: 200px;
+  border: 1px solid #B0B3B8;
+  border-radius: 4px;
+  background-color: #18191A;
+  display: flex;
+  justify-content: center;
+
+}
+
+.body{
+  background-color: #18191A;
+  justify-content: flex-start;
+  align-items: normal;
+  display: flex;
+  height: 100vh;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.title{
+  margin: 40px 0 20px 0;
+  padding: 0;
+  color: #E4E6EB;
+  font-size: 64px;
+}
