@@ -3,14 +3,17 @@ import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
 import NotFound from "./pages/404";
 import Signup from "./pages/signup";
+import ProfileEdit from "./pages/profileedit"
 
 export function App() {
+
   return (
     <BrowserRouter>
         <Routes>
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login/>} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<ProfileEdit />} />
             <Route path="/" element={<NotFound />} />
         </Routes>
     </BrowserRouter>
