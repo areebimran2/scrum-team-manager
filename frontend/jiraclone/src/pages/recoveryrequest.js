@@ -15,7 +15,7 @@ export function RecoveryRequest() {
             email : data.email
         }
 
-        let response = fetch("http://127.0.0.1/login/recover", {
+        let response = fetch("http://127.0.0.1:10001/login/recover/", {
             method: "POST",
             headers : {
                 'Content-Type': 'application/json;charset=utf-8'
