@@ -5,6 +5,7 @@ export function RecoveryRequestSuccess() {
         <div className={styles.container}>
             <h1> Password Recovery </h1>
             <p className={styles.text}>A temporary password has been sent to your email.</p>
+            <a href="/login">Return to Login</a>
         </div>
     </div>
   );
