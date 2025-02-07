@@ -9,8 +9,8 @@ from rest_framework.views import APIView
 from .models import *
 from .serializers import *
 
-@api_view(['POST', 'GET'])
-def userprofile_handler(request, uid_str):
+@api_view(['POST'])
+def userprofile_post_handler(request):
     if request.method == 'POST':
         serializer = UserFullSerializer(data=request.data)
         if serializer.is_valid():
@@ -34,8 +34,12 @@ def userprofile_handler(request, uid_str):
         else:
             # Data formatted wrong
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'GET':
+    else:
+        return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+def userprofile_get_handler(request, uid_str):
+    if request.method == 'GET':
         print("is GET request")
 
         try:
