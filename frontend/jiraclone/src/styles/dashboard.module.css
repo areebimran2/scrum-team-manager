@@ -6,16 +6,6 @@
  accent colour: #8454D2
  */
 
-.titleContainer {
-  width: 600px;
-  height: 200px;
-  border: 1px solid #B0B3B8;
-  border-radius: 4px;
-  background-color: #18191A;
-  display: flex;
-  justify-content: center;
-
-}
 
 .body{
   background-color: #18191A;
@@ -28,8 +18,58 @@
 }
 
 .title{
-  margin: 40px 0 20px 0;
+  margin: 20px;
   padding: 0;
   color: #E4E6EB;
   font-size: 64px;
+}
+
+.ticketContainer{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+}
+
+.ticketCard{
+  width: 500px;
+  border-radius: 4px;
+  background-color: #242526;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.ticketTitle{
+  color: #E4E6EB;
+  font-size: 24px;
+  margin: 10px;
+}
+
+.ticketDescription{
+  color: #B0B3B8;
+  font-size: 16px;
+  margin: 10px;
+  display: flex;
+}
+
+.sidebar{
+  background-color: #242526;
+  width: 60px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+
+.image{
+  width: 45px;
+  height: 45px;
+  align-self: center;
+  margin: 0 8px 10px 7px;
+  border-radius: 100%;
 }
