@@ -26,5 +26,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('signup/', views_signup.signup_handler),
     path('login/', views_login.login_handler),
+    path('login/recover/', UserLoginRecoveryView.as_view()),
     path('userprofile/', views_userprofile.userprofile_handler)
 ]
