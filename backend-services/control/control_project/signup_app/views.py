@@ -21,7 +21,7 @@ def signup_handler(request):
             attempts = 0 # attempts to reach ISCS
             while attempts <= 5:
                 #TODO configure URL for ISCS
-                url = "http://127.0.0.1:8000"
+                url = "http://127.0.0.1:8001"
 
                 response = requests.get(url + f"/user/query/EMAIL/{serializer.validated_data["email"]}")
 
