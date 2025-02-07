@@ -29,7 +29,7 @@ def login_handler(request):
             attempts = 0 # attempts to reach ISCS
             while attempts <= 5:
 
-                url = "http://127.0.0.1:8000"
+                url = "http://127.0.0.1:8001"
 
                 response = requests.get(url + f"/user/query/EMAIL/{serializer.validated_data["email"]}")
 
@@ -73,7 +73,7 @@ class UserLoginRecoveryView(APIView):
             # see if there exists a user with the email
             validated_data = serializer.validated_data
             url = "http://127.0.0.1:8001"
-            response = requests.get(url + "/user/query/{0}".format(validated_data["email"]))
+            response = requests.get(url + "/user/query/EMAIL/{0}".format(validated_data["email"]))
 
             # There is no user with such email
             if response.status_code == 404:
