@@ -15,11 +15,28 @@ export function RecoveryRequest() {
             email : data.email
         }
 
-        // do what you gotta do over here to process if the email exists 
-        // for now I just have it go to the recover request success page without checking anything 
-        // or sending the request at all
+        let response = fetch("http://127.0.0.1/login/recover", {
+            method: "POST",
+            headers : {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(user)
+        });
 
-        navigate("/recoveryrequestsuccess", {replace: true});
+        response.then(Response => {
+            
+            if (Response.status === 404){
+                alert("No User with that email");
+            } else if (Response.status === 400){
+                alert("Invalid Parameters")
+            } else if (Response.status === 200){
+                navigate("/recoveryrequestsuccess", {replace: true});
+            } else {
+                alert("Unknown error, please try again later");
+            }
+
+        });
+
     }
 
     const recoveryRequest = (

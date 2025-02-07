@@ -59,7 +59,8 @@ export function Login() {
                         <br/>
                         <input type="password" placeholder="Password" name="password" required {...register("password")}/>
                         <br/>
-                        <a href="">Forgot Password?</a>
+                        <a href="/recoveryrequest">Forgot Password?</a>
+                        <br/>
                         <button type="submit">Login</button>
                         <a href="signup">Don't have an account? Sign up here</a>
                     </div>
