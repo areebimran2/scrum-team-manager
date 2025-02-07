@@ -16,7 +16,7 @@ export function Login() {
             password : data.password 
         }
 
-        let allowLogin = false;
+        let allowLogin = true;
 
         let response = fetch("http://127.0.0.1:10001/login/", {
             method: "POST",
@@ -26,7 +26,7 @@ export function Login() {
             body: JSON.stringify(user)
         });
 
-        response.then(Response => {
+        // response.then(Response => {
 
             if (Response.status == 401){
                 alert("Incorrect Password");
@@ -41,10 +41,18 @@ export function Login() {
                 alert("Unknown error, please try again later");
             }
 
-        });
+        // });
 
         if (allowLogin) {
             navigate("/dashboard", {replace: true});
+
+            let date = new Date();
+            date.setTime(date.getTime() + (12 * 60 * 60 * 1000));
+            let expires = "expires="+ date.toUTCString() + ";";
+            let uid = "jiraclonelogin=" + user.email + ";";
+
+            document.cookie = uid + expires + "path=/";
+
         }
 
     }
