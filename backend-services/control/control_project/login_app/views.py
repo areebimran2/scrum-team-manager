@@ -22,9 +22,9 @@ def login_handler(request):
             attempts = 0 # attempts to reach ISCS
             while attempts <= 5:
 
-                url = "http://127.0.0.1:8001"
+                url = "http://127.0.0.1:8000"
 
-                response = requests.get(url + f"/user/query/{serializer.validated_data["email"]}")
+                response = requests.get(url + f"/user/query/EMAIL/{serializer.validated_data["email"]}")
 
                 if response.status_code == 404: # Account does not exist
                     # Send 404 back to frontend
@@ -34,10 +34,10 @@ def login_handler(request):
                 elif response.status_code == 200: # Account exists
                     #TODO Check request data matches with response from get request
                     
-                    response_serializer = UserFullSerializer(data=response.data)
+                    response_data = response.json()[0]
                     
                     given_password = serializer.validated_data['password']
-                    saved_password = response_serializer.data['password']
+                    saved_password = response_data['password']
 
                     # If request data matches response data
                     if given_password == saved_password:
