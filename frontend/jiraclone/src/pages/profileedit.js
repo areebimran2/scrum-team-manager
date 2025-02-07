@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import styles from "../styles/profileedit.module.css";
+import defaultPic from "../assets/defaultProfilePic.png";
 
 export function ProfileEdit() {
     
@@ -87,20 +88,33 @@ export function ProfileEdit() {
 
     const profileEdit = (
 
-            <div>
-                <h1>Welcome</h1>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <div>
-                    <input type="text" placeholder="Name" name="name" {...register("name")} value={user.display_name}/>
-                    <input type="text" placeholder="Email" name="email" {...register("email")} value={user.email}/>
-                    <input type="password" placeholder="Current Password" required name="currPassword" {...register("currPassword")}/>
-                    <input type="password" placeholder="Password" name="password" {...register("password")}/>
-                    <input type="password" placeholder="Confirm Password" name="password" {...register("password2")}/>
-                    <input type="file" name="profilePic" {...register("profilePic")}/>
-                    <br/>
-                    <button type="submit">Save</button>
-                    </div>
-                </form>
+            <div className={styles.background}>
+                <div className={styles.container}>
+                    
+                    <img src={defaultPic} alt="Profile Picture" className={styles.profilePicture}/>
+                    <h1>Edit Profile</h1>                    
+
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <div>
+                            <p className={styles.formnames}>Name: </p>
+                            <input type="text" placeholder="Name" name="name" {...register("name")} value={user.display_name} className={styles.input}/>
+                            <p className={styles.formnames}>Email: </p>
+                            <input type="text" placeholder="Email" name="email" {...register("email")} value={user.email} className={styles.input}/>
+                            <div className={styles.passwords}>
+                                <p className={styles.formnames}>Password: </p>
+                                <input type="password" placeholder="Current Password" required name="currPassword" {...register("currPassword")} className={styles.input}/>
+                                <input type="password" placeholder="Password" name="password" {...register("password")} className={styles.input}/>
+                                <input type="password" placeholder="Confirm Password" name="password" {...register("password2")} className={styles.input}/>
+                            </div>
+                            <p className={styles.formnames}>Profile Picture</p>
+                            <input type="file" name="profilePic" {...register("profilePic")} className={styles.picinput}/>
+                            <br/>
+                            <div className={styles.buttons}>
+                                <button type="submit">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
 
     );
