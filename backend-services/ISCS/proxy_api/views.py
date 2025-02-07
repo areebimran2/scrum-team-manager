@@ -33,7 +33,7 @@ class ProxyAPIView(APIView):
         # Tentative approach: Assumes the path remains unchanged from frontend -> control -> iscs -> resource.
         # A 'catch-all' url is used to resolve the request from the control.
         # The target url is determined from the path in this implementation, hence the reason it must be unchanged.
-        service = request.path.split('/')[0]
+        service = request.path.split('/')[1]
 
         # The '<host>:<port>' of each (resource) microservice is kept in a dictionary in settings.py
         # Currently assumes all services in MICROSERVICES are running
