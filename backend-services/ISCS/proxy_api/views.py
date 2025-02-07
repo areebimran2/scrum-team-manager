@@ -26,7 +26,7 @@ class ProxyAPIView(APIView):
 
         # Relay request to resource and return the response
         service = self._get_target_url(request) + request.path
-        service_response = requests.request(method, service, data=request.data, headers=request.headers)
+        service_response = requests.request(method, service, json=request.data, headers=request.headers)
         return service_response
 
     def _get_target_url(self, request):
