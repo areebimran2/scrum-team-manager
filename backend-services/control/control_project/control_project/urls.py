@@ -21,6 +21,7 @@ from userprofile_app import views as views_userprofile
 from signup_app import views as views_signup
 from login_app import views as views_login
 
+from login_app.views import UserLoginRecoveryView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
