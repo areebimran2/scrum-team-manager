@@ -18,7 +18,7 @@ export function Login() {
 
         let allowLogin = false;
 
-        let response = fetch("http://127.0.0.1:10001/login", {
+        let response = fetch("http://127.0.0.1:10001/login/", {
             method: "POST",
             headers : {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -36,6 +36,7 @@ export function Login() {
                 alert("Invalid Parameters")
             } else if (Response.status == 200){
                 allowLogin = true;
+                navigate("/dashboard", {replace: true});
             } else {
                 alert("Unknown error, please try again later");
             }

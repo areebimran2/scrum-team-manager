@@ -20,7 +20,7 @@ export function Signup() {
             password : data.password
         }
         
-        let response = fetch("http://127.0.0.1:10001/signup", {
+        let response = fetch("http://127.0.0.1:10001/signup/", {
             method: "POST",
             headers : {
                 'Content-Type': 'application/json;charset=utf-8'
