@@ -84,7 +84,7 @@ class UserLoginRecoveryView(APIView):
 
             try:
                 subject = "JirAI Login Recovery"
-                message = ("Hello, your temporary password is {0}.\r\n\r\nPlease login at <login_page_url> " 
+                message = ("Hello, your temporary password is {0}.\r\n\r\nPlease login at http://127.0.0.1:10001/login " 
                            "and change your password as soon as possible.").format(temp_password)
                 from_email = settings.EMAIL_HOST_USER
                 to_email = user["email"]
