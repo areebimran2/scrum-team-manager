@@ -2,11 +2,6 @@ from django.db import models
 
 # Create your models here.
 
-class UserLoginModel(models.Model):
-    #TODO Max Length to be confirmed
-    email = models.EmailField()
-    password = models.CharField(max_length=200)
-
 class UserFullModel(models.Model):
     uid = models.IntegerField("User Id", primary_key=True)
     assigned_tickets =  models.JSONField(default=list)

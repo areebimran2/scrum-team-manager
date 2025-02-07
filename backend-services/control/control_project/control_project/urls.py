@@ -17,13 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from login_app.views import UserLoginRecoveryView
+from userprofile_app import views as views_userprofile
 from signup_app import views as views_signup
 from login_app import views as views_login
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('signup/', views_signup.signup_handler),
     path('login/', views_login.login_handler),
-    path('login/recover/', UserLoginRecoveryView.as_view())
+    path('login/recover/', UserLoginRecoveryView.as_view()),
+    path('userprofile/', views_userprofile.userprofile_handler)
 ]

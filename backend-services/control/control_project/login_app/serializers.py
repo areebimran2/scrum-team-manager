@@ -1,16 +1,21 @@
 from rest_framework import serializers
-from .models import UserModel
+from .models import *
 
-class UserSerializer(serializers.ModelSerializer):
+class UserLoginSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = UserModel 
+        model = UserLoginModel 
         fields = ('email', 'password')
-
+        
 class UserLoginRecoverySerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
 
     class Meta:
-        model = UserModel
+        model = UserLoginModel
         fields = ['email']
+        
+class UserFullSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = UserFullModel
+        fields = '__all__'
