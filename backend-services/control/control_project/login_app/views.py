@@ -31,7 +31,7 @@ def login_handler(request):
 
                 url = "http://127.0.0.1:8001"
 
-                response = requests.get(url + "/user/query/{0}".format(serializer.validated_data["email"]))
+                response = requests.get(url + "/user/query/EMAIL/{0}".format(serializer.validated_data["email"]))
 
                 if response.status_code == 404: # Account does not exist
                     # Send 404 back to frontend
@@ -40,15 +40,16 @@ def login_handler(request):
                 
                 elif response.status_code == 200: # Account exists
                     #TODO Check request data matches with response from get request
-                    
-                    response_serializer = UserFullSerializer(data=response.data)
+
+                    response_data = response.json()[0]
                     
                     given_password = serializer.validated_data['password']
-                    saved_password = response_serializer.data['password']
+                    saved_password = response_data['password']
+
 
                     # If request data matches response data
                     if given_password == saved_password:
-                        return Response(status=status.HTTP_200_OK)
+                        return Response({"uid":response_data["uid"]}, status=status.HTTP_200_OK)
                     else:
                         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
