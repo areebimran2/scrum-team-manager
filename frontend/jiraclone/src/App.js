@@ -3,6 +3,7 @@ import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
 import NotFound from "./pages/404";
 import Signup from "./pages/signup";
+import Skills from "./pages/skills";
 
 export function App() {
   return (
@@ -11,6 +12,7 @@ export function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/skills" element={<Skills />} />
             <Route path="/" element={<NotFound />} />
         </Routes>
     </BrowserRouter>
