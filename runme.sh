@@ -26,7 +26,7 @@ freshstart_service() {
     # React: npm install
     if [[ "$service" == "frontend" ]]; then
         echo "Running npm install for frontend..."
-        npm install
+        npm install --legacy-peer-deps
     fi
 
     # Start the service after preparation
