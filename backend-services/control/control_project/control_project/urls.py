@@ -20,6 +20,7 @@ from django.urls import path
 from userprofile_app import views as views_userprofile
 from signup_app import views as views_signup
 from login_app import views as views_login
+from ticket_app import views as views_ticket
 
 from login_app.views import UserLoginRecoveryView
 
@@ -29,5 +30,6 @@ urlpatterns = [
     path('login/', views_login.login_handler),
     path('login/recover/', views_login.UserLoginRecoveryView.as_view()),
     path('userprofile/', views_userprofile.userprofile_post_handler),
-    path('userprofile/<str:uid_str>', views_userprofile.userprofile_get_handler)
+    path('userprofile/<str:uid_str>', views_userprofile.userprofile_get_handler),
+    path('ticket/<str:tid_str>', views_ticket.ticket_get_handler)
 ]
