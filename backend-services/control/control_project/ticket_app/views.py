@@ -31,3 +31,30 @@ def ticket_get_handler(request, tid_str):
             return Response(response.json(), status=status.HTTP_200_OK)
     else:
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+def ticket_update_handler(request):
+    if request.method == 'POST':
+        serializer = TicketOptionalFullSerializer(data=request.data)
+        if serializer.is_valid():
+            url = "http://127.0.0.1:8001"
+
+            exists_response = requests.get(url + f'/ticket/query/TID/{serializer.validated_data['tid']}')
+
+            if exists_response.status_code == 404: # Ticket does not exist
+                # Send 404 back to frontend
+                return Response(status=status.HTTP_404_NOT_FOUND)
+                    
+            elif exists_response.status_code == 200: # Ticekt exists
+                update_response = requests.post(url + '/ticket/update/', json=serializer.validated_data)
+                if update_response.status_code == 200:
+                    return Response(status=status.HTTP_200_OK)
+                else:
+                    return Response(update_response, status=update_response.status_code)
+
+        else:
+            # Data formatted wrong
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+    
