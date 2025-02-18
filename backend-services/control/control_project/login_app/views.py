@@ -1,4 +1,6 @@
+from datetime import timedelta, datetime
 from smtplib import SMTPException
+
 from django.core.mail import send_mail
 
 from django.shortcuts import render
@@ -6,12 +8,15 @@ import requests
 import time
 
 from django.utils.crypto import get_random_string
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.views import APIView
 
 from control_project import settings
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import *
 from .serializers import *
@@ -49,7 +54,12 @@ def login_handler(request):
 
                     # If request data matches response data
                     if given_password == saved_password:
-                        return Response({"uid":response_data["uid"]}, status=status.HTTP_200_OK)
+                        token = RefreshToken()
+                        token["id"] = response_data["uid"]
+                        token["email"] = response_data["email"]
+
+                        return Response({"refresh": str(token),
+                                              "access": str(token.access_token)}, status=status.HTTP_200_OK)
                     else:
                         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
@@ -63,7 +73,6 @@ def login_handler(request):
     # wrong request method
     else:
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
-
 
 class UserLoginRecoveryView(APIView):
     def post(self, request, *args, **kwargs):

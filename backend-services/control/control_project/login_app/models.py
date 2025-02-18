@@ -1,10 +1,11 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class UserLoginModel(models.Model):
     email = models.EmailField()
     password = models.CharField(max_length=100)
 
-class UserFullModel(models.Model):
+class UserFullModel(AbstractUser):
     uid = models.IntegerField("User Id", primary_key=True)
     assigned_tickets =  models.JSONField(default=list)
     project = models.IntegerField(default=-1)
