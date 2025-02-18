@@ -31,6 +31,6 @@ urlpatterns = [
     path('login/recover/', views_login.UserLoginRecoveryView.as_view()),
     path('userprofile/', views_userprofile.userprofile_post_handler),
     path('userprofile/<str:uid_str>', views_userprofile.userprofile_get_handler),
-    path('ticket/<str:tid_str>', views_ticket.ticket_get_handler),
-    path('ticket/update/', views_ticket.ticket_update_handler)
+    path('ticket/<str:tid_str>', views_ticket.ticket_get_delete_handler),
+    path('ticket/update/', views_ticket.ticket_update_handler),
 ]
