@@ -21,6 +21,6 @@ class TicketOptionalFullSerializer(serializers.Serializer):
     completed = serializers.BooleanField(required=False, allow_null=True, default=None)
     assigned = serializers.BooleanField(required=False, allow_null=True, default=None)
 
-    date_created = serializers.DateField(required=False, allow_null=True, default=None)
-    date_completed = serializers.DateField(required=False, allow_null=True, default=None)
-    date_assigned = serializers.DateField(required=False, allow_null=True, default=None)
+    date_created = serializers.DateTimeField(required=False, allow_null=True, default=None)
+    date_completed = serializers.DateTimeField(required=False, allow_null=True, default=None)
+    date_assigned = serializers.DateTimeField(required=False, allow_null=True, default=None)
