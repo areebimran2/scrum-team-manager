@@ -16,37 +16,36 @@ freshstart_service() {
     port=$2
     echo "Performing fresh start for $service service..."
 
-    # Django: Make migrations and migrate
-    if [[ "$service" == "control" || "$service" == "iscs" || "$service" == "user" ]]; then
-        echo "Making migrations and migrating for $service..."
-        python3 manage.py makemigrations
-        python3 manage.py migrate
-    fi
-
-    # React: npm install
-    if [[ "$service" == "frontend" ]]; then
-        echo "Running npm install for frontend..."
-        npm install --legacy-peer-deps
-    fi
-
-    # Start the service after preparation
-    echo "Starting $service service after fresh start..."
-    if [[ "$service" == "frontend" ]]; then
-        npm start &
-        BACKGROUND_PIDS+=($!)  # Store the PID of the background process
-    else
-        start_service $service $port
-    fi
+    case "$service" in
+        # Django: Make migrations and migrate
+        "control" | "iscs" | "user" | "project" | "ticket")
+            echo "Making migrations and migrating for $service..."
+            python3 manage.py makemigrations
+            python3 manage.py migrate
+            echo "Starting $service service after fresh start..."
+            start_service $service $port
+            ;;
+        # React: npm install
+        "frontend")
+            echo "Running npm install for frontend..."
+            npm install --legacy-peer-deps
+            echo "Starting $service service after fresh start..."
+            npm start &
+            BACKGROUND_PIDS+=($!)  # Store the PID of the background process
+    esac
 }
 
 # Function to flush the service database
 flush_db() {
-    if [[ "$1" == "user" ]]; then
-        echo "Flushing database for user service..."
-        python3 manage.py flush --no-input
-    else
-        echo "Flush is only supported for the data tier services."
-    fi
+    case "$1" in
+        "user" | "project" | "ticket")
+            echo "Flushing database for user service..."
+            python3 manage.py flush --no-input
+            ;;
+    *)
+        echo "Flush is only supported for the data tier services: user, ticket, project."
+        ;;
+    esac
 }
 
 # Function to handle backend services
@@ -65,6 +64,13 @@ handle_backend() {
         "user")
             cd backend-services/user/receive_and_save_user_details
             ;;
+        "project")
+            cd backend-services/project/Project
+            ;;
+        "ticket")
+            cd backend-services/ticket/Ticket
+            ;;
+
     esac
 
     case "$action" in
@@ -122,6 +128,8 @@ if [[ $# -lt 2 ]]; then
     echo "  -c  Control service"
     echo "  -i  ISCS service"
     echo "  -u  User service"
+    echo "  -p  Project service"
+    echp "  -t  Ticket service"
     exit 1
 fi
 
@@ -131,7 +139,7 @@ shift
 
 # Parse flags
 flags=""
-while getopts "abfciu" opt; do
+while getopts "abfciupt" opt; do
     case $opt in
         a) flags+="all " ;;
         b) flags+="backend " ;;
@@ -139,6 +147,8 @@ while getopts "abfciu" opt; do
         c) flags+="control " ;;
         i) flags+="iscs " ;;
         u) flags+="user " ;;
+        p) flags+="project " ;;
+        t) flags+="ticket " ;;
         *) echo "Unknown flag: -$opt" && exit 1 ;;
     esac
 done
@@ -155,12 +165,16 @@ for flag in $flags; do
             handle_backend $action "control" 10001
             handle_backend $action "iscs" 8001
             handle_backend $action "user" 8000
+            handle_backend $action "project" 8002
+            handle_backend $action "ticket" 8003
             handle_frontend $action
             ;;
         backend)
             handle_backend $action "control" 10001
             handle_backend $action "iscs" 8001
             handle_backend $action "user" 8000
+            handle_backend $action "project" 8002
+            handle_backend $action "ticket" 8003
             ;;
         frontend)
             handle_frontend $action
@@ -173,6 +187,12 @@ for flag in $flags; do
             ;;
         user)
             handle_backend $action "user" 8000
+            ;;
+        project)
+            handle_backend $action "project" 8002
+            ;;
+        ticket)
+            handle_backend $action "ticket" 8003
             ;;
     esac
 done
