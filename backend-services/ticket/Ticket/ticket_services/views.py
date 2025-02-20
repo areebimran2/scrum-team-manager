@@ -1,5 +1,5 @@
 from .models import Ticket
-from serializer import TicketSerializer
+from .serializer import TicketSerializer
 from django.db.models import Q
 import json
 from rest_framework.decorators import api_view
