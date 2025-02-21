@@ -64,13 +64,13 @@ export function Login() {
                 <p className={styles.prompt}>Please enter your login details:</p>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div>
-                        <input type="text" placeholder="Email" name="email" required {...register("email")} />
+                        <input type="text" placeholder="Email" name="email" required {...register("email")} className={styles.input} />
                         <br/>
-                        <input type="password" placeholder="Password" name="password" required {...register("password")}/>
+                        <input type="password" placeholder="Password" name="password" required {...register("password")} className={styles.input}/>
                         <br/>
                         <a href="recoveryrequest" className={styles.recoveryLink}>Forgot your password? </a>
                         <br/>
-                        <button type="submit">Login</button>
+                        <button type="submit" className={styles.button}>Login</button>
                         <p className={styles.signupPrompt}>Don't have an account? <a href="signup" className={styles.promptLink}>Sign up here!</a></p>
                     </div>
                 </form>
