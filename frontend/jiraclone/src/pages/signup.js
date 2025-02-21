@@ -51,11 +51,11 @@ export function Signup() {
         <p className={styles.prompt}>Please enter your email and a password:</p>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div>
-                    <input type="text" placeholder="Email" name="email" required {...register("email")}></input>
+                    <input type="text" placeholder="Email" name="email" required {...register("email")} className={styles.input}></input>
                     <br/>
-                    <input type="password" placeholder="Password" name="password" required {...register("password")}></input>
+                    <input type="password" placeholder="Password" name="password" required {...register("password")} className={styles.input}></input>
                     <br/>
-                    <input type="password" placeholder="Confirm Password" name="password" required {...register("password2")}></input>
+                    <input type="password" placeholder="Confirm Password" name="password" required {...register("password2")} className={styles.input}></input>
                     <br/>
                     <button type="submit" className={styles.button}>Sign Up</button>
                     <br/>

@@ -38,7 +38,7 @@ body {
     width: 300px;
 }
 
-input {
+.input {
     width: 300px;
     height: 30px;
     padding: 8px;
@@ -51,7 +51,7 @@ input {
     font-size: 20px;
 }
 
-button {
+.button {
     margin: 10px 0 0 7px;
     color: #E4E6EB;
     width: 300px;
@@ -71,12 +71,12 @@ button {
     font-weight: bold;
   }
   
-  button:hover {
+  .button:hover {
     background-color: #005a4d;
     box-shadow: 0px 0px 20px -18px rgba(0, 0, 0, 0.5);
   }
   
-  button:active {
+  .button:active {
     transform: scale(0.95);
   }
 
@@ -92,7 +92,7 @@ button {
     font-size: 18px;
   }
 
-  a:hover {
+  .loginLink:hover {
     color: #3A8DFF;
 }
 

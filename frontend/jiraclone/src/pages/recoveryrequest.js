@@ -40,17 +40,15 @@ export function RecoveryRequest() {
     }
 
     const recoveryRequest = (
-        <div id="recoveryRequest" className={styles.outsideContainer}>
-            <div className={styles.container}>
-                <h1 className={styles.heading}> Password Recovery </h1>
+        <div id="recoveryRequest" className={styles.container}>
+                <h1 className={styles.heading}> Please Enter Your Email: </h1>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <div class="container">
-                        <input type="text" placeholder="Email" name="email" required {...register("email")} />
+                    <div>
+                        <input type="text" placeholder="Email" name="email" required {...register("email")} className={styles.input} />
                         <br/>
-                        <button type="submit">Submit</button>
+                        <button type="submit" className={styles.button}>Recover my Password</button>
                     </div>
                 </form>
-            </div>
         </div>
     );
     
