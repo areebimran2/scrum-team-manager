@@ -145,11 +145,12 @@ DEFAULT_FROM_EMAIL = 'JirAI Recovery'
 # rest settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'control_project.auth.CustomJWTAuthentication',
     )
 }
 
 # settings for JWT
 SIMPLE_JWT = {
     'USER_ID_FIELD': 'uid',
+    'USER_ID_CLAIM': 'id',
 }

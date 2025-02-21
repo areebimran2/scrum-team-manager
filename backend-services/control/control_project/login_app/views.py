@@ -16,13 +16,14 @@ from rest_framework import status
 from rest_framework.views import APIView
 
 from control_project import settings
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import *
 from .serializers import *
 
 # Create your views here.
-
+JWTAuthentication
 @api_view(['POST'])
 def login_handler(request):
     if request.method == 'POST':
