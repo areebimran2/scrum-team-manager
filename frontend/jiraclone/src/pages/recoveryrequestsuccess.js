@@ -9,9 +9,11 @@ export function RecoveryRequestSuccess() {
   }
   
   return (
+    <div className={styles.page}>
     <div className={styles.container}>
           <p className={styles.text}>A temporary password has been sent to your email. Please change it as soon as possible </p>
           <button type="button" onClick={onClick} className={styles.button}>Back to Login Page</button>
+    </div>
     </div>
   );
 }
