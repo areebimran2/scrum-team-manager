@@ -45,7 +45,7 @@ export function Signup() {
     }
 
     const signup = (
-
+        <div className={styles.page}>
         <div className={styles.container}>
         <h1 className={styles.header}> Sign Up!</h1>
         <p className={styles.prompt}>Please enter your email and a password:</p>
@@ -62,6 +62,7 @@ export function Signup() {
                     <p className={styles.loginPrompt}>Already have an account? <a href="login" className={styles.loginLink}>Log in here!</a></p>
                 </div>
             </form>
+        </div>
         </div>
 
     );

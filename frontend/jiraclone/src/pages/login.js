@@ -58,7 +58,7 @@ export function Login() {
     }
 
     const login = (
-
+        <div className={styles.page}>
             <div className={styles.container}>
                 <h1 className={styles.header}>Welcome Back!</h1>
                 <p className={styles.prompt}>Please enter your login details:</p>
@@ -75,7 +75,7 @@ export function Login() {
                     </div>
                 </form>
             </div>
-
+        </div>
     );
 
   return (login);
