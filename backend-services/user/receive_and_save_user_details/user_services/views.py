@@ -15,44 +15,6 @@ def query(request, case, input):
    if not case or not input:
       return Response({"error": "Missing required parameters"}, status=400)
 
-   # email = data.get("email")
-   # if email:
-   #    if case == "AND":
-   #       query &= Q(email__exact=email)
-   #    elif case == "OR":
-   #       query |= Q(email__exact=email)
-
-   # uid = data.get("uid")
-   # if uid:
-   #    if case == "AND":
-   #       query &= Q(email__exact=email)
-   #    elif case == "OR":
-   #       query |= Q(email__exact=email)
-
-
-   # assigned_tickets = data.get("assigned_tickets")
-   # if assigned_tickets:
-   #    if case == "AND":
-   #       query &= Q(assigned_tickets__contains=assigned_tickets)
-   #    elif case == "OR":
-   #       query |= Q(assigned_tickets__contains=assigned_tickets)
-
-
-   # display_name = data.get("display_name")
-   # if display_name:
-   #    if case == "AND":
-   #       query &= Q(display_name__exact=display_name)
-   #    elif case == "OR":
-   #       query |= Q(display_name__exact=display_name)
-   
-   # skills = data.get("skills")
-   # if skills:
-   #    if case == "AND":
-   #       query &= Q(skills__contains=skills)
-   #    elif case == "OR":
-   #       query |= Q(skills__contains=skills)
-
-
    if case == "EMAIL":
       users = ScrumUser.objects.filter(email__exact=input)
    elif case == "UID":
