@@ -40,6 +40,7 @@ export function RecoveryRequest() {
     }
 
     const recoveryRequest = (
+        <div className={styles.page}>
         <div id="recoveryRequest" className={styles.container}>
                 <h1 className={styles.heading}> Please Enter Your Email: </h1>
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -49,6 +50,7 @@ export function RecoveryRequest() {
                         <button type="submit" className={styles.button}>Recover my Password</button>
                     </div>
                 </form>
+        </div>
         </div>
     );
     
