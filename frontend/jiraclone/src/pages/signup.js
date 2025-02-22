@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import "../styles/signup.css";
+import styles from "../styles/signup.module.css";
 
 export function Signup() {
 
@@ -46,20 +46,20 @@ export function Signup() {
 
     const signup = (
 
-        <div id="signup">
-        <h1> Register</h1>
+        <div className={styles.container}>
+        <h1 className={styles.header}> Sign Up!</h1>
+        <p className={styles.prompt}>Please enter your email and a password:</p>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div class="container">
-                    <input type="text" placeholder="Email" name="email" required {...register("email")}></input>
+                <div>
+                    <input type="text" placeholder="Email" name="email" required {...register("email")} className={styles.input}></input>
                     <br/>
-                    <input type="password" placeholder="Password" name="password" required {...register("password")}></input>
+                    <input type="password" placeholder="Password" name="password" required {...register("password")} className={styles.input}></input>
                     <br/>
-                    <input type="password" placeholder="Confirm Password" name="password" required {...register("password2")}></input>
+                    <input type="password" placeholder="Confirm Password" name="password" required {...register("password2")} className={styles.input}></input>
                     <br/>
-                    <p id="passwordError">Passwords do not match</p>
-                    <button type="submit">Register</button>
+                    <button type="submit" className={styles.button}>Sign Up</button>
                     <br/>
-                    <a href="login">Already have an account? Log in here</a>
+                    <p className={styles.loginPrompt}>Already have an account? <a href="login" className={styles.loginLink}>Log in here!</a></p>
                 </div>
             </form>
         </div>
