@@ -10,28 +10,22 @@ export function ProfileEdit() {
     const navigate = useNavigate();
     const {register, handleSubmit} = useForm();
 
-    //let userID = document.cookie.split("=")[1];
+    let userID = document.cookie.split("=")[1];
 
-    // let response = fetch("http://127.0.0.1:100001/userprofile/" + userID, {
-    //     method: "GET"
-    // });
+    let response = fetch("http://127.0.0.1:100001/userprofile/" + userID, {
+        method: "GET"
+    });
 
-    // let user;
-    // response.then(Response => {
-    //     if (Response.status === 200){
-    //         Response.json().then(data => {
-    //             user = data;
-    //         });
-    //     } else {
-    //         alert("Unknown error, please try again later");
-    //     }
-    // });
-
-    let user = {
-        display_name : "John Doe",
-        email : "JohnDoe@gmail.com",
-        password : "password",
-    };
+    let user;
+    response.then(Response => {
+        if (Response.status === 200){
+            Response.json().then(data => {
+                user = data;
+            });
+        } else {
+            alert("Unknown error, please try again later");
+        }
+    });
 
     // Ok idk how to do this but make a fetch request to the backend to get the user's information
     // If this is their first time logging in, then the user object will be empty
@@ -73,15 +67,15 @@ export function ProfileEdit() {
             newUser.password = data.password;
         }
 
-        // let respone = fetch("http://127.0.0.1:10001/userprofile", {
-        //     method: "POST",
-        //     headers : {
-        //         'Content-Type': 'application/json;charset=utf-8'
-        //     },
-        //     body: JSON.stringify(newUser)
-        // });
+        let respone = fetch("http://127.0.0.1:10001/userprofile", {
+            method: "POST",
+            headers : {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(newUser)
+        });
 
-        //navigate("/profile", {replace: true});
+        navigate("/profile", {replace: true});
 
 
     };

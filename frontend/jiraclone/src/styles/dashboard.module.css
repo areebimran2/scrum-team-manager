@@ -1,0 +1,106 @@
+/**
+ background colour: #18191A
+ secondary colour: #242526
+ text colour: #E4E6EB
+ secondary text colour: #B0B3B8
+ accent colour: #006756
+ */
+.dashboard {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: 300px 75px auto;
+  gap: 10px;
+}
+
+.projectContainer {
+  grid-row-start: 1;
+  grid-row-end: 2;
+  grid-column-start: 1;
+  grid-column-end:2;
+}
+
+.profileContainer {
+  background-color: #242526;
+  grid-row-start: 1;
+  grid-row-end: 3;
+
+  margin-right: 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+}
+
+.ticketContainer {
+  grid-row-start: 2;
+}
+
+.skillsContainer {
+  background-color: #242526;
+  grid-column-start: 2;
+
+  margin-right: 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+}
+
+.innerContainer {
+  background-color: #242526;
+
+  padding-top: 5px;
+  padding-bottom: 5px;
+  
+  margin-left: 10px;
+  border-radius: 8px;
+}
+
+.header {
+  margin-left: 10px;
+  font-size: 36px;
+  color: #E4E6EB;
+}
+
+.header2 {
+  text-align: center;
+  font-size: 30px;
+  color: #E4E6EB;
+}
+
+.profilePic {
+  width: 120px;
+  height: 120px;
+  border-radius: 100%;
+  display: block;
+  margin: 40px auto;
+  margin-bottom: 10px;
+}
+
+.button {
+  margin-bottom: 20px;
+  color: #E4E6EB;
+  width: 90%;
+  min-width: 175px;
+  height: 56px;
+  padding: 2px;
+  border-radius: 8px;
+  border: 1px solid #3a3b3c;
+  box-shadow: 0px 0px 20px -20px rgba(0, 0, 0, 0.5);
+  align-self: center;
+  cursor: pointer;
+  background-color: #006756;
+  transition: all 0.2s ease-in-out 0ms;
+  user-select: none;
+  font-family: 'Poppins', sans-serif;
+  font-size: 24px;
+}
+
+.button:hover {
+  background-color: #005a4d;
+  box-shadow: 0px 0px 20px -18px rgba(0, 0, 0, 0.5);
+}
+
+.button:active {
+  transform: scale(0.95);
+}
