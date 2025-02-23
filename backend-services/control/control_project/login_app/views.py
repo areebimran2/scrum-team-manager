@@ -55,12 +55,32 @@ def login_handler(request):
 
                     # If request data matches response data
                     if given_password == saved_password:
+                        # Create token
                         token = RefreshToken()
                         token["id"] = response_data["uid"]
                         token["email"] = response_data["email"]
 
-                        return Response({"refresh": str(token),
-                                              "access": str(token.access_token)}, status=status.HTTP_200_OK)
+                        # Break apart token
+                        header, payload, signature = str(token.access_token).split(".")
+
+                        # Return JWT in two pieces stored in two different cookies
+                        response = Response({"message": "Cookies set"}, status=status.HTTP_200_OK)
+
+                        response.set_cookie(
+                            key='cookie_1',
+                            value=f'{header}.{payload}',
+                            max_age=settings.COOKIE_AGE.total_seconds(),
+                            secure=True
+                        )
+
+                        response.set_cookie(
+                            key='cookie_2',
+                            value=signature,
+                            secure=True,
+                            httponly=True
+                        )
+
+                        return response
                     else:
                         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
