@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
 import NotFound from "./pages/404";
 import RecoveryRequest from "./pages/recoveryrequest";
 import RecoveryRequestSuccess from "./pages/recoveryrequestsuccess";
 import Signup from "./pages/signup";
 import ProfileEdit from "./pages/profileedit"
+import Dashboard from "./pages/dashboard";
 
 export function App() {
 

@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Link, useNavigate } from 'react-router-dom';
+import { Topbar } from '../components/topbar';
+import { TicketView } from '../components/ticketview.js';
+import { ProjectView } from '../components/projectview.js';
 import styles from '../styles/dashboard.module.css';
 import defaultProfilePic from '../assets/defaultProfilePic.png';
 
@@ -8,73 +11,98 @@ import defaultProfilePic from '../assets/defaultProfilePic.png';
 
 
 export function Dashboard() {
-  const TicketCard = ({ tickets }) => {
-    return (
-      <div className={styles.ticketCard}>
-        <h3 className={styles.ticketTitle}>{tickets.title}</h3>
-        <p className={styles.ticketDescription}>{tickets.description}</p>
-      </div>
-    );
-  };
+    const navigate = useNavigate();
 
-  const TicketList = ({ tickets }) => {
-    return (
-      <div className={styles.ticketList}>
-        {tickets.map(ticket => (
-          <TicketCard key={ticket.tid} tickets={ticket} />
-        ))}
-      </div>
-    );
-  };
+  /**
+   * I think what needs to be done here is:
+   * 1. make a GET request for the user's information 
+   * 2. load the information into the correct components (eg. <TicketView tickets={user.tickets} /> I think?) 
+   * 
+   * REMEMBER TO EDIT ALL THE PLACEHOLDER VALUES 
+   * Also uncomment the parts as they are added (skills page redirect button) 
+   */
 
-  // This will need to be changed when tickets are implemented 
-  const tickets = [
-    {
-      tid: 1,
-      title: 'Ticket 1',
-      description: 'This is the description for ticket 1. It has a lot of text in its description. This is because it is very long and needs to be long enough to test the layout of the ticket card. This is the description for ticket 1. It has a lot of text in its description. This is because it is very long and needs to be long enough to test the layout of the ticket card. This is the description for ticket 1. It has a lot of text in its description. This is because it is very long and needs to be long enough to test the layout of the ticket card.'
-    },
-    {
-      tid: 2,
-      title: 'Ticket 2',
-      description: 'This is the description for ticket 2'
-    },
-    {
-      tid: 3,
-      title: 'Ticket 3',
-      description: 'This is the description for ticket 3'
-    },
-    {
-      tid: 4,
-      title: 'Ticket 4',
-      description: 'This is the description for ticket 4'
+        // This will need to be changed when tickets are implemented and can be loaded for the specific user, this was just for testing
+        const tickets = [
+          {
+            tid: 1,
+            title: 'Ticket 1',
+            description: 'This is the description for ticket 1. It has a lot of text in its description. This is because it is very long and needs to be long enough to test the layout of the ticket card. This is the description for ticket 1. It has a lot of text in its description. This is because it is very long and needs to be long enough to test the layout of the ticket card. This is the description for ticket 1. It has a lot of text in its description. This is because it is very long and needs to be long enough to test the layout of the ticket card.'
+          },
+          {
+            tid: 2,
+            title: 'Ticket 2',
+            description: 'This is the description for ticket 2'
+          },
+          {
+            tid: 3,
+            title: 'Ticket 3',
+            description: 'This is the description for ticket 3'
+          },
+          {
+            tid: 4,
+            title: 'Ticket 4',
+            description: 'This is the description for ticket 4'
+          }
+        ];
+
+        // Change this as well, this is just to test projects 
+        const projects = [
+          {
+            pid: 1,
+            name: 'Project 1'
+          },
+          {
+            pid: 2,
+            name: 'Project 2'
+          }
+        ];
+
+    function onProfileClick() {
+        navigate("profile", {replace: true});
     }
-  ];
 
-  // This will also have to be changed according to the profile picture of the user.S
-  const profilepic = defaultProfilePic
+    function onSkillsClick() {
+        // page doesn't exist yet, hence the comment.
+        // navigate("skills", {replace: true}); 
+    }
 
-  const ProfilePic = () => {
-    return (
-      <Link to={'/profile'}>
-      <img src={profilepic} alt="Profile Picture" className={styles.image} />
-      </Link> 
-    );
-  };
-
+/**
+ * REMEMBER TO CHANGE THE PLACEHOLDER VALUES 
+ * 
+ * Specifically: 
+ * default profile pic and display name 
+ */
   return (
-    <body className={styles.body}>
-      <div>
-      <h1 className={styles.title}>Dashboard</h1>
-      <div className={styles.ticketContainer}>
-        <TicketList tickets={tickets} />
-      </div>
-      </div>
+    <div>
+        <Topbar page_name="Dashboard" className={styles.topbar}/>
+        <div className={styles.dashboard}>
+            <div className={styles.projectContainer}>
+                <h1 className={styles.header}>Projects</h1>
+                <div className={styles.projectsOuter}>
+                  <ProjectView projects={projects}/>
+                </div>
+            </div>
 
-      <div className={styles.sidebar}>
-        <ProfilePic />
-      </div>
-    </body>
+            <div className={styles.profileContainer}>
+                <img src={defaultProfilePic} className={styles.profilePic}/>
+                <h2 className={styles.header2}>Display Name</h2>
+                <button onClick={onProfileClick} className={styles.button}>Edit Profile</button>
+            </div>
+
+            <div className={styles.ticketContainer}>
+                <h1 className={styles.header}>Tickets</h1>
+                <div className={styles.innerContainer}>
+                    <TicketView tickets={tickets}/>
+                </div>
+            </div>
+        
+            <div className={styles.skillsContainer}>
+                <h2 className={styles.header2}>Skills</h2>
+                <button onClick={onSkillsClick} className={styles.button}>Edit Skills</button>
+            </div>
+        </div>
+    </div>
   );
 }
 
