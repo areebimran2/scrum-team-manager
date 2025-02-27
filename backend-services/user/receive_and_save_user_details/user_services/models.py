@@ -5,8 +5,8 @@ from django.db import models
 class ScrumUser(models.Model):
     uid = models.IntegerField("User Id", primary_key=True)
     assigned_tickets =  models.JSONField(default=list)
-    project = models.JSONField(default=list)
-    num_tickets = models.IntegerField(default=0)
+ 
+
 
     email = models.EmailField()
     password = models.CharField(max_length=100)
