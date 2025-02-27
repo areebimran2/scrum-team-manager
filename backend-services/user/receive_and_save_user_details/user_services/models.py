@@ -4,7 +4,7 @@ from django.db import models
 
 class ScrumUser(models.Model):
     uid = models.IntegerField("User Id", primary_key=True)
-    assigned_tickets =  models.JSONField(default=list)
+    assigned_tickets =  models.JSONField(default=dict)
  
 
 
