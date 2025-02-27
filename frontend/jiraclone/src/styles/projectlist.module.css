@@ -1,0 +1,30 @@
+.topbar {
+    background-color: #006756;
+    width: 100vw;
+    height: 50px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.header {
+    margin: 100px 0 10px 10px;
+    font-size: 36px;
+    color: #E4E6EB;
+}
+
+.outer {
+    width: 100vw;
+}
+
+.projectContainer {
+    border: 5px
+}
+
+.exampleHeader {
+    color: white;
+    font-size: larger;
+}
