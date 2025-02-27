@@ -28,6 +28,7 @@ urlpatterns = [
     path('login/', views_login.login_handler),
     path('login/recover/', views_login.UserLoginRecoveryView.as_view()),
     path('userprofile/', views_userprofile.userprofile_post_handler),
-    path('userprofile/<str:uid_str>', views_userprofile.userprofile_get_handler),
+    path('userprofile/<str:uid_str>/', views_userprofile.userprofile_get_handler),
     path('userprojects/', views_userprojects.userprojects_post_handler),
+    path('project/<int:pid>/', views_userprojects.UserProjectTicketView.as_view()),
 ]
