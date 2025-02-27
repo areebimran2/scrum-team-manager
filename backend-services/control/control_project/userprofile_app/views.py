@@ -18,7 +18,7 @@ def userprofile_post_handler(request):
             url = "http://127.0.0.1:8001"
 
             #TODO configure endpoint URI
-            exists_response = requests.get(url + f'/user/query/UID/{serializer.validated_data['uid']}')
+            exists_response = requests.get(url + f'/user/query/UID/{serializer.validated_data["uid"]}')
 
             if exists_response.status_code == 404: # Account does not exist
                 # Send 404 back to frontend

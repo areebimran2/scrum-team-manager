@@ -10,7 +10,7 @@ class UserAllProjectsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        url = "http://127.0.0.1:8001"
+        url = "http://127.0.0.1:8002"
         all_projects = []
         for pid in request.user.assigned_tickets.keys():
             response = requests.get(url + "/project/query/{0}".format(pid))
@@ -18,14 +18,13 @@ class UserAllProjectsView(APIView):
                 all_projects.append(response.json())
         return Response({"projects": all_projects}, status=status.HTTP_200_OK)
 
-class UserProjectTicketsView(APIView):
+class ProjectTicketsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, **kwargs):
         url = "http://127.0.0.1:8003"
 
-        # Signed in user is not apart of project and is therefore not authorized to view the project
-        # home page
+        # Signed in user is not apart of project and is therefore not authorized to access project info
         project_id = self.kwargs['pid']
         if request.user.assigned_tickets.get(project_id) is None:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -37,3 +36,25 @@ class UserProjectTicketsView(APIView):
             if response.status_code == 200:
                 all_tickets.append(response.json())
         return Response({"pid": project_id, "tickets": all_tickets}, status=status.HTTP_200_OK)
+
+class ProjectMembersView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, **kwargs):
+        user_url = "http://127.0.0.1:8000"
+        project_url = "http://127.0.0.1:8002"
+
+        # Signed in user is not apart of project and is therefore not authorized to access project info
+        project_id = self.kwargs['pid']
+        if request.user.assigned_tickets.get(project_id) is None:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        project_response = requests.get(project_url + "/project/query/{0}".format(project_id))
+
+        all_members = []
+
+        for user_id in project_response.json()["scrum_users"]:
+            user_response = requests.get(user_url + "/user/query/UID/{0}".format(user_id))
+            if user_response.status_code == 200:
+                all_members.append(user_response.json())
+        return Response({"members": all_members}, status=status.HTTP_200_OK)
