@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils import timezone
+
 # Create your models here.
-class Ticket(models.Model):
- 
+class ProjectTicketAssignmentModel(models.Model):
     tid = models.IntegerField("Ticket Id", primary_key=True)
     title = models.CharField(max_length=100, default="")
     description = models.CharField(max_length=500, default="")

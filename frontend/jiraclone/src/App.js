@@ -10,6 +10,7 @@ import ProjectList from "./pages/projectlist";
 import { BarGraphExample } from "./pages/bargraphexample";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/App.css'
+import FullTicket from "./pages/ticket";
 
 export function App() {
 
@@ -22,7 +23,8 @@ export function App() {
                 <Route path="/profile" element={<ProfileEdit />} />
                 <Route path="/recoveryrequest" element={<RecoveryRequest />} />
                 <Route path="/recoveryrequestsuccess" element={<RecoveryRequestSuccess />} />
-                <Route path="/" element={<NotFound />} />
+                <Route path="/ticket" element={<FullTicket />} />
+            <Route path="/" element={<NotFound />} />
                 <Route path="/projectlist" element={<ProjectList />}></Route>
                 <Route path="/barexample" element={<BarGraphExample />}></Route>
             </Routes>
