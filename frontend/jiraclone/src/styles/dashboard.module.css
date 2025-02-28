@@ -5,9 +5,11 @@
  secondary text colour: #B0B3B8
  accent colour: #006756
  */
+
 .dashboard {
   margin-top: 64px;
   display: grid;
+  width: 100%;
   grid-template-columns: 3fr 1fr;
   grid-template-rows: 300px 75px auto;
   gap: 10px;
@@ -47,6 +49,19 @@
   justify-items: center;
 }
 
+.projectsOuter {
+  overflow-x:scroll;
+  overflow-y: hidden;
+  background-color: #242526;
+  width: 99%;
+
+  padding-top: 5px;
+  padding-bottom: 5px;
+  
+  margin-left: 10px;
+  border-radius: 8px;
+}
+
 .innerContainer {
   background-color: #242526;
 
@@ -58,7 +73,7 @@
 }
 
 .header {
-  margin-left: 10px;
+  margin: 0 0 10px 10px;
   font-size: 36px;
   color: #E4E6EB;
 }
