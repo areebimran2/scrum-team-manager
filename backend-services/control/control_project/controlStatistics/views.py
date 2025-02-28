@@ -53,8 +53,8 @@ def getBar(request, pid_str):
                 try:
                     userResponse = requests.get(url + f'/user/query/{uid}').json()
                     one_bar_dict = dict()
-                    one_bar_dict["completed"] = uid_dict[uid]["completed"]
-                    one_bar_dict["uncompleted"] = uid_dict[uid]["uncompleted"]
+                    one_bar_dict["completed"] = len(uid_dict[uid]["completed"])
+                    one_bar_dict["uncompleted"] = len(uid_dict[uid]["uncompleted"])
                     one_bar_dict["UID"] = uid
                     one_bar_dict["name"] = userResponse["display_name"]
                     final_json.append(one_bar_dict)
@@ -68,3 +68,4 @@ def getBar(request, pid_str):
             return Response(status=response.status_code)
     else:
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+    
