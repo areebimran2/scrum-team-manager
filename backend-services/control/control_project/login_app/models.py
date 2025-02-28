@@ -7,10 +7,12 @@ class UserLoginModel(models.Model):
 
 class UserFullModel(AbstractBaseUser):
     uid = models.IntegerField("User Id", primary_key=True)
-    assigned_tickets =  models.JSONField(default=list)
+    assigned_tickets =  models.JSONField(default=dict)
     project = models.IntegerField(default=-1)
-    num_tickets = models.IntegerField(default=0)
-    email = models.EmailField(unique=True)
+
+    email = models.EmailField()
+
+
     password = models.CharField(max_length=100)
     display_name = models.CharField(max_length=200, blank=True)
     skills = models.JSONField(default=list)
