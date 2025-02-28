@@ -88,8 +88,6 @@ def updateProject(request):
     if request.method == 'POST':
         serializer = ProjectUpdateShellSerializer(data=request.data)
         if serializer.is_valid():
-            if (serializer.validated_data.get("creator") or serializer.validated_data.get("date_created")):
-                return Response({"error": "Cannot change fields based on creation of project"}, status=status.HTTP_400_BAD_REQUEST)
 
             if (not serializer.validated_data.get("pid")):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -102,15 +100,9 @@ def updateProject(request):
 
       
                 # Send Data to ProjectService through ISCS
-
-                project_create_data = {
-                        'pid' : serializer.validated_data.get("pid"),
-                        'name' : serializer.validated_data.get("name"),
-                        'description' : serializer.validated_data.get("description")
-                    }
                 
 
-                response = requests.post(url + f"/project/add/", json=project_create_data)
+                response = requests.post(url + f"/project/add/", json=serializer.validated_data)
 
                 # Send 201 back
                 if response.status_code == 404:
