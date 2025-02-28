@@ -3,7 +3,8 @@ import requests
 import time
 
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.utils import timezone
 
@@ -167,6 +168,64 @@ def adminView(request, pid_str):
             }
             return Response(return_data, status=status.HTTP_200_OK)
 
+    else:
+        return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def editStatus(request):
+    if request.method == 'POST':
+        serializer = EditStatusSerializer(data=request.data)
+        if serializer.is_valid():
+            #Get project details
+            pid = serializer.validated_data[pid]
+            response = requests.get(f"http://127.0.0.1:8001/project/query/{pid}")
+            if response.status_code != 200:
+                return Response({"error": f'error retreiving project {pid} : {response}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            project_data = response.json()[0]
+
+            action = serializer.validated_data[action]
+            uid = serializer.validated_data[uid]
+
+            if action == "promote":
+                #Check if already admin
+                admin_list = project_data["admin"]
+                if uid in admin_list:
+                    return Response({"error": f'User {uid} is already an admin'}, status=status.HTTP_409_CONFLICT)
+                
+                #update project
+                project_data["admin"].append(uid)
+                
+                update_response = requests.post(f"http://127.0.0.1:8001/project/update/", json=project_data)
+                if update_response.status_code == 200:
+                    return Response(status=status.HTTP_200_OK)
+                else:
+                    return Response({'error': update_response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            elif action == "demote":
+                #Check if admin
+                admin_list = project_data["admin"]
+                if uid not in admin_list:
+                    return Response({"error": f'User {uid} is not an admin'}, status=status.HTTP_409_CONFLICT)
+                
+                #update project
+                project_data["admin"].remove(uid)
+                
+                update_response = requests.post(f"http://127.0.0.1:8001/project/update/", json=project_data)
+                if update_response.status_code == 200:
+                    return Response(status=status.HTTP_200_OK)
+                else:
+                    return Response({'error': update_response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                
+            elif action == "remove":
+                pass
+            else:
+                return Response({'error': f'{action} is not a valid action'}, status=status.HTTP_400_BAD_REQUEST)
+            
+                
+        # Data formatted wrong
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # wrong request method
     else:
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
     

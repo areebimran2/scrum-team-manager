@@ -33,5 +33,6 @@ urlpatterns = [
     path('project/add/', views_project.createProject),
     path('project/query/<str:pid_str>', views_project.getProject),
     path('project/update/', views_project.updateProject),
-    path('project/adminview/<str:pid_str>', views_project.adminView)
+    path('project/adminview/<str:pid_str>', views_project.adminView),
+    path('project/editstatus/', views_project.editStatus)
 ]
