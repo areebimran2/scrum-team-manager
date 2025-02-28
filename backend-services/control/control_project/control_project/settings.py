@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'user_projects_app',
     'signup_app',
     'login_app',
+    'ticket_app',
     'projectControl'
 ]
 
