@@ -19,6 +19,9 @@ from control_project import settings
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from argon2 import PasswordHasher
+from argon2.exceptions import *
+
 from .models import *
 from .serializers import *
 
@@ -52,9 +55,16 @@ def login_handler(request):
                     given_password = serializer.validated_data['password']
                     saved_password = response_data['password']
 
-
                     # If request data matches response data
-                    if given_password == saved_password:
+                    password_hasher = PasswordHasher()
+                    try:
+                        is_match = password_hasher.verify(saved_password, given_password)
+                    except VerifyMismatchError: #Password don't match
+                        return Response(status=status.HTTP_401_UNAUTHORIZED)
+                    except: #Verification Error
+                        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+
+                    if is_match:
                         # Create token
                         token = RefreshToken()
                         token["id"] = response_data["uid"]
