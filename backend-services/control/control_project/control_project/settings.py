@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,10 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
     'userprofile_app',
+    'user_projects_app',
     'signup_app',
-    'login_app'
+    'login_app',
+    'ticket_app',
+    'projectControl'
 ]
 
 MIDDLEWARE = [
@@ -54,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'control_project.middleware.AuthenticationTransformationLayer'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -108,6 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'login_app.UserFullModel'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -139,3 +145,23 @@ EMAIL_HOST_USER = 'jirai.recovery@gmail.com'
 EMAIL_HOST_PASSWORD = 'xcjd swkm zfoa roai'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'JirAI Recovery'
+
+# rest settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'control_project.auth.CustomJWTAuthentication',
+    )
+}
+
+# settings for JWT
+SIMPLE_JWT = {
+    'USER_ID_FIELD': 'uid',
+    'USER_ID_CLAIM': 'id',
+
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
+}
+
+JWT_COOKIE_HEADER_PAYLOAD = 'cookie_1'
+JWT_COOKIE_SIGNATURE = 'cookie_2'
+
+COOKIE_AGE = timedelta(minutes=15)
