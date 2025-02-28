@@ -202,6 +202,7 @@ def editStatus(request):
                     return Response(status=status.HTTP_200_OK)
                 else:
                     return Response({'error': update_response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                
             elif action == "demote":
                 #Check if admin
                 admin_list = project_data["admin"]
@@ -218,7 +219,39 @@ def editStatus(request):
                     return Response({'error': update_response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                 
             elif action == "remove":
-                pass
+                #get user details
+                user_response = requests.get(f"http://127.0.0.1:8001/user/query/UID/{uid}")
+                user_data = user_response.json()[0]
+                user_tickets = user_data["assigned_tickets"]
+                ticket_list = user_tickets[pid]
+
+                #remove ticket assignemts
+                for tid in ticket_list:
+                    #get ticket
+                    ticket_response = requests.get(f"http://127.0.0.1:8001/ticket/query/{tid}")
+                    ticket_data = ticket_response.json()[0]
+                    #update ticket
+                    ticket_data["assigned"] = False
+                    ticket_data["assigned_to"] = -1
+                    requests.post("http://127.0.0.1:8001/ticket/update/", json=ticket_data)
+
+                #update user data
+                del user_data["assigned_tickets"][pid]
+                user_update_response = requests.post("http://127.0.0.1:8001/user/update/", json=user_data)
+                if user_update_response.status_code != 200:
+                    return Response({'error': user_update_response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+                #update project
+                if uid in project_data["admin"]:
+                    project_data["admin"].remove(uid)
+                project_data["scrum_users"].remove(uid)
+
+                update_response = requests.post(f"http://127.0.0.1:8001/project/update/", json=project_data)
+                if update_response.status_code == 200:
+                    return Response(status=status.HTTP_200_OK)
+                else:
+                    return Response({'error': update_response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
             else:
                 return Response({'error': f'{action} is not a valid action'}, status=status.HTTP_400_BAD_REQUEST)
             
