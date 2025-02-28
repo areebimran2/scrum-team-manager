@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client';
 import { Link, useNavigate } from 'react-router-dom';
 import { Topbar } from '../components/topbar';
 import { TicketView } from '../components/ticketview';
+import { UserView } from '../components/users';
+import { BarGraph } from '../components/BarGraph';
 import styles from '../styles/adminproject.module.css';
 
 export function AdminProject() {
@@ -71,9 +73,9 @@ export function AdminProject() {
                     <p className={styles.description}>
                         Load the project description into this part by replacing this text with it. Wahooooooo
                     </p>
-                    <h1 className={styles.headings}>Performance (import and insert into the blank space underneath) </h1>
+                    <h1 className={styles.headings}>Performance</h1>
                     <div className={styles.innerContainer}>
-
+                        <BarGraph />
                     </div>
 
                     <div className={styles.ticketStuff}>
@@ -95,7 +97,7 @@ export function AdminProject() {
                 <div className={styles.sidepanel}>
                     <button onClick={onEditClick} className={styles.sidebutton}>Edit Project</button>
                     <div className={styles.users}>
-
+                        <UserView />
                     </div>
                 </div>
             </div>
