@@ -9,23 +9,31 @@ import Dashboard from "./pages/dashboard";
 import ProjectEdit from "./pages/projectedit"
 import AdminProject from "./pages/adminproject";
 import "./styles/Global.css";
+import ProjectList from "./pages/projectlist";
+import { BarGraphExample } from "./pages/bargraphexample";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/App.css'
+import FullTicket from "./pages/ticket";
 
 export function App() {
 
-  return (
-    <BrowserRouter>
-        <Routes>
-            <Route path="/login" element={<Login/>} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/profile" element={<ProfileEdit />} />
-            <Route path="/recoveryrequest" element={<RecoveryRequest />} />
-            <Route path="/recoveryrequestsuccess" element={<RecoveryRequestSuccess />} />
-            <Route path="/projectedit" element={<ProjectEdit />} />
-            <Route path="/adminproject" element={<AdminProject />} />
-            <Route path="/" element={<NotFound />} />
-        </Routes>
-    </BrowserRouter>
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/profile" element={<ProfileEdit />} />
+                <Route path="/recoveryrequest" element={<RecoveryRequest />} />
+                <Route path="/recoveryrequestsuccess" element={<RecoveryRequestSuccess />} />
+                <Route path="/ticket" element={<FullTicket />} />
+                <Route path="/" element={<NotFound />} />
+                <Route path="/projectlist" element={<ProjectList />}></Route>
+                <Route path="/barexample" element={<BarGraphExample />}></Route>
+                <Route path="/projectedit" element={<ProjectEdit />} />
+                <Route path="/adminproject" element={<AdminProject />} />
+            </Routes>
+        </BrowserRouter >
     );
 }
 

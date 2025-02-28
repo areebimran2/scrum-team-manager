@@ -45,5 +45,5 @@ export function TicketView({ tickets, mode }) {
         );
       };
 
-    return <TicketList tickets={tickets} />;
+  return <TicketList tickets={tickets} />;
 }

@@ -7,7 +7,7 @@ class Project(models.Model):
     description = models.CharField(max_length=500, default="")
     tickets = models.JSONField(default=list)
     creator = models.IntegerField()
-    date_created = models.CharField(max_length=100)
+    date_created = models.DateField()
     scrum_users = models.JSONField(default=list)
     # changed this to a list
     admin = models.JSONField(default=list)

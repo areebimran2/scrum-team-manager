@@ -5,6 +5,7 @@
  secondary text colour: #B0B3B8
  accent colour: #006756
  */
+
 .dashboard {
   margin-top: 64px;
   display: grid;
@@ -67,6 +68,19 @@
   justify-items: center;
 }
 
+.projectsOuter {
+  overflow-x:scroll;
+  overflow-y: hidden;
+  background-color: #242526;
+  width: 99%;
+
+  padding-top: 5px;
+  padding-bottom: 5px;
+  
+  margin-left: 10px;
+  border-radius: 8px;
+}
+
 .innerContainer {
   background-color: #242526;
 
@@ -78,8 +92,7 @@
 }
 
 .header {
-  margin-left: 10px;
-  margin-bottom: 10px;
+  margin: 0 0 10px 10px;
   font-size: 36px;
   color: #E4E6EB;
 }
