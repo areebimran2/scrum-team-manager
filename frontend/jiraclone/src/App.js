@@ -7,6 +7,7 @@ import Signup from "./pages/signup";
 import ProfileEdit from "./pages/profileedit"
 import Dashboard from "./pages/dashboard";
 import ProjectEdit from "./pages/projectedit"
+import AdminProject from "./pages/adminproject";
 
 export function App() {
 
@@ -20,6 +21,7 @@ export function App() {
             <Route path="/recoveryrequest" element={<RecoveryRequest />} />
             <Route path="/recoveryrequestsuccess" element={<RecoveryRequestSuccess />} />
             <Route path="/projectedit" element={<ProjectEdit />} />
+            <Route path="/adminproject" element={<AdminProject />} />
             <Route path="/" element={<NotFound />} />
         </Routes>
     </BrowserRouter>

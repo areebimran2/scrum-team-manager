@@ -3,22 +3,36 @@ import ReactDOM from 'react-dom/client';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from '../styles/ticketview.module.css';
 
-export function TicketView({ tickets }) {
+export function TicketView({ tickets, mode }) {
 
     /**
-     * Change the ticket card to display the correct information according to the ERD (story points, completion status, etc.)
-     * 
-     * What might work best for reusing this for other pages would be specifying the info you want displayed 
-     * but i don't know how to do that, that's just a hypothetical. 
+     * TODO:
+     * change the link for ticket title (line 18) to work.
+     * maybe add checkbox functionality in the future but I'm just leaving it for now 
      */
 
     const TicketCard = ({ tickets }) => {
-        return (
-          <div className={styles.ticketCard}>
-            <h3 className={styles.ticketTitle}>{tickets.title}</h3>
-            <p className={styles.ticketDescription}>{tickets.description}</p>
-          </div>
-        );
+      if (mode === 'dashboard') {
+       return (
+        <div className={styles.DticketCard}>
+            <a className={styles.ticketTitle}>{tickets.title}</a>
+            <p className={styles.descriptors}>{tickets.project}</p>  
+            <input type="checkbox" checked={tickets.completed} readOnly className={styles.checkbox}/>          
+            <p className={styles.descriptors}>{tickets.priority}</p> 
+            <p className={styles.descriptors}>{tickets.story_points}</p>      
+        </div>
+        ); 
+      } else if (mode === 'project') {
+          return (
+            <div className={styles.PticketCard}>
+                <p className={styles.ticketTitle}>{tickets.title}</p>
+                <p className={styles.descriptors}>{tickets.assigned}</p>
+                <input type="checkbox" checked={tickets.completed} readOnly className={styles.checkbox}/>            
+                <p className={styles.descriptors}>{tickets.priority}</p> 
+                <p className={styles.descriptors}>{tickets.story_points}</p>         
+            </div>
+          );
+        }
       };
     
       const TicketList = ({ tickets }) => {

@@ -26,21 +26,37 @@ export function Dashboard() {
           {
             tid: 1,
             title: 'Ticket 1',
+            project: 'Project 1',
+            completed: true,
+            story_points: 32,
+            priority: 1,
             description: 'This is the description for ticket 1. It has a lot of text in its description. This is because it is very long and needs to be long enough to test the layout of the ticket card. This is the description for ticket 1. It has a lot of text in its description. This is because it is very long and needs to be long enough to test the layout of the ticket card. This is the description for ticket 1. It has a lot of text in its description. This is because it is very long and needs to be long enough to test the layout of the ticket card.'
           },
           {
             tid: 2,
             title: 'Ticket 2',
+            project: 'Project 2',
+            completed: false,
+            story_points: 64,
+            priority: 1,
             description: 'This is the description for ticket 2'
           },
           {
             tid: 3,
             title: 'Ticket 3',
+            project: 'Project 1',
+            completed: true,
+            story_points: 32,
+            priority: 2,
             description: 'This is the description for ticket 3'
           },
           {
             tid: 4,
             title: 'Ticket 4',
+            project: 'Project 1',
+            completed: false,
+            story_points: 16,
+            priority: 3,
             description: 'This is the description for ticket 4'
           }
         ];
@@ -79,8 +95,15 @@ export function Dashboard() {
 
             <div className={styles.ticketContainer}>
                 <h1 className={styles.header}>Tickets</h1>
+                <div className={styles.ticketInfo}>
+                  <p className={styles.ticketTitle}>Ticket</p>
+                  <p className={styles.categories}>Project</p>
+                  <p className={styles.categories}>Completed</p>
+                  <p className={styles.categories}>Priority</p>
+                  <p className={styles.categories}>SP</p>
+                </div>
                 <div className={styles.innerContainer}>
-                    <TicketView tickets={tickets}/>
+                    <TicketView tickets={tickets} mode="dashboard"/>
                 </div>
             </div>
         
