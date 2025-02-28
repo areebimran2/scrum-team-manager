@@ -127,7 +127,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MICROSERVICES = {
     'user' : 'http://127.0.0.1:8000',
 
-    'ticket' : 'http://127.0.0.1:8003'
+    'ticket' : 'http://127.0.0.1:8003',
 
     'project' : 'http://127.0.0.1:8002',
 
