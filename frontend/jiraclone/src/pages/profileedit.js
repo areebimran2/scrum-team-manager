@@ -1,31 +1,43 @@
-import React from "react";
+import { React, useState} from "react";
 import ReactDOM from "react-dom/client";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import getAuthCookie from "../components/getAuthCookie";
 import styles from "../styles/profileedit.module.css";
 import defaultPic from "../assets/defaultProfilePic.png";
 
 export function ProfileEdit() {
-    
+
     const navigate = useNavigate();
     const {register, handleSubmit} = useForm();
+    const [user, setUser] = useState({ display_name: "", email: ""});
+    
+    let payload = getAuthCookie();
 
-    let userID = document.cookie.split("=")[1];
+    let userID = payload.uid;
 
-    let response = fetch("http://127.0.0.1:100001/userprofile/" + userID, {
-        method: "GET"
-    });
+    console.log(payload);
 
-    let user;
-    response.then(Response => {
-        if (Response.status === 200){
-            Response.json().then(data => {
-                user = data;
-            });
-        } else {
-            alert("Unknown error, please try again later");
-        }
-    });
+    useEffect(() => {
+
+        const controller = new AbortController();
+        const signal = controller.signal;   
+
+        fetch("http://127.0.0.1:10001/userprofile/" + userID, {method: "GET"})
+        .then(response => response.json())
+        .then(data => {
+            console.log("Inside function:");
+            console.log(data[0]);
+            setUser(data[0]);
+        })
+        .catch(error => {
+            console.error("Error: ", error);
+        });
+
+        return () => controller.abort();
+
+    }, []);
 
     // Ok idk how to do this but make a fetch request to the backend to get the user's information
     // If this is their first time logging in, then the user object will be empty

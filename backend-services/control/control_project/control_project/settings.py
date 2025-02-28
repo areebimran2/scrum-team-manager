@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
+    "invitations",
     'userprofile_app',
     'user_projects_app',
     'signup_app',
@@ -165,3 +166,6 @@ JWT_COOKIE_HEADER_PAYLOAD = 'cookie_1'
 JWT_COOKIE_SIGNATURE = 'cookie_2'
 
 COOKIE_AGE = timedelta(minutes=15)
+
+INVITATIONS_INVITATION_MODEL = "user_projects_app.CustomUserInvite"
+INVITATIONS_CONFIRMATION_URL_NAME = "project-accept-invite"

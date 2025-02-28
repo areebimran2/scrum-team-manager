@@ -75,7 +75,8 @@ def update_ticket(request):
         new_ticket.story_points = data.get("story_points") if data.get("story_points") else new_ticket.story_points
         new_ticket.priority= data.get("priority") if data.get("priority") else new_ticket.priority
         new_ticket.date_assigned = data.get("date_assigned") if data.get("date_assigned") else new_ticket.date_assigned
-
+        new_ticket.completed = data.get("completed") if data.get("completed") else new_ticket.completed
+        new_ticket.date_completed = data.get("date_completed") if data.get("date_completed") else new_ticket.date_completed
 
         new_ticket.save()
 

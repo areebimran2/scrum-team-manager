@@ -7,13 +7,13 @@ export function ProjectView({ projects }) {
     const navigate = useNavigate();
 
     function OnClick() {
-        navigate("projectedit", {replace: true});
+        navigate("/projectedit");
     }
 
     function OnProjectClick() {
         // Have this navigate to the specific project page depending on the name of the project I guess?
         // you might have to create a second function like this one for admin specific project clicking.
-        navigate("project", {replace: true});
+        navigate("/project");
     }
 
     const ProjectCard = ({ project }) => {
