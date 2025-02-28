@@ -10,7 +10,7 @@ class UserFullModel(AbstractBaseUser):
     assigned_tickets =  models.JSONField(default=dict)
     project = models.IntegerField(default=-1)
 
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
 
 
     password = models.CharField(max_length=100)
