@@ -106,10 +106,7 @@ def updateProject(request):
                 project_create_data = {
                         'pid' : serializer.validated_data.get("pid"),
                         'name' : serializer.validated_data.get("name"),
-                        'description' : serializer.validated_data.get("description"),
-                        'tickets' : serializer.validated_data.get("tickets"),
-                        'scrum_users' : serializer.validated_data.get("scrum_users"),
-                        'admin' : serializer.validated_data.get("admin"),
+                        'description' : serializer.validated_data.get("description")
                     }
                 
 
