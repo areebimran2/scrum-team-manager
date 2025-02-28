@@ -5,6 +5,7 @@ import time
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from django.utils import timezone
 
 from .serializers import *
 
@@ -12,7 +13,7 @@ from .serializers import *
 @api_view(['POST'])
 def createProject(request):
     if request.method == 'POST':
-        serializer = ProjectShellSerializer(data=request.data)
+        serializer = ProjectAddShellSerializer(data=request.data)
         if serializer.is_valid():
             
             # Check if project exists
@@ -26,14 +27,13 @@ def createProject(request):
                 # Send Data to ProjectService through ISCS
 
                 project_create_data = {
-                        'pid' : serializer.validated_data.get("pid"),
                         'name' : serializer.validated_data.get("name"),
                         'description' : serializer.validated_data.get("description"),
-                        'tickets' : serializer.validated_data.get("tickets"),
+                        'tickets' : [],
                         'creator' : serializer.validated_data.get("creator"),
-                        'date_created' : serializer.validated_data.get("date_created"),
-                        'scrum_users' : serializer.validated_data.get("scrum_users"),
-                        'admin' : serializer.validated_data.get("admin"),
+                        'date_created': timezone.now,
+                        'scrum_users' : [ serializer.validated_data.get("creator")],
+                        'admin' :  [ serializer.validated_data.get("creator")],
                     }
                 
 
@@ -86,7 +86,7 @@ def getProject(request, pid_str):
 @api_view(['POST'])
 def updateProject(request):
     if request.method == 'POST':
-        serializer = ProjectShellSerializer(data=request.data)
+        serializer = ProjectUpdateShellSerializer(data=request.data)
         if serializer.is_valid():
             if (serializer.validated_data.get("creator") or serializer.validated_data.get("date_created")):
                 return Response({"error": "Cannot change fields based on creation of project"}, status=status.HTTP_400_BAD_REQUEST)
