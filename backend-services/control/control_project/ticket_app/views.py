@@ -84,7 +84,7 @@ def ticket_update_handler(request):
         if serializer.is_valid():
             url = "http://127.0.0.1:8001"
 
-            exists_response = requests.get(url + f'/ticket/query/{serializer.validated_data['tid']}')
+            exists_response = requests.get(url + f'/ticket/query/{serializer.validated_data["tid"]}')
 
             if exists_response.status_code == 404: # Ticket does not exist
                 # Send 404 back to frontend
