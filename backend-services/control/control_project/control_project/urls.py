@@ -32,4 +32,6 @@ urlpatterns = [
     path('userprojects/', views_userprojects.UserAllProjectsView.as_view()),
     path('project/<int:pid>/tickets/', views_userprojects.ProjectTicketsView.as_view()),
     path('project/<int:pid>/members/', views_userprojects.ProjectMembersView.as_view()),
+    path('project/<int:pid>/assign/', views_userprojects.ProjectTicketAssignView.as_view()),
+    path('project/<int:pid>/unassign/', views_userprojects.ProjectTicketUnassignView.as_view()),
 ]

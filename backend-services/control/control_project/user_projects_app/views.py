@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 import requests
 
+from control.control_project.user_projects_app.serializers import ProjectTicketAssignmentSerializer
+
 
 class UserAllProjectsView(APIView):
     permission_classes = [IsAuthenticated]
@@ -58,3 +60,27 @@ class ProjectMembersView(APIView):
             if user_response.status_code == 200:
                 all_members.append(user_response.json())
         return Response({"members": all_members}, status=status.HTTP_200_OK)
+
+class ProjectTicketAssignView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, **kwargs):
+        serializer = ProjectTicketAssignmentSerializer(data=request.data)
+        if serializer.is_valid():
+            user_url = "http://127.0.0.1:8000"
+            project_url = "http://127.0.0.1:8002"
+            ticket_url = "http://127.0.0.1:8003"
+
+            validated_data = serializer.validated_data
+            ticket_response = requests.get(ticket_url + "/ticket/query/{0}".format(validated_data["tid"]))
+
+
+
+
+
+
+class ProjectTicketUnassignView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, **kwargs):
+        project_id = self.kwargs['pid']
