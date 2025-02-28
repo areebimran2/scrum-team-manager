@@ -6,6 +6,7 @@ import RecoveryRequestSuccess from "./pages/recoveryrequestsuccess";
 import Signup from "./pages/signup";
 import ProfileEdit from "./pages/profileedit"
 import Dashboard from "./pages/dashboard";
+import FullTicket from "./pages/ticket";
 
 export function App() {
 
@@ -18,6 +19,7 @@ export function App() {
             <Route path="/profile" element={<ProfileEdit />} />
             <Route path="/recoveryrequest" element={<RecoveryRequest />} />
             <Route path="/recoveryrequestsuccess" element={<RecoveryRequestSuccess />} />
+            <Route path="/ticket" element={<FullTicket />} />
             <Route path="/" element={<NotFound />} />
         </Routes>
     </BrowserRouter>
