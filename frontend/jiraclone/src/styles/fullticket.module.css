@@ -1,8 +1,14 @@
+body {
+    display: flex;
+    justify-content: center;
+}
+
 .container {
     font-family: 'Poppins', sans-serif;
+    color: #E4E6EB;
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 20px 20px 20px 20px;
 }
 
 .title {
@@ -16,6 +22,7 @@
     align-items: center;
     font-size: 18px;
     margin-bottom: 20px;
+    padding: 0 20px;
 }
 
 .metadataLabel {
@@ -30,14 +37,22 @@
 
 .divider {
     border: 1px solid #ccc;
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 
 .descriptionContainer {
     font-size: 18px;
+    padding: 0 20px;
 }
 
 .descriptionText {
     font-size: 16px;
     margin-top: 10px;
+    text-align: justify;
+}
+
+.errorMessage {
+    font-family: 'Poppins', sans-serif;
+    color: #E4E6EB;
+    padding: 20px;
 }
