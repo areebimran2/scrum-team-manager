@@ -32,6 +32,6 @@ urlpatterns = [
     path('userprofile/<str:uid_str>', views_userprofile.userprofile_get_handler),
     path('project/add/', views_project.createProject),
     path('project/query/<str:pid_str>', views_project.getProject),
-    path('project/update/', views_project.updateProject)
-
+    path('project/update/', views_project.updateProject),
+    path('project/adminview/<str:pid_str>', views_project.adminView)
 ]

@@ -122,3 +122,51 @@ def updateProject(request):
     # wrong request method
     else:
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+def adminView(request, pid_str):
+    if request.method == 'GET':
+        print("is GET request")
+
+        try:
+            pid = int(pid_str)
+        except:
+            return Response({"error": f"{pid_str} is not a number"}, status=status.HTTP_400_BAD_REQUEST)
+
+        url = "http://127.0.0.1:8001"
+
+        response = requests.get(url + f'/project/query/{pid}')
+
+        if response.status_code == 404: # Account does not exist
+            print("actually 404")
+            # Send 404 back to frontend
+            return Response(status=status.HTTP_404_NOT_FOUND)
+                
+        elif response.status_code == 200: # Account exists
+            #Get all project members
+            project_data = response.json()[0]
+            scrum_users = []
+            for uid in project_data["scrum_users"]:
+                response = requests.get(f"http://127.0.0.1:8001/user/query/UID/{uid}")
+                if response.status_code != 200:
+                    return Response({"error": f'error retreiving user {uid} : {response}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                scrum_users.append(response.json()[0])
+
+            #Get all tickets
+            tickets = []
+            for tid in project_data["tickets"]:
+                response = requests.get(f"http://127.0.0.1:8001/ticket/query/{tid}")
+                if response.status_code != 200:
+                    return Response({"error": f'error retreiving ticket {tid} : {response}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                tickets.append(response.json()[0])
+
+            #Return data
+            return_data = {
+                "users" : scrum_users,
+                "tickets" : tickets
+            }
+            return Response(return_data, status=status.HTTP_200_OK)
+
+    else:
+        return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+    
