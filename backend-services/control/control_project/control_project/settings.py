@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'userprofile_app',
     'user_projects_app',
     'signup_app',
-    'login_app'
+    'login_app',
+    'projectControl'
 ]
 
 MIDDLEWARE = [

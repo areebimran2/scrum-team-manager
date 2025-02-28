@@ -20,6 +20,7 @@ from django.urls import path
 from userprofile_app import views as views_userprofile
 from signup_app import views as views_signup
 from login_app import views as views_login
+from projectControl import views as views_project
 from user_projects_app import views as views_userprojects
 
 urlpatterns = [
@@ -28,10 +29,10 @@ urlpatterns = [
     path('login/', views_login.login_handler),
     path('login/recover/', views_login.UserLoginRecoveryView.as_view()),
     path('userprofile/', views_userprofile.userprofile_post_handler),
-    path('userprofile/<str:uid_str>/', views_userprofile.userprofile_get_handler),
-    path('userprojects/', views_userprojects.UserAllProjectsView.as_view()),
-    path('project/<int:pid>/tickets/', views_userprojects.ProjectTicketsView.as_view()),
-    path('project/<int:pid>/members/', views_userprojects.ProjectMembersView.as_view()),
-    path('project/<int:pid>/assign/', views_userprojects.ProjectTicketAssignView.as_view()),
-    path('project/<int:pid>/unassign/', views_userprojects.ProjectTicketUnassignView.as_view()),
+    path('userprofile/<str:uid_str>', views_userprofile.userprofile_get_handler),
+    path('project/add/', views_project.createProject),
+    path('project/query/<str:pid_str>', views_project.getProject),
+    path('project/update/', views_project.updateProject),
+    path('project/adminview/<str:pid_str>', views_project.adminView),
+    path('project/editstatus/', views_project.editStatus)
 ]

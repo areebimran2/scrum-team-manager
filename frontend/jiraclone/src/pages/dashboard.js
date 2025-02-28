@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { Link, useNavigate } from 'react-router-dom';
 import { Topbar } from '../components/topbar';
 import { TicketView } from '../components/ticketview.js';
+import { ProjectView } from '../components/projectview.js';
 import styles from '../styles/dashboard.module.css';
 import defaultProfilePic from '../assets/defaultProfilePic.png';
 
@@ -45,6 +46,18 @@ export function Dashboard() {
           }
         ];
 
+        // Change this as well, this is just to test projects 
+        const projects = [
+          {
+            pid: 1,
+            name: 'Project 1'
+          },
+          {
+            pid: 2,
+            name: 'Project 2'
+          }
+        ];
+
     function onProfileClick() {
         navigate("profile", {replace: true});
     }
@@ -66,8 +79,8 @@ export function Dashboard() {
         <div className={styles.dashboard}>
             <div className={styles.projectContainer}>
                 <h1 className={styles.header}>Projects</h1>
-                <div className={styles.innerContainer}>
-
+                <div className={styles.projectsOuter}>
+                  <ProjectView projects={projects}/>
                 </div>
             </div>
 
