@@ -8,6 +8,7 @@ from rest_framework import status
 
 from .serializers import *
 
+from argon2 import PasswordHasher
 
 # Create your views here.
 @api_view(['POST'])
@@ -26,11 +27,17 @@ def signup_handler(request):
                 response = requests.get(url + "/user/query/EMAIL/{0}".format(serializer.validated_data["email"]))
 
                 if response.status_code == 404: # Account does not exist
+                    #Hash Password
+
+                    password_hasher = PasswordHasher()
+                    password = serializer.validated_data["password"]
+                    hashed_pass = password_hasher.hash(password)
+
                     # Send Data to UserService through ISCS
 
                     user_create_data = {
                         'email' : serializer.validated_data["email"],
-                        'password' : serializer.validated_data["password"],
+                        'password' : hashed_pass
                     }
 
                     response = requests.post(url + f"/user/add/", json=user_create_data)

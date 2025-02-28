@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'control_project.middleware.AuthenticationTransformationLayer'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -154,4 +155,11 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'USER_ID_FIELD': 'uid',
     'USER_ID_CLAIM': 'id',
+
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
 }
+
+JWT_COOKIE_HEADER_PAYLOAD = 'cookie_1'
+JWT_COOKIE_SIGNATURE = 'cookie_2'
+
+COOKIE_AGE = timedelta(minutes=15)
