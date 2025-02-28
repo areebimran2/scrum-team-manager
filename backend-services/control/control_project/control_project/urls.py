@@ -38,7 +38,7 @@ urlpatterns = [
     path('userprofile/', views_userprofile.userprofile_post_handler),
     path('userprofile/<str:uid_str>', views_userprofile.userprofile_get_handler),
 
-    path('stats/<str:pid_str>', views_stats.getBar)
+    path('stats/<str:pid_str>', views_stats.getBar),
 
     path('userprojects/', views_userprojects.UserAllProjectsView.as_view()),
     path('project/<int:pid>/tickets/', views_userprojects.ProjectTicketsView.as_view()),
@@ -52,5 +52,4 @@ urlpatterns = [
     path('ticket/<str:tid_str>', views_ticket.ticket_get_delete_handler),
     path('ticket/update/', views_ticket.ticket_update_handler),
     path('project/editstatus/', views_project.editStatus)
-
-]
+    ]
