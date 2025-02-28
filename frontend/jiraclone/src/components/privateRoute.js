@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 
 const PrivateRoute = ({children}) => {
     const token = getAuthCookie();
+
     if (token === null){
         return <Navigate to="/login" />;
     } else {

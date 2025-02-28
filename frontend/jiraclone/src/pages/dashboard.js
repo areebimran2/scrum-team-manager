@@ -6,9 +6,6 @@ import { ProjectView } from '../components/projectview.js';
 import styles from '../styles/dashboard.module.css';
 import defaultProfilePic from '../assets/defaultProfilePic.png';
 
-
-
-
 export function Dashboard(props) {
     const navigate = useNavigate();
 

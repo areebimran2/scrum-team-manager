@@ -12,8 +12,6 @@ import AdminProject from "./pages/adminproject";
 import "./styles/Global.css";
 import ProjectList from "./pages/projectlist";
 import { BarGraphExample } from "./pages/bargraphexample";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './styles/App.css'
 import FullTicket from "./pages/ticket";
 
 export function App() {
@@ -33,6 +31,7 @@ export function App() {
             <Route path="/barexample" element={<BarGraphExample />}></Route>
             <Route path="/projectedit" element={<ProjectEdit />} />
             <Route path="/adminproject" element={<AdminProject />} />
+            <Route path="/project" element={<ProjectList />} />
         </Routes>
     </BrowserRouter >
     );
