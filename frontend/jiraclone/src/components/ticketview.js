@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import styles from '../styles/ticketview.module.css';
 
 export function TicketView({ tickets, mode }) {
-
+    const navigate = useNavigate();
     /**
      * TODO:
      * change the link for ticket title (line 18) to work.
@@ -15,7 +15,7 @@ export function TicketView({ tickets, mode }) {
       if (mode === 'dashboard') {
        return (
         <div className={styles.DticketCard}>
-            <a className={styles.ticketTitle}>{tickets.title}</a>
+            <a className={styles.ticketTitle} onClick={() => navigate("/ticket")}>{tickets.title}</a>
             <p className={styles.descriptors}>{tickets.project}</p>  
             <input type="checkbox" checked={tickets.completed} readOnly className={styles.checkbox}/>          
             <p className={styles.descriptors}>{tickets.priority}</p> 
@@ -25,7 +25,7 @@ export function TicketView({ tickets, mode }) {
       } else if (mode === 'project') {
           return (
             <div className={styles.PticketCard}>
-                <p className={styles.ticketTitle}>{tickets.title}</p>
+                <p className={styles.ticketTitle} onClick={() => navigate("/ticket")}>{tickets.title}</p>
                 <p className={styles.descriptors}>{tickets.assigned}</p>
                 <input type="checkbox" checked={tickets.completed} readOnly className={styles.checkbox}/>            
                 <p className={styles.descriptors}>{tickets.priority}</p> 

@@ -32,6 +32,7 @@ export function App() {
             <Route path="/projectedit" element={<ProjectEdit />} />
             <Route path="/adminproject" element={<AdminProject />} />
             <Route path="/project" element={<ProjectList />} />
+            <Route path="/ticketedit" element={<FullTicket />} />
         </Routes>
     </BrowserRouter >
     );
