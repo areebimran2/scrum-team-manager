@@ -1,0 +1,128 @@
+.projectpage {
+    margin-top: 64px;
+    display: grid;
+    grid-template-columns: 1fr 1200px 300px 1fr;
+    gap: 10px;
+}
+
+.mainbody {
+    grid-column-start: 2;
+}
+
+.description {
+    margin: 0 0 0 10px;
+    font-size: 18px;
+    color: #B0B3B8;
+
+}
+
+.headings {
+    margin-left: 10px;
+    margin-bottom: 10px;
+    font-size: 36px;
+    color: #E4E6EB;
+}
+
+.ticketStuff {
+    display: grid;
+    grid-template-columns: auto min-content;
+}
+
+.innerContainer {
+    background-color: #242526;
+
+    padding-top: 5px;
+    padding-bottom: 5px;
+    
+    margin-left: 10px;
+    border-radius: 8px;
+}
+
+.ticketInfo {
+    display: grid;
+    grid-template-columns: auto 150px 150px 100px 75px;
+}
+  
+.ticketTitle {
+    color: #B0B3B8;
+    font-weight: bold;
+    font-size: 24px;
+    margin-left: 20px;
+}
+  
+.categories {
+    color: #B0B3B8;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.sidepanel {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+}
+
+.sidebutton {
+    margin-bottom: 20px;
+    color: #E4E6EB;
+    width: 90%;
+    min-width: 175px;
+    height: auto;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #3a3b3c;
+    box-shadow: 0px 0px 20px -20px rgba(0, 0, 0, 0.5);
+    align-self: center;
+    cursor: pointer;
+    background-color: #006756;
+    transition: all 0.2s ease-in-out 0ms;
+    user-select: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+}
+
+.ticketbutton {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    color: #E4E6EB;
+    width: auto;
+    min-width: 175px;
+    height: auto;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #3a3b3c;
+    box-shadow: 0px 0px 20px -20px rgba(0, 0, 0, 0.5);
+    align-self: center;
+    cursor: pointer;
+    background-color: #006756;
+    transition: all 0.2s ease-in-out 0ms;
+    user-select: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+}
+  
+.ticketbutton:hover, .sidebutton:hover {
+    background-color: #005a4d;
+    box-shadow: 0px 0px 20px -18px rgba(0, 0, 0, 0.5);
+}
+  
+.ticketbutton:active, .sidebutton:active {
+    transform: scale(0.95);
+}
+
+.users {
+    background-color: #242526;
+    margin-right: 10px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+}
+
+/**
+ background colour: #18191A
+ secondary colour: #242526
+ text colour: #E4E6EB
+ secondary text colour: #B0B3B8
+ accent colour: #006756
+ */

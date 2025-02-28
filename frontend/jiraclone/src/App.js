@@ -7,6 +7,14 @@ import Signup from "./pages/signup";
 import ProfileEdit from "./pages/profileedit"
 import Dashboard from "./pages/dashboard";
 import PrivateRoute from "./components/privateRoute";
+import ProjectEdit from "./pages/projectedit"
+import AdminProject from "./pages/adminproject";
+import "./styles/Global.css";
+import ProjectList from "./pages/projectlist";
+import { BarGraphExample } from "./pages/bargraphexample";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/App.css'
+import FullTicket from "./pages/ticket";
 
 export function App() {
 
@@ -20,8 +28,13 @@ export function App() {
             <Route path="/recoveryrequest" element={ <PrivateRoute> <RecoveryRequest /> </PrivateRoute> } />
             <Route path="/recoveryrequestsuccess" element={ <PrivateRoute> <RecoveryRequestSuccess /> </PrivateRoute> } />
             <Route path="/*" element={<NotFound />} />
+            <Route path="/ticket" element={<FullTicket />} />
+            <Route path="/projectlist" element={<ProjectList />}></Route>
+            <Route path="/barexample" element={<BarGraphExample />}></Route>
+            <Route path="/projectedit" element={<ProjectEdit />} />
+            <Route path="/adminproject" element={<AdminProject />} />
         </Routes>
-    </BrowserRouter>
+    </BrowserRouter >
     );
 }
 
