@@ -24,7 +24,6 @@ def userprofile_post_handler(request):
             if serializer.validated_data['uid'] != request.user.uid:
                 return Response({"error": "User does not have access to this profile"}, status=status.HTTP_401_UNAUTHORIZED)
 
-            #TODO configure endpoint URI
             exists_response = requests.get(url + '/user/query/UID/{0}'.format(serializer.validated_data['uid']))
 
             if exists_response.status_code == 404: # Account does not exist
