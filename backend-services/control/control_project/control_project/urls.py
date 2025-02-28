@@ -22,6 +22,7 @@ from signup_app import views as views_signup
 from login_app import views as views_login
 
 from login_app.views import UserLoginRecoveryView
+from controlStatistics import views as views_stats
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,5 +30,6 @@ urlpatterns = [
     path('login/', views_login.login_handler),
     path('login/recover/', views_login.UserLoginRecoveryView.as_view()),
     path('userprofile/', views_userprofile.userprofile_post_handler),
-    path('userprofile/<str:uid_str>', views_userprofile.userprofile_get_handler)
+    path('userprofile/<str:uid_str>', views_userprofile.userprofile_get_handler),
+    path('stats/<str:pid_str>', views_stats.getBar)
 ]
