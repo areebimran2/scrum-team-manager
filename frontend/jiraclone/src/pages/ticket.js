@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState} from 'react';
 import ReactDOM from "react-dom/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import styles from "../styles/fullticket.module.css";
 
 export function FullTicket() {
     const navigate = useNavigate();
-    //const [searchParams, setSearchParams] = useSearchParams();
-    //const tid = searchParams.get("tid")
-    const tid = 1
+    const [searchParams, setSearchParams] = useSearchParams();
+    const tid = searchParams.get("tid")
     const [ticket, setTicket] = useState(null);
     const [error, setError] = useState(null);
 
@@ -33,41 +32,41 @@ export function FullTicket() {
                 setTicket(data);
             })
             .catch(error => {
-                //setError(error);
-                console.error("Fetch error, loading Test Ticket", error);
-                setTicket(testTicket);
+                setError(error);
+                //console.error("Fetch error, loading Test Ticket", error);
+                //setTicket(testTicket);
             });
     }, [tid]);
 
     if (error) {
-        return <div>Error: {error.message}</div>;
+        return <div className={styles.errorMessage}>Error: {error.message}</div>;
     }
 
     if (!ticket) {
-        return <div>No ticket data found</div>;
+        return <div className={styles.errorMessage}>No ticket data found</div>;
     }
 
     return (
-        <div className="container">
+        <div className={styles.container}>
             {/* Title */}
-            <h1 className="title">{ticket.Title}</h1>
+            <h1 className={styles.title}>{ticket.Title}</h1>
 
             {/* Priority and Story Points */}
-            <div className="metadataContainer">
-                <span className="metadataLabel">Priority:</span>
-                <span className="metadataValue">{ticket.Priority}</span>
+            <div className={styles.metadataContainer}>
+                <span className={styles.metadataLabel}>Priority:</span>
+                <span className={styles.metadataValue}>{ticket.Priority}</span>
                 <span style={{ flex: 1 }}></span> {/* Spacer */}
-                <span className="metadataLabel">Story Point Estimate:</span>
-                <span className="metadataValue">{ticket.Story_points}</span>
+                <span className={styles.metadataLabel}>Story Point Estimate:</span>
+                <span className={styles.metadataValue}>{ticket.Story_points}</span>
             </div>
 
             {/* Divider */}
-            <hr className="divider" />
+            <hr className={styles.divider} />
 
             {/* Description */}
-            <div className="descriptionContainer">
-                <span className="metadataLabel">Description:</span>
-                <p className="descriptionText">{ticket.Description}</p>
+            <div className={styles.descriptionContainer}>
+                <span className={styles.metadataLabel}>Description:</span>
+                <p className={styles.descriptionText}>{ticket.Description}</p>
             </div>
         </div>
     );
