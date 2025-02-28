@@ -8,6 +8,7 @@ import ProfileEdit from "./pages/profileedit"
 import Dashboard from "./pages/dashboard";
 import ProjectEdit from "./pages/projectedit"
 import AdminProject from "./pages/adminproject";
+import "./styles/Global.css";
 
 export function App() {
 
