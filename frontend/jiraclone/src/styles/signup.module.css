@@ -1,0 +1,111 @@
+body {
+    background-color: #18191A;
+    display: flex;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+}
+
+.page {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+    min-width: 450px;
+    min-height: 350px;
+    border: 1px solid #006756;
+    border-radius: 64px;
+    margin:auto;
+    background-color: #242526;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.header {
+    margin: 20px 0 5px 0;
+    padding: 0;
+    color: #E4E6EB;
+    font-size: 40px;
+    font-weight:bold;
+}
+
+.prompt {
+    margin: 5px;
+    color: #E4E6EB;
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    word-wrap: break-word;
+    text-align: center;
+    width: 300px;
+}
+
+.input {
+    width: 300px;
+    height: 30px;
+    padding: 8px;
+    margin: 10px 0;
+    border-radius: 4px;
+    border: 0px;
+    background-color: #3A3B3C;
+    color: #E4E6EB;
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+}
+
+.button {
+    margin: 10px 0 0 7px;
+    color: #E4E6EB;
+    width: 300px;
+    min-width: 175px;
+    height: 45px;
+    padding: 2px;
+    border-radius: 8px;
+    border: 1px solid #3a3b3c;
+    box-shadow: 0px 0px 20px -20px rgba(0, 0, 0, 0.5);
+    align-self: center;
+    cursor: pointer;
+    background-color: #006756;
+    transition: all 0.2s ease-in-out 0ms;
+    user-select: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+  }
+  
+  .button:hover {
+    background-color: #005a4d;
+    box-shadow: 0px 0px 20px -18px rgba(0, 0, 0, 0.5);
+  }
+  
+  .button:active {
+    transform: scale(0.95);
+  }
+
+  .loginPrompt {
+    color: #E4E6E8;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+  }
+
+  .loginLink {
+    color: #5C95FE;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+  }
+
+  .loginLink:hover {
+    color: #3A8DFF;
+}
+
+/**
+ background colour: #18191A
+ secondary colour: #242526
+ text colour: #E4E6EB
+ secondary text colour: #B0B3B8
+ accent colour: #006756
+ */

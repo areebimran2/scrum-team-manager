@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import "../styles/login.css";
+import styles from "../styles/login.module.css";
 
 
 export function Login() {
@@ -58,23 +58,24 @@ export function Login() {
     }
 
     const login = (
-
-            <div id="login">
-                <h1> Login </h1>
+        <div className={styles.page}>
+            <div className={styles.container}>
+                <h1 className={styles.header}>Welcome Back!</h1>
+                <p className={styles.prompt}>Please enter your login details:</p>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <div class="container">
-                        <input type="text" placeholder="Email" name="email" required {...register("email")} />
+                    <div>
+                        <input type="text" placeholder="Email" name="email" required {...register("email")} className={styles.input} />
                         <br/>
-                        <input type="password" placeholder="Password" name="password" required {...register("password")}/>
+                        <input type="password" placeholder="Password" name="password" required {...register("password")} className={styles.input}/>
                         <br/>
-                        <a href="/recoveryrequest">Forgot Password?</a>
+                        <a href="recoveryrequest" className={styles.recoveryLink}>Forgot your password? </a>
                         <br/>
-                        <button type="submit">Login</button>
-                        <a href="signup">Don't have an account? Sign up here</a>
+                        <button type="submit" className={styles.button}>Login</button>
+                        <p className={styles.signupPrompt}>Don't have an account? <a href="signup" className={styles.promptLink}>Sign up here!</a></p>
                     </div>
                 </form>
             </div>
-
+        </div>
     );
 
   return (login);
