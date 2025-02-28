@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
+    "invitations",
     'userprofile_app',
     'user_projects_app',
     'signup_app',

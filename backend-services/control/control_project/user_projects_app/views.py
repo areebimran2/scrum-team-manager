@@ -1,12 +1,15 @@
 from django.shortcuts import render
+from control_project import settings
+
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from invitations.utils import get_invitation_model
+
+from .serializers import *
+
 import requests
-
-from user_projects_app.serializers import ProjectTicketAssignmentSerializer
-
 
 class UserAllProjectsView(APIView):
     permission_classes = [IsAuthenticated]
@@ -164,3 +167,30 @@ def reassign_ticket(validated_data, pid, new_assigned):
         if response.status_code != 200:
             return response
     return Response(status=status.HTTP_200_OK)
+
+class ProjectInviteView(APIView):
+    def post(self, request, *args, **kwargs):
+        # Use serializer to check if request contains expected information
+        serializer = ProjectUserInviteSerializer(data=request.data)
+        if serializer.is_valid():
+            url = "http://127.0.0.1:8001"
+
+            validated_data = serializer.validated_data
+            response = requests.get(url + "/user/query/EMAIL/{0}".format(validated_data["email"]))
+
+            # There is no user with such email
+            if response.status_code == 404:
+                return Response({"error": "There is no user with the provided email"},
+                                status=status.HTTP_404_NOT_FOUND)
+
+            # Assume that only one user can exist per email
+            user = response.json()[0]
+
+            # Create and send invitation
+            Invitation = get_invitation_model()
+            invitation = Invitation.create(email=user["email"])
+            invitation.send_invitation()
+
+            return Response({"message": "Email sent"}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
