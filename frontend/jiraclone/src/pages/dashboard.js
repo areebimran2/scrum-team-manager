@@ -1,6 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Topbar } from '../components/topbar';
 import { TicketView } from '../components/ticketview.js';
 import { ProjectView } from '../components/projectview.js';
@@ -10,7 +9,7 @@ import defaultProfilePic from '../assets/defaultProfilePic.png';
 
 
 
-export function Dashboard() {
+export function Dashboard(props) {
     const navigate = useNavigate();
 
   /**
@@ -75,7 +74,7 @@ export function Dashboard() {
         ];
 
     function onProfileClick() {
-        navigate("profile", {replace: true});
+        navigate("/profile");
     }
 
     function onSkillsClick() {
