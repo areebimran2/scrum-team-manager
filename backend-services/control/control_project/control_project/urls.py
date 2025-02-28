@@ -20,9 +20,15 @@ from django.urls import path, include
 from userprofile_app import views as views_userprofile
 from signup_app import views as views_signup
 from login_app import views as views_login
+
+
+from login_app.views import UserLoginRecoveryView
+from controlStatistics import views as views_stats
+
 from ticket_app import views as views_ticket
 from projectControl import views as views_project
 from user_projects_app import views as views_userprojects
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,6 +37,9 @@ urlpatterns = [
     path('login/recover/', views_login.UserLoginRecoveryView.as_view()),
     path('userprofile/', views_userprofile.userprofile_post_handler),
     path('userprofile/<str:uid_str>', views_userprofile.userprofile_get_handler),
+
+    path('stats/<str:pid_str>', views_stats.getBar),
+
     path('userprojects/', views_userprojects.UserAllProjectsView.as_view()),
 
     path('project/<int:pid>/tickets/', views_userprojects.ProjectTicketsView.as_view()),
@@ -48,4 +57,4 @@ urlpatterns = [
     path('ticket/<str:tid_str>', views_ticket.ticket_get_delete_handler),
     path('ticket/update/', views_ticket.ticket_update_handler),
     path('project/editstatus/', views_project.editStatus)
-]
+    ]
