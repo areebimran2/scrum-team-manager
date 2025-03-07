@@ -12,7 +12,6 @@ class UserFullModel(AbstractBaseUser):
 
     email = models.EmailField(unique=True)
 
-
     password = models.CharField(max_length=100)
     display_name = models.CharField(max_length=200, blank=True)
     skills = models.JSONField(default=list)
