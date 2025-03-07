@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.utils import timezone
 import requests
 
 from rest_framework.response import Response
@@ -96,6 +97,49 @@ def ticket_update_handler(request):
                     return Response(status=status.HTTP_200_OK)
                 else:
                     return Response(update_response, status=update_response.status_code)
+
+        else:
+            # Data formatted wrong
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+def ticket_create_handler(request):
+    if request.method == 'POST':
+        serializer = TicketCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            url = "http://127.0.0.1:8001"
+            #create ticket
+            ticket_data = {
+                "project" : serializer.validated_data["project"],
+                "creator" : serializer.validated_data["creator"],
+                "date_created" : str(timezone.now())
+            }
+            print(ticket_data)
+            print(type(ticket_data["date_created"]))
+            create_response = requests.post(url + "/ticket/add/", json=ticket_data)
+            if create_response.status_code != 200:
+                return Response(create_response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            full_ticket_data = create_response.json()
+            print(f'full ticket: {full_ticket_data}')
+            tid = full_ticket_data["tid"]
+            
+            #get to project
+            pid = serializer.validated_data["project"]
+            get_response = requests.get(url+f"/ticket/query/{pid}")
+            if create_response.status_code != 200:
+                return Response(get_response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            #update ticket list
+            project_data = get_response.json()[0]
+            project_data["tickets"].append(tid)
+            update_response = requests.post(url + "/project/update/", json=project_data)
+            if update_response.status_code == 200:
+                return Response(status=status.HTTP_200_OK)
+            else:
+                return Response(update_response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         else:
             # Data formatted wrong

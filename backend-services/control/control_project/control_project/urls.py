@@ -51,5 +51,6 @@ urlpatterns = [
     path('project/adminview/<str:pid_str>', views_project.adminView),
     path('ticket/<str:tid_str>', views_ticket.ticket_get_delete_handler),
     path('ticket/update/', views_ticket.ticket_update_handler),
+    path('ticket/create/', views_ticket.ticket_create_handler),
     path('project/editstatus/', views_project.editStatus)
     ]

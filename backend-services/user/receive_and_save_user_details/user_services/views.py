@@ -57,7 +57,7 @@ def add_user(request):
    elif profile_picture:
       new_user = ScrumUser(email=email, password=password, profile_picture = profile_picture)
    else:
-      new_user = ScrumUser(email=email, password=password, num_tickets=0)
+      new_user = ScrumUser(email=email, password=password)
    
    new_user.save()
    serialized =ScrumUserSerializer(new_user)

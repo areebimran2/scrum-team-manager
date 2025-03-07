@@ -4,8 +4,8 @@ from django.utils import timezone
 class Ticket(models.Model):
  
     tid = models.IntegerField("Ticket Id", primary_key=True)
-    title = models.CharField(max_length=100, default="")
-    description = models.CharField(max_length=500, default="")
+    title = models.CharField(max_length=100, default="New Ticket")
+    description = models.CharField(max_length=500, default="No deescription")
     assigned = models.IntegerField(default=-1)
     story_points = models.IntegerField(default=0)
     creator = models.IntegerField()

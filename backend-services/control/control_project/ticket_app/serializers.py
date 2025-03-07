@@ -24,3 +24,7 @@ class TicketOptionalFullSerializer(serializers.Serializer):
     date_created = serializers.DateTimeField(required=False, allow_null=True, default=None)
     date_completed = serializers.DateTimeField(required=False, allow_null=True, default=None)
     date_assigned = serializers.DateTimeField(required=False, allow_null=True, default=None)
+
+class TicketCreateSerializer(serializers.Serializer):
+    project = serializers.IntegerField(required=True)
+    creator = serializers.IntegerField(required=True)
