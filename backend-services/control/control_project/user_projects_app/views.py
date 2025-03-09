@@ -231,3 +231,37 @@ class ProjectUserInviteAcceptView(APIView):
                                                                  "scrum_users": project['scrum_users']})
 
         return Response({"message": "Invitation accepted"}, status=status.HTTP_200_OK)
+
+@APIView(['POST'])
+def manual_add_user(request):
+    if request.method == 'POST':
+        serializer = ManualAddProjectMemberSerializer(data=request.data)
+        if serializer.is_valid():
+
+            pid = serializer.validated_data["pid"]
+            uid = serializer.validated_data["uid"]
+            url = "http://127.0.0.1:8001"
+
+            # Update Project with new user
+            project_response = requests.get(url + "/project/query/{0}".format(pid))
+            project = project_response.json()[0]
+            project['scrum_users'].append(uid)
+            data = {"pid": pid, "scrum_users": project['scrum_users']}
+            response = requests.post(url + "/project/update/", data=data)
+            if response.status_code != 200:
+                return Response({"error": "Failed to update project"}, status=response.status_code)
+
+            # Update User with new project
+            user_response = requests.get(url + "/user/query/EMAIL/{0}".format(uid))
+            user = user_response.json()[0]
+            user["assigned_tickets"][pid] = []
+            data = {"uid": uid, "assigned_tickets": user["assigned_tickets"]}
+            response = requests.post(url + "/user/update/", data=data)
+            if response.status_code != 200:
+                return Response({"error": "Failed to update user"}, status=response.status_code)
+            
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)

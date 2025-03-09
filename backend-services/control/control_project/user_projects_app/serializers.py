@@ -15,3 +15,7 @@ class ProjectUserInviteSerializer(serializers.Serializer):
     class Meta:
         model = CustomUserInvite
         fields = ['email']
+    
+class ManualAddProjectMemberSerializer(serializers.Serializer):
+    pid = serializers.IntegerField(required=True)
+    uid = serializers.IntegerField(required=True)
