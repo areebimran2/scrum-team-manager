@@ -233,7 +233,7 @@ class ProjectUserInviteAcceptView(APIView):
         return Response({"message": "Invitation accepted"}, status=status.HTTP_200_OK)
 
 @APIView(['POST'])
-def manual_add_user(request):
+def manual_add_project_member(request):
     if request.method == 'POST':
         serializer = ManualAddProjectMemberSerializer(data=request.data)
         if serializer.is_valid():
