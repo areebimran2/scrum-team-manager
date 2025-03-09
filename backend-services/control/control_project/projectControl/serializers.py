@@ -14,5 +14,4 @@ class ProjectUpdateShellSerializer(serializers.Serializer):
 class EditStatusSerializer(serializers.Serializer):
     pid = serializers.IntegerField()
     uid = serializers.IntegerField()
-    action = serializers.CharField()
 

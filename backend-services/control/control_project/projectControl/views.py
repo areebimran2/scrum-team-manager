@@ -173,7 +173,7 @@ def adminView(request, pid_str):
     
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def editStatus(request):
+def promote(request):
     if request.method == 'POST':
         serializer = EditStatusSerializer(data=request.data)
         if serializer.is_valid():
@@ -261,4 +261,96 @@ def editStatus(request):
     # wrong request method
     else:
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def demote(request):
+    if request.method == 'POST':
+        serializer = EditStatusSerializer(data=request.data)
+        if serializer.is_valid():
+            #Get project details
+            pid = serializer.validated_data[pid]
+            response = requests.get(f"http://127.0.0.1:8001/project/query/{pid}")
+            if response.status_code != 200:
+                return Response({"error": f'error retreiving project {pid} : {response}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            project_data = response.json()[0]
+
+            action = serializer.validated_data[action]
+            uid = serializer.validated_data[uid]
+
+            #Check if admin
+            admin_list = project_data["admin"]
+            if uid not in admin_list:
+                return Response({"error": f'User {uid} is not an admin'}, status=status.HTTP_409_CONFLICT)
+            
+            #update project
+            project_data["admin"].remove(uid)
+            
+            update_response = requests.post(f"http://127.0.0.1:8001/project/update/", json=project_data)
+            if update_response.status_code == 200:
+                return Response(status=status.HTTP_200_OK)
+            else:
+                return Response({'error': update_response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+        # Data formatted wrong
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # wrong request method
+    else:
+        return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
     
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def remove(request):
+    if request.method == 'POST':
+        serializer = EditStatusSerializer(data=request.data)
+        if serializer.is_valid():
+            #Get project details
+            pid = serializer.validated_data[pid]
+            response = requests.get(f"http://127.0.0.1:8001/project/query/{pid}")
+            if response.status_code != 200:
+                return Response({"error": f'error retreiving project {pid} : {response}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            project_data = response.json()[0]
+
+            action = serializer.validated_data[action]
+            uid = serializer.validated_data[uid]
+
+            #get user details
+            user_response = requests.get(f"http://127.0.0.1:8001/user/query/UID/{uid}")
+            user_data = user_response.json()[0]
+            user_tickets = user_data["assigned_tickets"]
+            ticket_list = user_tickets[pid]
+
+            #remove ticket assignemts
+            for tid in ticket_list:
+                #get ticket
+                ticket_response = requests.get(f"http://127.0.0.1:8001/ticket/query/{tid}")
+                ticket_data = ticket_response.json()[0]
+                #update ticket
+                ticket_data["assigned"] = False
+                ticket_data["assigned_to"] = -1
+                requests.post("http://127.0.0.1:8001/ticket/update/", json=ticket_data)
+
+            #update user data
+            del user_data["assigned_tickets"][pid]
+            user_update_response = requests.post("http://127.0.0.1:8001/user/update/", json=user_data)
+            if user_update_response.status_code != 200:
+                return Response({'error': user_update_response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            #update project
+            if uid in project_data["admin"]:
+                project_data["admin"].remove(uid)
+            project_data["scrum_users"].remove(uid)
+
+            update_response = requests.post(f"http://127.0.0.1:8001/project/update/", json=project_data)
+            if update_response.status_code == 200:
+                return Response(status=status.HTTP_200_OK)
+            else:
+                return Response({'error': update_response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+        # Data formatted wrong
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # wrong request method
+    else:
+        return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
