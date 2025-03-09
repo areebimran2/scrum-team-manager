@@ -12,7 +12,7 @@ from .models import *
 from .serializers import *
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def userprofile_post_handler(request):
     if request.method == 'POST':
         serializer = UserFullSerializer(data=request.data)
@@ -21,8 +21,8 @@ def userprofile_post_handler(request):
             #TODO set ISCS url
             url = "http://127.0.0.1:8001"
 
-            if serializer.validated_data['uid'] != request.user.uid:
-                return Response({"error": "User does not have access to this profile"}, status=status.HTTP_401_UNAUTHORIZED)
+            # if serializer.validated_data['uid'] != request.user.uid:
+            #     return Response({"error": "User does not have access to this profile"}, status=status.HTTP_401_UNAUTHORIZED)
 
             #TODO configure endpoint URI
             exists_response = requests.get(url + '/user/query/UID/{0}'.format(serializer.validated_data['uid']))
@@ -45,15 +45,15 @@ def userprofile_post_handler(request):
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def userprofile_get_handler(request, uid_str):
     if request.method == 'GET':
         print("is GET request")
 
         try:
             uid = int(uid_str)
-            if uid != request.user.uid:
-                return Response({"error": "User does not have access to this profile"}, status=status.HTTP_401_UNAUTHORIZED)
+            # if uid != request.user.uid:
+            #     return Response({"error": "User does not have access to this profile"}, status=status.HTTP_401_UNAUTHORIZED)
         except:
             return Response({"error": f"{uid_str} is not a number"}, status=status.HTTP_400_BAD_REQUEST)
 

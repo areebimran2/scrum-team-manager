@@ -110,7 +110,7 @@ class ProjectTicketAssignView(APIView):
 
 
 class ProjectTicketUnassignView(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def post(self, request, **kwargs):
         serializer = ProjectTicketAssignmentSerializer(data=request.data)
@@ -125,8 +125,8 @@ class ProjectTicketUnassignView(APIView):
             if project_code != 200:
                 return Response(status=project_code)
 
-            if request.user.uid not in project_response.json()["admin"]:
-                return Response(status=status.HTTP_401_UNAUTHORIZED)
+            # if request.user.uid not in project_response.json()["admin"]:
+            #     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
             if validated_data["tid"] not in project_response.json()["tickets"]:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
