@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from invitations.utils import get_invitation_model
+from rest_framework.decorators import api_view
 
 from .serializers import *
 
@@ -232,7 +233,7 @@ class ProjectUserInviteAcceptView(APIView):
 
         return Response({"message": "Invitation accepted"}, status=status.HTTP_200_OK)
 
-@APIView(['POST'])
+@api_view(['POST'])
 def manual_add_project_member(request):
     if request.method == 'POST':
         serializer = ManualAddProjectMemberSerializer(data=request.data)
