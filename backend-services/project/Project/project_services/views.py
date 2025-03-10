@@ -18,6 +18,8 @@ def query(request, key):
     
     serialized = ProjectSerializer(ticket, many=True)
 
+    print(f"IN GET, Data: {serialized.data}")
+
     return Response(serialized.data)
 
 """
@@ -34,6 +36,8 @@ def add_project(request):
     admin = data.get("admin")
     date_created = data.get("date_created")
 
+    print("DateCreated: " + date_created)
+
     if (not creator or not date_created or not admin):
         return Response({"error": "Missing required parameters"}, status=400)
     
@@ -43,6 +47,8 @@ def add_project(request):
     new_project.description = data.get("description") if data.get("description") else new_project.description
     new_project.tickets = data.get("tickets") if data.get("tickets") else new_project.tickets
     new_project.scrum_users = data.get("scrum_users") if data.get("name") else new_project.scrum_users
+
+    print(f"in project: {new_project.date_created}")
 
     new_project.save()
 
@@ -69,7 +75,7 @@ def update_project(request):
         new_project.name = data.get("name") if data.get("name") else new_project.name
         new_project.description = data.get("description") if data.get("description") else new_project.description
         new_project.tickets = data.get("tickets") if data.get("tickets") else new_project.tickets
-        new_project.scrum_users = data.get("scrum_users") if data.get("name") else new_project.scrum_users
+        new_project.scrum_users = data.get("scrum_users") if data.get("scrum_users") else new_project.scrum_users
 
         new_project.save()
         

@@ -27,12 +27,14 @@ def createProject(request):
       
                 # Send Data to ProjectService through ISCS
 
+
+                print(timezone.now().strftime("%Y-%m-%d %H:%M:%S"))
                 project_create_data = {
                         'name' : serializer.validated_data.get("name"),
                         'description' : serializer.validated_data.get("description"),
                         'tickets' : [],
                         'creator' : serializer.validated_data.get("creator"),
-                        'date_created': timezone.now,
+                        'date_created': timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
                         'scrum_users' : [ serializer.validated_data.get("creator")],
                         'admin' :  [ serializer.validated_data.get("creator")],
                     }
@@ -91,7 +93,7 @@ def updateProject(request):
         if serializer.is_valid():
 
             if (not serializer.validated_data.get("pid")):
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": "no pid"},status=status.HTTP_400_BAD_REQUEST)
 
             # Check if project exists
 
@@ -103,7 +105,7 @@ def updateProject(request):
                 # Send Data to ProjectService through ISCS
                 
 
-                response = requests.post(url + f"/project/add/", json=serializer.validated_data)
+                response = requests.post(url + f"/project/update/", json=serializer.validated_data)
 
                 # Send 201 back
                 if response.status_code == 404:
