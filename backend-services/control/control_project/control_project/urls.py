@@ -57,12 +57,12 @@ urlpatterns = [
     path('project/update/promote/', views_project.promote),
     path('project/update/demote/', views_project.demote),
     path('project/update/remove/', views_project.remove),
-    path('project/<int:pid>/assign/', views_userprojects.ProjectTicketAssignView.as_view()),
-    path('project/<int:pid>/unassign/', views_userprojects.ProjectTicketUnassignView.as_view()),
+    path('project/<str:pid>/assign/', views_userprojects.ProjectTicketAssignView.as_view()),
+    path('project/<str:pid>/unassign/', views_userprojects.ProjectTicketUnassignView.as_view()),
 
     # Project Fillers
-    path('project/<int:pid>/tickets/', views_userprojects.ProjectTicketsView.as_view()),
-    path('project/<int:pid>/members/', views_userprojects.ProjectMembersView.as_view()),
+    path('project/<str:pid>/tickets/', views_userprojects.ProjectTicketsView.as_view()),
+    path('project/<str:pid>/members/', views_userprojects.ProjectMembersView.as_view()),
     path('project/<str:pid_str>/adminview/', views_project.adminView),
     path('stats/<str:pid_str>', views_stats.getBar),
 

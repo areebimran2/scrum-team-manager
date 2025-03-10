@@ -41,7 +41,7 @@ class ProjectTicketsView(APIView):
         for ticket_id in request.user.assigned_tickets[project_id]:
             response = requests.get(url + "/ticket/query/{0}".format(ticket_id))
             if response.status_code == 200:
-                all_tickets.append(response.json())
+                all_tickets.extend(response.json())
         return Response({"pid": project_id, "tickets": all_tickets}, status=status.HTTP_200_OK)
 
 class ProjectMembersView(APIView):
@@ -62,7 +62,7 @@ class ProjectMembersView(APIView):
         for user_id in project_response.json()["scrum_users"]:
             user_response = requests.get(url + "/user/query/UID/{0}".format(user_id))
             if user_response.status_code == 200:
-                all_members.append(user_response.json())
+                all_members.extend(user_response.json())
         return Response({"members": all_members}, status=status.HTTP_200_OK)
 
 class ProjectTicketAssignView(APIView):
