@@ -18,8 +18,6 @@ def query(request, key):
     
     serialized = ProjectSerializer(ticket, many=True)
 
-    print(f"IN GET, Data: {serialized.data}")
-
     return Response(serialized.data)
 
 """
@@ -34,23 +32,20 @@ def add_project(request):
 
     creator = data.get("creator")
     admin = data.get("admin")
-    date_created = data.get("date_created")
 
-    print("DateCreated: " + date_created)
-
-    if (not creator or not date_created or not admin):
+    if (not creator or not admin):
         return Response({"error": "Missing required parameters"}, status=400)
     
-    new_project = Project(creator=creator, admin=admin, date_created=date_created)
+    new_project = Project(creator=creator, admin=admin)
 
     new_project.name = data.get("name") if data.get("name") else new_project.name
     new_project.description = data.get("description") if data.get("description") else new_project.description
     new_project.tickets = data.get("tickets") if data.get("tickets") else new_project.tickets
     new_project.scrum_users = data.get("scrum_users") if data.get("name") else new_project.scrum_users
 
-    print(f"in project: {new_project.date_created}")
-
     new_project.save()
+
+    print(f"in project: {new_project.date_created}")
 
     serialized = ProjectSerializer(new_project)
 

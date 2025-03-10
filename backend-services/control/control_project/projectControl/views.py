@@ -27,18 +27,14 @@ def createProject(request):
       
                 # Send Data to ProjectService through ISCS
 
-
-                print(timezone.now().strftime("%Y-%m-%d %H:%M:%S"))
                 project_create_data = {
                         'name' : serializer.validated_data.get("name"),
                         'description' : serializer.validated_data.get("description"),
                         'tickets' : [],
                         'creator' : serializer.validated_data.get("creator"),
-                        'date_created': timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
                         'scrum_users' : [ serializer.validated_data.get("creator")],
                         'admin' :  [ serializer.validated_data.get("creator")],
                     }
-                
 
                 response = requests.post(url + f"/project/add/", json=project_create_data)
 
