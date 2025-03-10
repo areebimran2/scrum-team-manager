@@ -27,22 +27,44 @@ def createProject(request):
       
                 # Send Data to ProjectService through ISCS
 
+                creator_uid = serializer.validated_data.get("creator")
+
                 project_create_data = {
                         'name' : serializer.validated_data.get("name"),
                         'description' : serializer.validated_data.get("description"),
                         'tickets' : [],
-                        'creator' : serializer.validated_data.get("creator"),
-                        'scrum_users' : [ serializer.validated_data.get("creator")],
-                        'admin' :  [ serializer.validated_data.get("creator")],
+                        'creator' : creator_uid,
+                        'scrum_users' : [ creator_uid],
+                        'admin' :  [ creator_uid],
                     }
+                
 
                 response = requests.post(url + f"/project/add/", json=project_create_data)
 
+
                 # Send 201 back
                 if response.status_code == 200:
-                    return Response(status=status.HTTP_201_CREATED)
-                elif response.status_code <500:
-                    return Response(status=status.HTTP_400_BAD_REQUEST)
+                    project_data = response.json()
+                    print(f"Project data: {project_data}")
+                    pid = project_data["pid"]
+
+                    # Update Creator's user  object
+                    response = requests.get(url+f"/user/query/UID/{creator_uid}")
+                    user_data = response.json()[0]
+                    assigned_tickets = user_data["assigned_tickets"]
+                    assigned_tickets[pid] = []
+
+                    data = {"uid": creator_uid, "assigned_tickets": assigned_tickets}
+                    response = requests.post(url+"/user/update/", json=data)
+
+                    if response.status_code != 200:
+                        err = {"error": "could not update user"}
+                        return Response(err, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                    else:
+                        return Response(status=status.HTTP_201_CREATED, data=project_data)
+                elif response.status_code != 200:
+                    err = {"error": "could not create project"}
+                    return Response(err,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                 
                 attempts += 1
                 time.sleep(5)
@@ -170,88 +192,39 @@ def adminView(request, pid_str):
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def promote(request):
     if request.method == 'POST':
         serializer = EditStatusSerializer(data=request.data)
         if serializer.is_valid():
             #Get project details
-            pid = serializer.validated_data[pid]
+            pid = serializer.validated_data["pid"]
             response = requests.get(f"http://127.0.0.1:8001/project/query/{pid}")
             if response.status_code != 200:
                 return Response({"error": f'error retreiving project {pid} : {response}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             project_data = response.json()[0]
 
-            action = serializer.validated_data[action]
-            uid = serializer.validated_data[uid]
+            #Check Auth
+            if request.user.uid not in project_data["admin"]:
+                return Response({"error": f"User {request.user.uid} is not an admin for this project!"}, status=status.HTTP_401_UNAUTHORIZED)
 
-            if action == "promote":
-                #Check if already admin
-                admin_list = project_data["admin"]
-                if uid in admin_list:
-                    return Response({"error": f'User {uid} is already an admin'}, status=status.HTTP_409_CONFLICT)
-                
-                #update project
-                project_data["admin"].append(uid)
-                
-                update_response = requests.post(f"http://127.0.0.1:8001/project/update/", json=project_data)
-                if update_response.status_code == 200:
-                    return Response(status=status.HTTP_200_OK)
-                else:
-                    return Response({'error': update_response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-                
-            elif action == "demote":
-                #Check if admin
-                admin_list = project_data["admin"]
-                if uid not in admin_list:
-                    return Response({"error": f'User {uid} is not an admin'}, status=status.HTTP_409_CONFLICT)
-                
-                #update project
-                project_data["admin"].remove(uid)
-                
-                update_response = requests.post(f"http://127.0.0.1:8001/project/update/", json=project_data)
-                if update_response.status_code == 200:
-                    return Response(status=status.HTTP_200_OK)
-                else:
-                    return Response({'error': update_response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-                
-            elif action == "remove":
-                #get user details
-                user_response = requests.get(f"http://127.0.0.1:8001/user/query/UID/{uid}")
-                user_data = user_response.json()[0]
-                user_tickets = user_data["assigned_tickets"]
-                ticket_list = user_tickets[pid]
+            uid = serializer.validated_data["uid"]
 
-                #remove ticket assignemts
-                for tid in ticket_list:
-                    #get ticket
-                    ticket_response = requests.get(f"http://127.0.0.1:8001/ticket/query/{tid}")
-                    ticket_data = ticket_response.json()[0]
-                    #update ticket
-                    ticket_data["assigned"] = False
-                    ticket_data["assigned_to"] = -1
-                    requests.post("http://127.0.0.1:8001/ticket/update/", json=ticket_data)
-
-                #update user data
-                del user_data["assigned_tickets"][pid]
-                user_update_response = requests.post("http://127.0.0.1:8001/user/update/", json=user_data)
-                if user_update_response.status_code != 200:
-                    return Response({'error': user_update_response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-                #update project
-                if uid in project_data["admin"]:
-                    project_data["admin"].remove(uid)
-                project_data["scrum_users"].remove(uid)
-
-                update_response = requests.post(f"http://127.0.0.1:8001/project/update/", json=project_data)
-                if update_response.status_code == 200:
-                    return Response(status=status.HTTP_200_OK)
-                else:
-                    return Response({'error': update_response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+            #Check if already admin
+            admin_list = project_data["admin"]
+            if uid in admin_list:
+                return Response({"error": f'User {uid} is already an admin'}, status=status.HTTP_409_CONFLICT)
+            
+            #update project
+            project_data["admin"].append(uid)
+            
+            update_response = requests.post(f"http://127.0.0.1:8001/project/update/", json=project_data)
+            if update_response.status_code == 200:
+                return Response(status=status.HTTP_200_OK)
             else:
-                return Response({'error': f'{action} is not a valid action'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error': update_response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
             
                 
         # Data formatted wrong
@@ -261,21 +234,24 @@ def promote(request):
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def demote(request):
     if request.method == 'POST':
         serializer = EditStatusSerializer(data=request.data)
         if serializer.is_valid():
             #Get project details
-            pid = serializer.validated_data[pid]
+            pid = serializer.validated_data["pid"]
             response = requests.get(f"http://127.0.0.1:8001/project/query/{pid}")
             if response.status_code != 200:
                 return Response({"error": f'error retreiving project {pid} : {response}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             project_data = response.json()[0]
 
-            action = serializer.validated_data[action]
-            uid = serializer.validated_data[uid]
+            #Check Auth
+            if request.user.uid not in project_data["admin"]:
+                return Response({"error": f"User {request.user.uid} is not an admin for this project!"}, status=status.HTTP_401_UNAUTHORIZED)
+
+            uid = serializer.validated_data["uid"]
 
             #Check if admin
             admin_list = project_data["admin"]
@@ -298,27 +274,31 @@ def demote(request):
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def remove(request):
     if request.method == 'POST':
         serializer = EditStatusSerializer(data=request.data)
         if serializer.is_valid():
             #Get project details
-            pid = serializer.validated_data[pid]
+            pid = serializer.validated_data["pid"]
             response = requests.get(f"http://127.0.0.1:8001/project/query/{pid}")
             if response.status_code != 200:
                 return Response({"error": f'error retreiving project {pid} : {response}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             project_data = response.json()[0]
 
-            action = serializer.validated_data[action]
-            uid = serializer.validated_data[uid]
+            #Check Auth
+            if request.user.uid not in project_data["admin"]:
+                return Response({"error": f"User {request.user.uid} is not an admin for this project!"}, status=status.HTTP_401_UNAUTHORIZED)
+
+            uid = serializer.validated_data["uid"]
 
             #get user details
             user_response = requests.get(f"http://127.0.0.1:8001/user/query/UID/{uid}")
             user_data = user_response.json()[0]
             user_tickets = user_data["assigned_tickets"]
-            ticket_list = user_tickets[pid]
+
+            ticket_list = user_tickets[f"{pid}"]
 
             #remove ticket assignemts
             for tid in ticket_list:
@@ -331,7 +311,8 @@ def remove(request):
                 requests.post("http://127.0.0.1:8001/ticket/update/", json=ticket_data)
 
             #update user data
-            del user_data["assigned_tickets"][pid]
+            del user_data["assigned_tickets"][f"{pid}"]
+
             user_update_response = requests.post("http://127.0.0.1:8001/user/update/", json=user_data)
             if user_update_response.status_code != 200:
                 return Response({'error': user_update_response}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -41,11 +41,9 @@ def add_project(request):
     new_project.name = data.get("name") if data.get("name") else new_project.name
     new_project.description = data.get("description") if data.get("description") else new_project.description
     new_project.tickets = data.get("tickets") if data.get("tickets") else new_project.tickets
-    new_project.scrum_users = data.get("scrum_users") if data.get("name") else new_project.scrum_users
+    new_project.scrum_users = data.get("scrum_users") if data.get("scrum_users") else new_project.scrum_users
 
     new_project.save()
-
-    print(f"in project: {new_project.date_created}")
 
     serialized = ProjectSerializer(new_project)
 
@@ -56,10 +54,9 @@ update a project given its pid
 """
 @api_view(['POST'])
 def update_project(request):
-    try:
-        data = json.loads(request.body)
-    except json.decoder.JSONDecodeError:
-        return Response({"error":"Body required for this request"}, status=400)
+
+    data = request.data
+        
     try:
         pid = data.get("pid")
 
@@ -71,6 +68,7 @@ def update_project(request):
         new_project.description = data.get("description") if data.get("description") else new_project.description
         new_project.tickets = data.get("tickets") if data.get("tickets") else new_project.tickets
         new_project.scrum_users = data.get("scrum_users") if data.get("scrum_users") else new_project.scrum_users
+        new_project.admin = data.get("admin") if data.get("admin") else new_project.admin
 
         new_project.save()
         

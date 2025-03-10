@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Project(models.Model):
-    pid = models.IntegerField("Project Id", primary_key=True)
+    pid = models.AutoField("Project Id", primary_key=True)
     name = models.CharField(max_length=100, default="")
     description = models.CharField(max_length=500, default="")
     tickets = models.JSONField(default=list)

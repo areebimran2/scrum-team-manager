@@ -246,18 +246,23 @@ def manual_add_project_member(request):
             # Update Project with new user
             project_response = requests.get(url + "/project/query/{0}".format(pid))
             project = project_response.json()[0]
+
+            if uid in project["scrum_users"]:
+                return Response({"error": f"User {uid} already in project"}, status=status.HTTP_409_CONFLICT)
+
             project['scrum_users'].append(uid)
             data = {"pid": pid, "scrum_users": project['scrum_users']}
-            response = requests.post(url + "/project/update/", data=data)
+            response = requests.post(url + "/project/update/", json=data)
             if response.status_code != 200:
                 return Response({"error": "Failed to update project"}, status=response.status_code)
 
             # Update User with new project
-            user_response = requests.get(url + "/user/query/EMAIL/{0}".format(uid))
+            user_response = requests.get(url + "/user/query/UID/{0}".format(uid))
             user = user_response.json()[0]
+            # print(f"User: {user}, type: {type(user)}")
             user["assigned_tickets"][pid] = []
             data = {"uid": uid, "assigned_tickets": user["assigned_tickets"]}
-            response = requests.post(url + "/user/update/", data=data)
+            response = requests.post(url + "/user/update/", json=data)
             if response.status_code != 200:
                 return Response({"error": "Failed to update user"}, status=response.status_code)
             
