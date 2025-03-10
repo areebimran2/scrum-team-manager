@@ -22,7 +22,7 @@ class UserAllProjectsView(APIView):
         for pid in request.user.assigned_tickets.keys():
             response = requests.get(url + "/project/query/{0}".format(pid))
             if response.status_code == 200:
-                all_projects.append(response.json())
+                all_projects.extend(response.json())
         return Response({"projects": all_projects}, status=status.HTTP_200_OK)
 
 class ProjectTicketsView(APIView):
