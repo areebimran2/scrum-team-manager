@@ -59,7 +59,7 @@ class ProjectMembersView(APIView):
 
         all_members = []
 
-        for user_id in project_response.json()["scrum_users"]:
+        for user_id in project_response.json()[0]["scrum_users"]:
             user_response = requests.get(url + "/user/query/UID/{0}".format(user_id))
             if user_response.status_code == 200:
                 all_members.extend(user_response.json())
