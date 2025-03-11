@@ -45,7 +45,6 @@ def createProject(request):
                 # Send 201 back
                 if response.status_code == 200:
                     project_data = response.json()
-                    print(f"Project data: {project_data}")
                     pid = project_data["pid"]
 
                     # Update Creator's user  object

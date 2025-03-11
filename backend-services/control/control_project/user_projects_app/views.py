@@ -85,26 +85,38 @@ class ProjectTicketAssignView(APIView):
             project_code = project_response.status_code
             if project_code != 200:
                 return Response(status=project_code)
+            
+            project_data = project_response.json()[0]
+            print(f"project data: {project_data}")
 
-            if request.user.uid not in project_response.json()["admin"]:
+            if request.user.uid not in project_data["admin"]:
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
+            
+            print("checked is admin")
 
-            if validated_data["tid"] not in project_response.json()["tickets"]:
+            if validated_data["tid"] not in project_data["tickets"]:
+                err = {"error" : f"ticket {validated_data["tid"]} not project {project_data["pid"]}"}
                 return Response(status=status.HTTP_400_BAD_REQUEST)
+            
+            print("ticket in list")
 
             # Reassign the ticket value to the User with uid <assigned>
             response = reassign_ticket(validated_data, project_id, validated_data["assigned"])
             if response.status_code != 200:
-                return response
+                err = {"error" : f"error code {response.status_code}"}
+                return Response(err, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            print("ticket reassigned")
 
             # Add to Users tickets
-            user = user_response.json()
-            user["assigned_tickets"][project_id].append(validated_data["tid"])
+            user = user_response.json()[0]
+            user["assigned_tickets"][f"{project_id}"].append(validated_data["tid"])
 
-            response = requests.post(url + "/user/update/", data={"uid": validated_data["assigned"],
+            response = requests.post(url + "/user/update/", json={"uid": validated_data["assigned"],
                                                                   "assigned_tickets": user["assigned_tickets"]})
             if response.status_code != 200:
-                return response
+                err = {"error":f"code: {response.status_code}, response: {response.text}"}
+                return Response(err, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             return Response(status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -125,11 +137,12 @@ class ProjectTicketUnassignView(APIView):
             project_code = project_response.status_code
             if project_code != 200:
                 return Response(status=project_code)
+            project_data = project_response.json()[0]
 
-            if request.user.uid not in project_response.json()["admin"]:
+            if request.user.uid not in project_data["admin"]:
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-            if validated_data["tid"] not in project_response.json()["tickets"]:
+            if validated_data["tid"] not in project_data["tickets"]:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
             # Reassign ticket to -1, which is the unassigned value
@@ -139,32 +152,46 @@ class ProjectTicketUnassignView(APIView):
 def reassign_ticket(validated_data, pid, new_assigned):
     url = "http://127.0.0.1:8001"
 
+    #get ticket object
     ticket_response = requests.get(url + "/ticket/query/{0}".format(validated_data["tid"]))
     ticket_code = ticket_response.status_code
     if ticket_response.status_code != 200:
         return Response(status=ticket_code)
+    ticket_data = ticket_response.json()[0]
 
-    currently_assigned = ticket_response.json()["assigned"]
+    currently_assigned = ticket_data["assigned"]
 
-    if currently_assigned != -1:
+    #check if assigned
+    if currently_assigned != -1: # assigned to another user
+        # get assigned user
         user_response = requests.get(url + "/user/query/UID/{0}".format(currently_assigned))
-        user_code = user_response.status_code
         if user_response.status_code != 200:
-            return Response(status=user_code)
+            return user_response
+        user = user_response.json()[0]
 
-        user = user_response.json()
-        user["assigned_tickets"][pid].remove(validated_data["tid"])
+        # remove ticket from previously assigned user
+        user["assigned_tickets"][f"{pid}"].remove(validated_data["tid"])
 
-        response = requests.post(url + "/user/update/", data={"uid": user["uid"],
+        # update user
+        response = requests.post(url + "/user/update/", json={"uid": user["uid"],
                                                               "assigned_tickets": user["assigned_tickets"]})
-
-        if response.status_code != 200:
-            return Response(status=response.status_code)
-
-        response = requests.post(url + "/ticket/update/", data={"tid": validated_data["tid"],
-                                                                "assigned": new_assigned})
         if response.status_code != 200:
             return response
+
+        # unassign ticket
+        response = requests.post(url + "/ticket/update/", json={"tid": validated_data["tid"],
+                                                            "assigned": -1})
+        if response.status_code != 200:
+            return response
+    
+    #check if being assigned
+    if new_assigned != -1: #being assigned
+        #update ticket
+        response = requests.post(url + "/ticket/update/", json={"tid": validated_data["tid"],
+                                                            "assigned": new_assigned})
+        if response.status_code != 200:
+            return response
+
     return Response(status=status.HTTP_200_OK)
 
 class ProjectUserInviteView(APIView):
@@ -228,7 +255,7 @@ class ProjectUserInviteAcceptView(APIView):
         project = project_response.json()
         project['scrum_users'].append(user_response.json()["uid"])
 
-        response = requests.post(url + "/project/update/", data={"pid": pid,
+        response = requests.post(url + "/project/update/", json={"pid": pid,
                                                                  "scrum_users": project['scrum_users']})
 
         return Response({"message": "Invitation accepted"}, status=status.HTTP_200_OK)
