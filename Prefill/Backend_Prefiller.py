@@ -42,7 +42,7 @@ if __name__ == "__main__":
     uid_counter = 1
 
     for test in test_cases:
-        print(f"test: {test}")
+        print(f"Task: {test}")
         case = test_cases[test]
 
         if case["cookie_id"] is None or case["cookie_id"] == -1:
