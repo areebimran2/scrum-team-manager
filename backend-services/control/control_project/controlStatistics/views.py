@@ -29,11 +29,11 @@ def getBar(request, pid_str):
         elif response.status_code == 200: # Project exists
             uid_dict = dict()
             
-            project_dict = response.json()
+            project_dict = response.json()[0]
 
             for ticketID in project_dict.get("tickets"):
                 try:
-                    ticketResponse = requests.get(url + f'/ticket/query/{ticketID}').json()
+                    ticketResponse = requests.get(url + f'/ticket/query/{ticketID}').json()[0]
                     if (not uid_dict.get(ticketResponse["assigned"])):
                         if (ticketResponse["completed"]):
                             uid_dict[ticketResponse["assigned"]] = {"completed": [ticketID], "uncompleted": []}
@@ -51,7 +51,7 @@ def getBar(request, pid_str):
             final_json = []
             for uid in uid_dict.keys():
                 try:
-                    userResponse = requests.get(url + f'/user/query/{uid}').json()
+                    userResponse = requests.get(url + f'/user/query/UID/{uid}').json()[0]
                     one_bar_dict = dict()
                     one_bar_dict["completed"] = len(uid_dict[uid]["completed"])
                     one_bar_dict["uncompleted"] = len(uid_dict[uid]["uncompleted"])
@@ -61,8 +61,7 @@ def getBar(request, pid_str):
 
                 except:
                     return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            
-            return Response(json.dumps(final_json), status=status.HTTP_200_OK)
+            return Response(data={"stats":final_json}, status=status.HTTP_200_OK)
             
         else:
             return Response(status=response.status_code)

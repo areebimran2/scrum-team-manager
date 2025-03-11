@@ -48,7 +48,7 @@ urlpatterns = [
     path('project/update/', views_project.updateProject),
 
     # Invite Project Members
-    path('project/<int:pid>/send-invite/', views_userprojects.ProjectUserInviteView.as_view()),
+    path('project/<str:pid>/send-invite/', views_userprojects.ProjectUserInviteView.as_view()),
     path("project-accept-invite/<key>/", views_userprojects.ProjectUserInviteAcceptView.as_view(), name="project-accept-invite"),
     path("invitations/", include('invitations.urls', namespace='invitations')),
     path("invite/", views_userprojects.manual_add_project_member),

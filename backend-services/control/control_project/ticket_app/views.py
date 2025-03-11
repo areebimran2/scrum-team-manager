@@ -129,7 +129,7 @@ def ticket_create_handler(request):
             project_data["tickets"].append(tid)
             update_response = requests.post(url + "/project/update/", json=project_data)
             if update_response.status_code == 200:
-                return Response(status=status.HTTP_200_OK)
+                return Response(status=status.HTTP_201_CREATED, data=full_ticket_data)
             else:
                 return Response(update_response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

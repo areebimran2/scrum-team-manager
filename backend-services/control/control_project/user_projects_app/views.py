@@ -95,7 +95,7 @@ class ProjectTicketAssignView(APIView):
             print("checked is admin")
 
             if validated_data["tid"] not in project_data["tickets"]:
-                err = {"error" : f"ticket {validated_data["tid"]} not project {project_data["pid"]}"}
+                err = {"error" : f"ticket {validated_data['tid']} not project {project_data['pid']}"}
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             
             print("ticket in list")
@@ -237,7 +237,7 @@ class ProjectUserInviteAcceptView(APIView):
         if invitation.key_expired():
             return Response({"error":"This invitation has expired."}, status=410)
 
-        # Check if thee invitation has been accepted
+        # Check if the invitation has been accepted
         if invitation.accepted:
             return Response({"error":"This invitation has already been accepted."}, status=400)
 
@@ -252,11 +252,23 @@ class ProjectUserInviteAcceptView(APIView):
         user_response = requests.get(url + "/user/query/EMAIL/{0}".format(email))
         project_response = requests.get(url + "/project/query/{0}".format(pid))
 
-        project = project_response.json()
-        project['scrum_users'].append(user_response.json()["uid"])
+        user = user_response.json()[0]
+        project = project_response.json()[0]
 
-        response = requests.post(url + "/project/update/", json={"pid": pid,
-                                                                 "scrum_users": project['scrum_users']})
+        user['assigned_tickets'][pid] = []
+        project['scrum_users'].append(user["uid"])
+
+        project_response = requests.post(url + "/project/update/", json={"pid": pid,
+                                                                         "scrum_users": project['scrum_users']})
+        user_response = requests.post(url + "/user/update/", json={"uid": user["uid"],
+                                                                   "assigned_tickets": user["assigned_tickets"]})
+
+        if project_response.status_code != 200 or user_response.status_code != 200:
+            if project_response.status_code != 200:
+                err = {"error": f"code: {project_response.status_code}, response: {project_response.text}"}
+            else:
+                err = {"error": f"code: {user_response.status_code}, response: {user_response.text}"}
+            return Response(err, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response({"message": "Invitation accepted"}, status=status.HTTP_200_OK)
 
