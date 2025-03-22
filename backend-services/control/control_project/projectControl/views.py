@@ -2,11 +2,12 @@ import time
 
 from rest_framework.decorators import api_view, permission_classes
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.status import HTTP_409_CONFLICT
 from rest_framework.views import APIView
 from invitations.utils import get_invitation_model
 from rest_framework.decorators import api_view
@@ -487,7 +488,8 @@ class ProjectTicketAssignView(APIView):
 
             # Add to Users tickets
             user = user_response.json()[0]
-            user["assigned_tickets"][f"{project_id}"].append(validated_data["tid"])
+            if validated_data["tid"] not in user["assigned_tickets"][f"{project_id}"]:
+                user["assigned_tickets"][f"{project_id}"].append(validated_data["tid"])
 
             response = requests.post(url + "/user/update/", json={"uid": validated_data["assigned"],
                                                                   "assigned_tickets": user["assigned_tickets"]})
@@ -595,8 +597,13 @@ class ProjectUserInviteView(APIView):
             Invitation = get_invitation_model()
             invitation = Invitation.objects.filter(email__iexact=validated_data["email"]).last()
 
-            print(Invitation.objects.filter())
+            if invitation is not None and invitation.accepted:
+                return Response({"error": "The user with this email has already accepted an invite"}, status=HTTP_409_CONFLICT)
+
             if invitation is None:
+                invitation = Invitation.create(email=validated_data["email"], pid=self.kwargs['pid'])
+            elif invitation.key_expired():
+                invitation.delete()
                 invitation = Invitation.create(email=validated_data["email"], pid=self.kwargs['pid'])
 
             invitation.send_invitation(request)
@@ -647,7 +654,10 @@ class ProjectUserInviteAcceptView(APIView):
                 err = {"error": f"code: {user_response.status_code}, response: {user_response.text}"}
             return Response(err, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        return Response({"message": "Invitation accepted"}, status=status.HTTP_200_OK)
+        # Redirect to dashboard for now
+        frontend_url = "http://localhost:3000/dashboard"
+
+        return redirect(frontend_url)
 
 @api_view(['POST'])
 def manual_add_project_member(request):
