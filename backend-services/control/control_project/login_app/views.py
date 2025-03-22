@@ -80,13 +80,13 @@ def login_handler(request):
                             key='cookie_1',
                             value=f'{header}.{payload}',
                             max_age=settings.COOKIE_AGE.total_seconds(),
-                            secure=True
+                            # secure=True
                         )
 
                         response.set_cookie(
                             key='cookie_2',
                             value=signature,
-                            secure=True,
+                            # secure=True,
                             httponly=True
                         )
 

@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'corsheaders',
     "invitations",
     'userprofile_app',
-    'user_projects_app',
     'signup_app',
     'login_app',
     'ticket_app',
@@ -167,5 +166,5 @@ JWT_COOKIE_SIGNATURE = 'cookie_2'
 
 COOKIE_AGE = timedelta(minutes=15)
 
-INVITATIONS_INVITATION_MODEL = "user_projects_app.CustomUserInvite"
+INVITATIONS_INVITATION_MODEL = "projectControl.CustomUserInvite"
 INVITATIONS_CONFIRMATION_URL_NAME = "project-accept-invite"

@@ -1,0 +1,310 @@
+{
+    "signup_bob" : {
+        "cookie_id" : null,
+        "URI" : "/signup/",
+        "method" : "POST",
+        "data" : {
+            "email" : "bob@mail.com",
+            "password" : "password123"
+        }
+    },
+    "login_bob" : {
+        "cookie_id" : -1,
+        "URI" : "/login/",
+        "method" : "POST",
+        "data" : {
+            "email" : "bob@mail.com",
+            "password" : "password123"
+        }
+    },
+    "update_bob" : {
+        "cookie_id" : 1,
+        "URI" : "/userprofile/",
+        "method" : "POST",
+        "data" : {
+            "uid" : 1,
+            "display_name" : "Bob"
+        }
+    },
+    "signup_jenny" : {
+        "cookie_id" : null,
+        "URI" : "/signup/",
+        "method" : "POST",
+        "data" : {
+            "email" : "jenny@mail.com",
+            "password" : "password123"
+        }
+    },
+    "login_jenny" : {
+        "cookie_id" : -1,
+        "URI" : "/login/",
+        "method" : "POST",
+        "data" : {
+            "email" : "jenny@mail.com",
+            "password" : "password123"
+        }
+    },
+    "update_jenny" : {
+        "cookie_id" : 2,
+        "URI" : "/userprofile/",
+        "method" : "POST",
+        "data" : {
+            "uid" : 2,
+            "display_name" : "Jenny"
+        }
+    },
+    "signup_sam" : {
+        "cookie_id" : null,
+        "URI" : "/signup/",
+        "method" : "POST",
+        "data" : {
+            "email" : "sam@mail.com",
+            "password" : "password123"
+        }
+    },
+    "login_sam" : {
+        "cookie_id" : -1,
+        "URI" : "/login/",
+        "method" : "POST",
+        "data" : {
+            "email" : "sam@mail.com",
+            "password" : "password123"
+        }
+    },
+    "update_sam" : {
+        "cookie_id" : 3,
+        "URI" : "/userprofile/",
+        "method" : "POST",
+        "data" : {
+            "uid" : 3,
+            "display_name" : "Sam"
+        }
+    },
+    "add_project1_bob" : {
+        "cookie_id" : 1,
+        "URI" : "/project/add/",
+        "method" : "POST",
+        "data" : {
+            "name" : "Voice Controlled Coffee Machine",
+            "description" : "Software for voice controlled coffee machine",
+            "creator" : 1
+        }
+    },
+    "add_project2_bob" : {
+        "cookie_id" : 1,
+        "URI" : "/project/add/",
+        "method" : "POST",
+        "data" : {
+            "name" : "Smart Microwave",
+            "description" : "Software for smart microwave",
+            "creator" : 1
+        }
+    },
+    "manually_invite_jenny" : {
+        "cookie_id" : 1,
+        "URI" : "/invite/",
+        "method" : "POST",
+        "data" : {
+            "pid" : 1,
+            "uid" : 2
+        }
+    },
+    "manually_invite_jenny_2" : {
+        "cookie_id" : 1,
+        "URI" : "/invite/",
+        "method" : "POST",
+        "data" : {
+            "pid" : 2,
+            "uid" : 2
+        }
+    },
+    "manually_invite_sam_2" : {
+        "cookie_id" : 1,
+        "URI" : "/invite/",
+        "method" : "POST",
+        "data" : {
+            "pid" : 2,
+            "uid" : 3
+        }
+    },
+    "create_ticket1_p1" : {
+        "cookie_id" : 1,
+        "URI" : "/ticket/create/",
+        "method" : "POST",
+        "data" : {
+            "project" : 1,
+            "creator" : 1
+        }
+    },
+    "update_ticket1p1: " : {
+        "cookie_id" : 1,
+        "URI" : "/ticket/update/",
+        "method" : "POST",
+        "data" : {
+            "tid" : 1,
+            "title" : "Create Interpreter for User Voice",
+            "description" : "Create interpretor to parse input mp3 of user command"
+        }
+    },
+    "create_ticket2_p1" : {
+        "cookie_id" : 1,
+        "URI" : "/ticket/create/",
+        "method" : "POST",
+        "data" : {
+            "project" : 1,
+            "creator" : 1
+        }
+    },
+    "update_ticket2_p1: " : {
+        "cookie_id" : 1,
+        "URI" : "/ticket/update/",
+        "method" : "POST",
+        "data" : {
+            "tid" : 2,
+            "title" : "Create Coffee Machine Controller",
+            "description" : "Create controller and drivers to send commands to the coffee machine"
+        }
+    },
+    "create_ticket3_p1" : {
+        "cookie_id" : 1,
+        "URI" : "/ticket/create/",
+        "method" : "POST",
+        "data" : {
+            "project" : 1,
+            "creator" : 1
+        }
+    },
+    "update_ticket3_p1: " : {
+        "cookie_id" : 1,
+        "URI" : "/ticket/update/",
+        "method" : "POST",
+        "data" : {
+            "tid" : 3,
+            "title" : "Create Store Website",
+            "description" : "Create website for users to purchase product"
+        }
+    },
+    "create_ticket1_p2" : {
+        "cookie_id" : 1,
+        "URI" : "/ticket/create/",
+        "method" : "POST",
+        "data" : {
+            "project" : 2,
+            "creator" : 1
+        }
+    },
+    "update_ticket1_p2: " : {
+        "cookie_id" : 1,
+        "URI" : "/ticket/update/",
+        "method" : "POST",
+        "data" : {
+            "tid" : 4,
+            "title" : "Configure Touch Screen Drivers",
+            "description" : "Configure drivers for microwave screen"
+        }
+    },
+    "create_ticket2_p2" : {
+        "cookie_id" : 1,
+        "URI" : "/ticket/create/",
+        "method" : "POST",
+        "data" : {
+            "project" : 2,
+            "creator" : 1
+        }
+    },
+    "update_ticket2_p2: " : {
+        "cookie_id" : 1,
+        "URI" : "/ticket/update/",
+        "method" : "POST",
+        "data" : {
+            "tid" : 5,
+            "title" : "Configure Connection",
+            "description" : "Connect device to servers so that it can receive software updates and connect to the mobile app"
+        }
+    },
+    "create_ticket3_p2" : {
+        "cookie_id" : 1,
+        "URI" : "/ticket/create/",
+        "method" : "POST",
+        "data" : {
+            "project" : 2,
+            "creator" : 1
+        }
+    },
+    "update_ticket3_p2: " : {
+        "cookie_id" : 1,
+        "URI" : "/ticket/update/",
+        "method" : "POST",
+        "data" : {
+            "tid" : 6,
+            "title" : "Create Mobile App",
+            "description" : "Create mobile app to connect to microwave for extra functionality"
+        }
+    },
+    "assign_ticket1_p1" : {
+        "cookie_id" : 1,
+        "method" : "POST query",
+        "URI1" : "/project/",
+        "key" : 1,
+        "URI2" : "/assign/",
+        "data" : {
+            "tid" : 1,
+            "assigned" : 2
+        }
+    },
+    "assign_ticket2_p1" : {
+        "cookie_id" : 1,
+        "method" : "POST query",
+        "URI1" : "/project/",
+        "key" : 1,
+        "URI2" : "/assign/",
+        "data" : {
+            "tid" : 2,
+            "assigned" : 2
+        }
+    },
+    "assign_ticket3_p1" : {
+        "cookie_id" : 1,
+        "method" : "POST query",
+        "URI1" : "/project/",
+        "key" : 1,
+        "URI2" : "/assign/",
+        "data" : {
+            "tid" : 3,
+            "assigned" : 1
+        }
+    },
+    "assign_ticket1_p2" : {
+        "cookie_id" : 1,
+        "method" : "POST query",
+        "URI1" : "/project/",
+        "key" : 2,
+        "URI2" : "/assign/",
+        "data" : {
+            "tid" : 4,
+            "assigned" : 1
+        }
+    },
+    "assign_ticket2_p2" : {
+        "cookie_id" : 1,
+        "method" : "POST query",
+        "URI1" : "/project/",
+        "key" : 2,
+        "URI2" : "/assign/",
+        "data" : {
+            "tid" : 5,
+            "assigned" : 2
+        }
+    },
+    "assign_ticket3_p2" : {
+        "cookie_id" : 1,
+        "method" : "POST query",
+        "URI1" : "/project/",
+        "key" : 2,
+        "URI2" : "/assign/",
+        "data" : {
+            "tid" : 6,
+            "assigned" : 3
+        }
+    }
+}

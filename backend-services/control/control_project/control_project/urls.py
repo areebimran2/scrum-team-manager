@@ -22,12 +22,10 @@ from signup_app import views as views_signup
 from login_app import views as views_login
 
 
-from login_app.views import UserLoginRecoveryView
 from controlStatistics import views as views_stats
 
 from ticket_app import views as views_ticket
 from projectControl import views as views_project
-from user_projects_app import views as views_userprojects
 
 
 urlpatterns = [
@@ -40,7 +38,7 @@ urlpatterns = [
     path('userprofile/<str:uid_str>', views_userprofile.userprofile_get_handler),
 
     # User Fillers
-    path('userprojects/', views_userprojects.UserAllProjectsView.as_view()),
+    path('userprojects/', views_project.UserAllProjectsView.as_view()),
 
     # Project Object Endpoints
     path('project/add/', views_project.createProject),
@@ -48,21 +46,22 @@ urlpatterns = [
     path('project/update/', views_project.updateProject),
 
     # Invite Project Members
-    path('project/<int:pid>/send-invite/', views_userprojects.ProjectUserInviteView.as_view()),
-    path("project-accept-invite/<key>/", views_userprojects.ProjectUserInviteAcceptView.as_view(), name="project-accept-invite"),
+    path('project/<str:pid>/send-invite/', views_project.ProjectUserInviteView.as_view()),
+    path("project-accept-invite/<key>/", views_project.ProjectUserInviteAcceptView.as_view(), name="project-accept-invite"),
     path("invitations/", include('invitations.urls', namespace='invitations')),
+    path("invite/", views_project.manual_add_project_member),
 
     # Project Actions
-    path('project/update/promote', views_project.promote),
-    path('project/update/demote', views_project.demote),
-    path('project/update/remove', views_project.remove),
-    path('project/<int:pid>/assign/', views_userprojects.ProjectTicketAssignView.as_view()),
-    path('project/<int:pid>/unassign/', views_userprojects.ProjectTicketUnassignView.as_view()),
+    path('project/update/promote/', views_project.promote),
+    path('project/update/demote/', views_project.demote),
+    path('project/update/remove/', views_project.remove),
+    path('project/<str:pid>/assign/', views_project.ProjectTicketAssignView.as_view()),
+    path('project/<str:pid>/unassign/', views_project.ProjectTicketUnassignView.as_view()),
 
     # Project Fillers
-    path('project/<int:pid>/tickets/', views_userprojects.ProjectTicketsView.as_view()),
-    path('project/<int:pid>/members/', views_userprojects.ProjectMembersView.as_view()),
-    path('project/<str:pid_str>/adminview', views_project.adminView),
+    path('project/<str:pid>/tickets/', views_project.ProjectTicketsView.as_view()),
+    path('project/<str:pid>/members/', views_project.ProjectMembersView.as_view()),
+    path('project/<str:pid_str>/adminview/', views_project.adminView),
     path('stats/<str:pid_str>', views_stats.getBar),
 
     # Ticket Object Endpoints

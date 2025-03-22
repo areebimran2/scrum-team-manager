@@ -111,24 +111,16 @@ def ticket_create_handler(request):
         if serializer.is_valid():
             url = "http://127.0.0.1:8001"
             #create ticket
-            ticket_data = {
-                "project" : serializer.validated_data["project"],
-                "creator" : serializer.validated_data["creator"],
-                "date_created" : str(timezone.now())
-            }
-            print(ticket_data)
-            print(type(ticket_data["date_created"]))
-            create_response = requests.post(url + "/ticket/add/", json=ticket_data)
+            create_response = requests.post(url + "/ticket/add/", json=serializer.validated_data)
             if create_response.status_code != 200:
                 return Response(create_response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
             full_ticket_data = create_response.json()
-            print(f'full ticket: {full_ticket_data}')
             tid = full_ticket_data["tid"]
-            
+
             #get to project
             pid = serializer.validated_data["project"]
-            get_response = requests.get(url+f"/ticket/query/{pid}")
+            get_response = requests.get(url+f"/project/query/{pid}")
             if create_response.status_code != 200:
                 return Response(get_response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
@@ -137,7 +129,7 @@ def ticket_create_handler(request):
             project_data["tickets"].append(tid)
             update_response = requests.post(url + "/project/update/", json=project_data)
             if update_response.status_code == 200:
-                return Response(status=status.HTTP_200_OK)
+                return Response(status=status.HTTP_201_CREATED, data=full_ticket_data)
             else:
                 return Response(update_response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
