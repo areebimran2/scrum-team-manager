@@ -1,8 +1,12 @@
 import time
+from smtplib import SMTPException
+
+from django.core.mail import send_mail
 
 from rest_framework.decorators import api_view, permission_classes
 
 from django.shortcuts import render, get_object_or_404, redirect
+from control_project import settings
 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -697,3 +701,53 @@ def manual_add_project_member(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+
+class ContactAdminView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        # Use serializer to check if request contains expected information
+        serializer = ContactAdminSerializer(data=request.data)
+        if serializer.is_valid():
+            url = "http://127.0.0.1:8001"
+
+            # Signed in user is not apart of project and is therefore not authorized to access project info
+            project_id = self.kwargs['pid']
+            if request.user.assigned_tickets.get(project_id) is None:
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+            project_response = requests.get(url + "/project/query/{0}".format(project_id))
+            project = project_response.json()[0]
+
+            # Get validated email from serializer and query user database to
+            # see if there exists a user with the email
+            validated_data = serializer.validated_data
+            admin_response = requests.get(url + "/user/query/EMAIL/{0}".format(validated_data["admin_email"]))
+            admin = admin_response.json()[0]
+
+            # There is no admin with such email
+            if admin_response.status_code == 404 or admin["uid"] not in project["admin"]:
+                return Response({"error": "There is no admin with the provided email for this project"},
+                                status=status.HTTP_404_NOT_FOUND)
+
+            # find the ticket information
+            ticket_response = requests.get(url + "/ticket/query/{0}".format(validated_data["tid"]))
+            ticket = ticket_response.json()[0]
+            if ticket_response.status_code == 404:
+                return Response({"error": "There is no ticket with the tid"}, status=status.HTTP_404_NOT_FOUND)
+
+            recipient = request.user
+
+            try:
+                subject = validated_data["subject"]
+                message = validated_data["message"] + "\r\n\r\n" + ticket
+                from_email = settings.EMAIL_HOST_USER
+                # Send the email to the admin and the user so that they have a reference as to what was sent
+                recipient_list = [admin["email"], recipient.email]
+                send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+            except SMTPException as e:
+                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            return Response({"response": "Email sent to admin"}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
