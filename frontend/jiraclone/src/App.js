@@ -14,6 +14,7 @@ import ProjectList from "./pages/projectlist";
 import { BarGraphExample } from "./pages/bargraphexample";
 import FullTicket from "./pages/ticket";
 import TicketEdit from "./pages/ticketedit";
+import MessageSend from "./pages/messageSend";
 
 export function App() {
 
@@ -34,6 +35,7 @@ export function App() {
             <Route path="/adminproject" element={<AdminProject />} />
             <Route path="/project" element={<ProjectList />} />
             <Route path="/ticketedit" element={<TicketEdit />} />
+            <Route path="/message" element={< MessageSend />} />
         </Routes>
     </BrowserRouter >
     );
