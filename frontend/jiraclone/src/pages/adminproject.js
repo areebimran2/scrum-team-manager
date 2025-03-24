@@ -12,12 +12,18 @@ export function AdminProject() {
 
     function onEditClick() {
         // as always, edit this as needed
-        navigate("/projectedit", {replace: true});
+        navigate("/projectedit", {replace: false});
+        // they can probably still navigate back to the project on the back button? so replace: false
     }
 
     function onNewClick() {
         // definitely edit this, gotta make a new ticket and all that 
-        navigate("/ticketedit", {replace: true});
+        navigate("/ticketedit", {replace: false});
+        // they can probably still navigate back to the project on the back button? so replace: false
+    }
+
+    function onDeleteClick() {
+        // show the pop up for confirmation and delete the project
     }
 
 
@@ -95,10 +101,11 @@ export function AdminProject() {
                 </div>
 
                 <div className={styles.sidepanel}>
-                    <button onClick={onEditClick} className={styles.sidebutton}>Edit Project</button>
+                    <button onClick={onEditClick} className={styles.editbutton}>Edit Project</button>
                     <div className={styles.users}>
                         <UserView />
                     </div>
+                    <button onClick={onDeleteClick} className={styles.deletebutton}>Delete Project</button>
                 </div>
             </div>
         </div>
