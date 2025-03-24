@@ -58,6 +58,9 @@ urlpatterns = [
     path('project/<str:pid>/assign/', views_project.ProjectTicketAssignView.as_view()),
     path('project/<str:pid>/unassign/', views_project.ProjectTicketUnassignView.as_view()),
 
+    # Project email to admin
+    path('project/<str:pid>/contact/', views_project.ContactAdminView.as_view()),
+
     # Project Fillers
     path('project/<str:pid>/tickets/', views_project.ProjectTicketsView.as_view()),
     path('project/<str:pid>/members/', views_project.ProjectMembersView.as_view()),
