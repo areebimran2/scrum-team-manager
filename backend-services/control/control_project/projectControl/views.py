@@ -156,10 +156,79 @@ def updateProject(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     # wrong request method
     else:
-        return Response({"error": "Method not allowed"},
-                        status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteProject(request, pid_str):
 
+    if request.method == 'DELETE':
+        try:
+            pid = int(pid_str)
+        except:
+            return Response({"error": f"{pid_str} is not a number"}, status=status.HTTP_400_BAD_REQUEST)
 
+        url = "http://127.0.0.1:8001"
+
+        # Check if project exists
+
+        response = requests.get(url + f'/project/query/{pid}')
+
+        if response.status_code == 404: # Project does not exist
+            # Send 404 back to frontend
+            return Response(status=status.HTTP_404_NOT_FOUND)
+                
+        elif response.status_code == 200: # Project exists
+            
+            project_data = response.json()[0]
+
+            #check user is admin
+            if request.user.uid not in project_data["admin"]:
+                return Response({"error": "User is not admin on this project"}, status=status.HTTP_401_UNAUTHORIZED)
+            
+            #Delete Tickets
+            for tid in project_data['tickets']:
+                del_url = f"http://127.0.0.1:10001/ticket/{tid}"
+                del_response = requests.delete(url=del_url)
+                if response.status_code != 200:
+                    err = f"Error deleting ticket {tid}: {del_response}"
+                    return Response(err, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            #Get user object list
+            members_response = requests.get(f"http://127.0.0.1:10001/project/{pid}/members/")
+            if members_response.status_code != 200:
+                err = f"Error getting member list: {members_response}"
+                return Response(err, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            #Remove project from users
+            user_list = members_response.json()[0]["members"]
+            for user in user_list:
+                del user["assigned_tickets"][f"{pid}"]
+                update_data = {
+                    "pid" : user["pid"],
+                    "assgned_tickets" : user["assigned_tickets"]
+                }
+                update_response = requests.post(url+"/user/update/", json=update_data)
+                if update_response.status_code != 200:
+                    err = f"Error updating {user["uid"]}: {update_response}"
+                    return Response(err, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            #Delete Project
+            delete_response = requests.post(url+"project/delete/", json={"pid":pid})
+            if delete_response.status_code != 200:
+                err = f"Error deleting project in DB: {delete_response}"
+                return Response(err, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            return Response(status=status.HTTP_200_OK)
+        
+        else:
+            err = f"Error getting project from DB: {response}"
+            return Response(err, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    # wrong request method
+    else:
+        return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+    
 @api_view(['GET'])
 def adminView(request, pid_str):
     if request.method == 'GET':

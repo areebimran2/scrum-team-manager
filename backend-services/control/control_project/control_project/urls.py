@@ -44,6 +44,7 @@ urlpatterns = [
     path('project/add/', views_project.createProject),
     path('project/<str:pid_str>', views_project.getProject),
     path('project/update/', views_project.updateProject),
+    path('project/delete/<str:pid_str>', views_project.deleteProject),
 
     # Invite Project Members
     path('project/<str:pid>/send-invite/', views_project.ProjectUserInviteView.as_view()),
