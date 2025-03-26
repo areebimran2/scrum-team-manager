@@ -50,10 +50,10 @@ def ticket_get_delete_handler(request, tid_str):
             response_data = response.json()[0]
             pid = response_data["project"]
 
-            if response_data["assigned"]: #Ticket is assigned to a user
+            if response_data["assigned"] != -1: #Ticket is assigned to a user
 
                 #Remove ticket from user
-                uid = response_data["assigned_to"]
+                uid = response_data["assigned"]
                 user_response = requests.get(url + f'/user/query/{uid}')
                 user_data = user_response.json()[0]
                 user_data["assigned_tickets"][pid].remove(tid)
@@ -64,7 +64,7 @@ def ticket_get_delete_handler(request, tid_str):
                 
             #Remove ticket from project
             project_response = requests.get(url + f'/project/query/{pid}')
-            project_data = project_response.json[0]
+            project_data = project_response.json()[0]
             project_data["tickets"].remove(tid)
             #Send updated project back
             update_response = requests.post(url + "/project/update/", json=project_data)
@@ -110,24 +110,16 @@ def ticket_create_handler(request):
         if serializer.is_valid():
             url = "http://127.0.0.1:8001"
             #create ticket
-            ticket_data = {
-                "project" : serializer.validated_data["project"],
-                "creator" : serializer.validated_data["creator"],
-                "date_created" : str(timezone.now())
-            }
-            print(ticket_data)
-            print(type(ticket_data["date_created"]))
-            create_response = requests.post(url + "/ticket/add/", json=ticket_data)
+            create_response = requests.post(url + "/ticket/add/", json=serializer.validated_data)
             if create_response.status_code != 200:
                 return Response(create_response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
             full_ticket_data = create_response.json()
-            print(f'full ticket: {full_ticket_data}')
             tid = full_ticket_data["tid"]
-            
+
             #get to project
             pid = serializer.validated_data["project"]
-            get_response = requests.get(url+f"/ticket/query/{pid}")
+            get_response = requests.get(url+f"/project/query/{pid}")
             if create_response.status_code != 200:
                 return Response(get_response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
@@ -136,7 +128,7 @@ def ticket_create_handler(request):
             project_data["tickets"].append(tid)
             update_response = requests.post(url + "/project/update/", json=project_data)
             if update_response.status_code == 200:
-                return Response(status=status.HTTP_200_OK)
+                return Response(status=status.HTTP_201_CREATED, data=full_ticket_data)
             else:
                 return Response(update_response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

@@ -69,10 +69,7 @@ update a user based on its uid
 """
 @api_view(['POST'])
 def update_user(request):
-   try:
-      data = json.loads(request.body)
-   except json.decoder.JSONDecodeError:
-      return Response({"error":"Body required for this request"}, status=400)
+   data = request.data
    uid = data.get("uid")
    if (not uid):
       return Response({"error": "no identification give"}, status=400)
@@ -82,7 +79,7 @@ def update_user(request):
       user = ScrumUser.objects.get(uid=uid)
 
       assigned_tickets = data.get("assigned_tickets")
-      if assigned_tickets:
+      if assigned_tickets is not None:
          user.assigned_tickets = assigned_tickets
 
 
