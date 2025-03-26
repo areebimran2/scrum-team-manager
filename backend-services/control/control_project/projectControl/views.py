@@ -195,17 +195,23 @@ def deleteProject(request, pid_str):
                     return Response(err, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             #Get user object list
-            members_response = requests.get(f"http://127.0.0.1:10001/project/{pid}/members/")
-            if members_response.status_code != 200:
-                err = f"Error getting member list: {members_response}"
-                return Response(err, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            user_list = []
+
+            for user_id in project_data["scrum_users"]:
+                user_response = requests.get(url + "/user/query/UID/{0}".format(user_id))
+                if user_response.status_code == 200:
+                    user_list.extend(user_response.json())
+                else:
+                    err = f"Error getting user {user_id}: {user_response}"
+                    return Response(err, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            print(f"USER LIST: {user_list}")
 
             #Remove project from users
-            user_list = members_response.json()[0]["members"]
             for user in user_list:
                 del user["assigned_tickets"][f"{pid}"]
                 update_data = {
-                    "pid" : user["pid"],
+                    "uid" : user["uid"],
                     "assgned_tickets" : user["assigned_tickets"]
                 }
                 update_response = requests.post(url+"/user/update/", json=update_data)
@@ -214,7 +220,7 @@ def deleteProject(request, pid_str):
                     return Response(err, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
             #Delete Project
-            delete_response = requests.post(url+"project/delete/", json={"pid":pid})
+            delete_response = requests.post(url+"/project/delete/", json={"pid":pid})
             if delete_response.status_code != 200:
                 err = f"Error deleting project in DB: {delete_response}"
                 return Response(err, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
