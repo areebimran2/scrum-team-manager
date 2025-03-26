@@ -71,7 +71,7 @@ def userprofile_get_handler(request, uid_str):
     else:
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view['GET']
+@api_view(['GET'])
 def skill_list(request):
     if request.method == "GET":
 
