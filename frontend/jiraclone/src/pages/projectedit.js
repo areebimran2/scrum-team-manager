@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -15,7 +15,24 @@ export function ProjectEdit() {
     const [searchParams, setSearchParams] = useSearchParams();
     const pid = searchParams.get("pid")
 
-    const project = GetProjects([pid]);
+    const [authFailed, setAuthFailed] = useState(false);
+
+    useEffect (() => {
+        if (authFailed){
+            navigate("/login");
+        }
+    }, [authFailed]);
+
+    try {
+        const project = GetProjects([pid]);
+    } catch (error) {
+        if (error.message === "Unauthorized request"){
+            setAuthFailed(true);
+        } else {
+            alert(`${error.message}. Please reload the page`);
+        }
+    }
+    
 
     function onSubmit(data) {
         // write the POST request in here.

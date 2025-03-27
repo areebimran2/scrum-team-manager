@@ -14,7 +14,15 @@ export function GetProjects(userPIDs) {
         for (var pid in userPIDs) {
 
             fetch("http://127.0.0.1:10001/project/" + pid, {method: "GET"})
-            .then(response => response.json())
+            .then(response => {
+                if (response.status == 401){
+                    throw new Error("Unauthorized request");
+                } else if (response.status != 200){
+                    throw new Error(`API error: ${response.status}`);
+                } else {
+                    return response.json;
+                }
+            })
             .then(data => {
                 setProjects(
                     [
@@ -22,9 +30,6 @@ export function GetProjects(userPIDs) {
                         data
                     ]
                     );
-            })
-            .catch(error => {
-                console.error("Error: ", error);
             });
             
         }
