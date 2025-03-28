@@ -115,6 +115,10 @@ export function AdminProject() {
         navigate("/ticketedit?tid=new");
     }
 
+    function onDeleteClick(){
+        
+    }
+
     // edit top bar's page name to be the name of the project 
     // will add the user's portion but that's a different feature 
     return (
