@@ -24,10 +24,10 @@ export function App() {
         <Routes>
             <Route path="/login" element={<Login/>} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/dashboard" element={ <PrivateRoute> <Dashboard /> </PrivateRoute> } />
-            <Route path="/profile" element={ <PrivateRoute> <ProfileEdit /> </PrivateRoute> } />
-            <Route path="/recoveryrequest" element={ <PrivateRoute> <RecoveryRequest /> </PrivateRoute> } />
-            <Route path="/recoveryrequestsuccess" element={ <PrivateRoute> <RecoveryRequestSuccess /> </PrivateRoute> } />
+            <Route path="/dashboard" element={ <Dashboard /> } />
+            <Route path="/profile" element={ <ProfileEdit />  } />
+            <Route path="/recoveryrequest" element={  <RecoveryRequest />  } />
+            <Route path="/recoveryrequestsuccess" element={  <RecoveryRequestSuccess />  } />
             <Route path="/*" element={<NotFound />} />
             <Route path="/ticket" element={<FullTicket />} />
             <Route path="/barexample" element={<BarGraphExample />}></Route>
