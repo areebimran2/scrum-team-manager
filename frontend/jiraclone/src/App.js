@@ -15,6 +15,7 @@ import { BarGraphExample } from "./pages/bargraphexample";
 import FullTicket from "./pages/ticket";
 import TicketEdit from "./pages/ticketedit";
 import MessageSend from "./pages/messageSend";
+import ContactAdmin from "./pages/contactadmin";
 
 export function App() {
 
@@ -36,6 +37,7 @@ export function App() {
             <Route path="/project" element={<ProjectList />} />
             <Route path="/ticketedit" element={<TicketEdit />} />
             <Route path="/message" element={< MessageSend />} />
+            <Route path="/contactadmin" element={<ContactAdmin />} />
         </Routes>
     </BrowserRouter >
     );
