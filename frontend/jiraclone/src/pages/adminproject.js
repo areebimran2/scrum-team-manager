@@ -11,7 +11,6 @@ export function AdminProject() {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const pid = searchParams.get("pid")
-
     const [project, setProject] = useState({name:"Test Project", description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ", admin:[4, 5], scrum_user:[1,2,3]});
     const [tickets, setTickets] = useState([
         {
@@ -148,10 +147,11 @@ export function AdminProject() {
                 </div>
 
                 <div className={styles.sidepanel}>
-                    <button onClick={onEditClick} className={styles.sidebutton}>Edit Project</button>
+                    <button onClick={onEditClick} className={styles.editbutton}>Edit Project</button>
                     <div className={styles.users}>
                         <UserView inputProject={ project }/>
                     </div>
+                    <button onClick={onDeleteClick} className={styles.deletebutton}>Delete Project</button>
                 </div>
             </div>
         </div>
