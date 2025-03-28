@@ -40,3 +40,8 @@ class ProjectUserInviteSerializer(serializers.Serializer):
 class ManualAddProjectMemberSerializer(serializers.Serializer):
     pid = serializers.IntegerField(required=True)
     uid = serializers.IntegerField(required=True)
+
+class ContactAdminSerializer(serializers.Serializer):
+    admin_email = serializers.EmailField(required=True)
+    tid = serializers.IntegerField(required=True)
+    message = serializers.CharField(required=False, allow_null=False)
