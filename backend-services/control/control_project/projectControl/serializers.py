@@ -44,5 +44,4 @@ class ManualAddProjectMemberSerializer(serializers.Serializer):
 class ContactAdminSerializer(serializers.Serializer):
     admin_email = serializers.EmailField(required=True)
     tid = serializers.IntegerField(required=True)
-    subject = serializers.CharField(required=False, allow_null=False)
     message = serializers.CharField(required=False, allow_null=False)

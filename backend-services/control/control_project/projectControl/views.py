@@ -20,7 +20,6 @@ from .serializers import *
 
 import requests
 
-
 # Create your views here.
 @api_view(['POST'])
 def createProject(request):
@@ -736,18 +735,44 @@ class ContactAdminView(APIView):
             if ticket_response.status_code == 404:
                 return Response({"error": "There is no ticket with the tid"}, status=status.HTTP_404_NOT_FOUND)
 
-            recipient = request.user
+            sender = request.user
+
+            if ticket["tid"] not in project["tickets"] or ticket["tid"] not in sender.assigned_tickets[project_id]:
+                return Response({"error": "Invalid ticket provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+            header_message = (f"This email has been sent to notify the project admin ({admin['email']}) of the user "
+                              f"({sender.email}), under the specified project, that requires attention to the "
+                              f"specified ticket for reassignment or to address some other concern.")
+
+            user_details = (f"*** User Information ***\r\n"
+                            f"Email: {sender.email}\r\n"
+                            f"Display name: {sender.display_name}")
+
+            project_details = (f"*** Project Details ***\r\n"
+                               f"Project Name: {project['name']}\r\n"
+                               f"Project Description: {project['description']}\r\n"
+                               f"Project Date Created: {project['date_created']}")
+
+            ticket_details = (f"*** Ticket Details ***\r\n"
+                              f"Ticket Title: {ticket['title']}\r\n"
+                              f"Ticket Description: {ticket['description']}\r\n"
+                              f"Ticket Story Points: {ticket['story_points']}\r\n"
+                              f"Ticket Priority: {ticket['priority']}\r\n"
+                              f"Ticket Date Created: {ticket['date_created']}\r\n"
+                              f"Ticket Date Assigned: {ticket['date_assigned']}")
+
+            user_message = (f"*** Additional Details (provided by {sender.email}) ***\r\n" + validated_data["message"])
 
             try:
-                subject = validated_data["subject"]
-                message = validated_data["message"] + "\r\n\r\n" + ticket
+                subject = "JirAI Admin Contact Service no-reply"
+                message = header_message + "\r\n\r\n" + user_details + "\r\n\r\n" + project_details + "\r\n\r\n" + ticket_details + "\r\n\r\n" + user_message
                 from_email = settings.EMAIL_HOST_USER
                 # Send the email to the admin and the user so that they have a reference as to what was sent
-                recipient_list = [admin["email"], recipient.email]
+                recipient_list = [admin['email'], sender.email]
                 send_mail(subject, message, from_email, recipient_list, fail_silently=False)
             except SMTPException as e:
                 return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-            return Response({"response": "Email sent to admin"}, status=status.HTTP_200_OK)
+            return Response({"response": "Email sent to recipients"}, status=status.HTTP_200_OK)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
