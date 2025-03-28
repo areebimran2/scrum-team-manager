@@ -34,7 +34,7 @@ export function Signup() {
                 alert("User already exists");
             } else if (Response.status === 400){
                 alert("Invalid Parameters")
-            } else if (Response.status === 200){
+            } else if (Response.status === 201){
                 navigate("/login", {replace: true});
             } else {
                 alert("Unknown error, please try again later");

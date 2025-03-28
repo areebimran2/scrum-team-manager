@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { useNavigate } from "react-router-dom";
-import styles from "../styles/topbar.module.css";
+import styles from "./styles/topbar.module.css";
 import logoutIcon from "../assets/logout.png";
 import homeIcon from "../assets/home.png";
 

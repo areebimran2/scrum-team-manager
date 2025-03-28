@@ -46,7 +46,6 @@ const SearchableDropdown = ({
       <div className={styles.control}>
         <div className={styles.selectedValue}>
           <input
-            placeholder="Add Skill"
             ref={inputRef}
             type="text"
             value={getDisplayValue()}

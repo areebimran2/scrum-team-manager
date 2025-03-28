@@ -26,7 +26,8 @@ from controlStatistics import views as views_stats
 
 from ticket_app import views as views_ticket
 from projectControl import views as views_project
-
+from AI_Control import views as views_AI
+from ticketaggregate import views as views_Aggregate
 
 urlpatterns = [
     # User Object Endpoints
@@ -45,6 +46,7 @@ urlpatterns = [
     path('project/add/', views_project.createProject),
     path('project/<str:pid_str>', views_project.getProject),
     path('project/update/', views_project.updateProject),
+    path('project/delete/<str:pid_str>', views_project.deleteProject),
 
     # Invite Project Members
     path('project/<str:pid>/send-invite/', views_project.ProjectUserInviteView.as_view()),
@@ -59,6 +61,9 @@ urlpatterns = [
     path('project/<str:pid>/assign/', views_project.ProjectTicketAssignView.as_view()),
     path('project/<str:pid>/unassign/', views_project.ProjectTicketUnassignView.as_view()),
 
+    # Project email to admin
+    path('project/<str:pid>/contact/', views_project.ContactAdminView.as_view()),
+
     # Project Fillers
     path('project/<str:pid>/tickets/', views_project.ProjectTicketsView.as_view()),
     path('project/<str:pid>/members/', views_project.ProjectMembersView.as_view()),
@@ -68,5 +73,9 @@ urlpatterns = [
     # Ticket Object Endpoints
     path('ticket/<str:tid_str>', views_ticket.ticket_get_delete_handler),
     path('ticket/update/', views_ticket.ticket_update_handler),
-    path('ticket/create/', views_ticket.ticket_create_handler)
+    path('ticket/create/', views_ticket.ticket_create_handler),
+    path('agg/<str:pid_str>', views_Aggregate.getTickets),
+    
+    # Ai Endpoint
+    path('llm/', views_AI.getBestUser)
     ]
