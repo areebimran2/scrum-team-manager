@@ -15,7 +15,8 @@ export function ProfileEdit() {
     
     let payload = getAuthCookie();
 
-    let userID = payload.uid;
+    //let userID = payload.uid;
+    let userID = 1;
 
     console.log(payload);
 

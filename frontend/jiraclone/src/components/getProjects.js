@@ -10,14 +10,16 @@ export function GetProjects(userPIDs) {
     useEffect(() => {
         const controller = new AbortController();
         const signal = controller.signal;   
-        
-        for (var pid in userPIDs) {
+        let pid;
+        let counter;
+        for (counter = 0; counter < userPIDs.length; counter++) {
+            pid = userPIDs[counter];
 
-            fetch("http://127.0.0.1:10001/project/" + pid, {method: "GET"})
+            fetch(`http://127.0.0.1:10001/project/${pid}`, {method: "GET"})
             .then(response => {
-                if (response.status == 401){
+                if (response.status === 401){
                     throw new Error("Unauthorized request");
-                } else if (response.status != 200){
+                } else if (response.status !== 200){
                     throw new Error(`API error: ${response.status}`);
                 } else {
                     return response.json;
@@ -30,7 +32,14 @@ export function GetProjects(userPIDs) {
                         data
                     ]
                     );
-            });
+            }).catch(e => {
+                setProjects(
+                    [
+                        ...projects,
+                        "error"
+                    ]
+                    );
+            })
             
         }
 
@@ -40,7 +49,7 @@ export function GetProjects(userPIDs) {
 
     }
     , []);
-
+    console.log(projects);
     return projects;
 
 }
