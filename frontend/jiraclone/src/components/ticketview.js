@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Link, useNavigate } from 'react-router-dom';
-import styles from '../styles/ticketview.module.css';
+import styles from './styles/ticketview.module.css';
 
 export function TicketView({ tickets, mode }) {
     const navigate = useNavigate();
