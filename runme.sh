@@ -48,6 +48,19 @@ flush_db() {
     esac
 }
 
+fill_db() {
+    case "$1" in
+        "user")
+            python3 manage.py loaddata ../../../Prefill/userSampleData.json;;
+        "project")
+            python3 manage.py loaddata ../../../Prefill/projectSampleData.json;;
+        "ticket")
+            python3 manage.py loaddata ../../../Prefill/ticketSampleData.json;;
+        *)
+            echo "No prefill available for $service";;
+    esac
+}
+
 # Function to handle backend services
 handle_backend() {
     action=$1
@@ -82,6 +95,9 @@ handle_backend() {
         ;;
         "flush")
         flush_db $service
+        ;;
+        "fill")
+        fill_db $service
     esac
 
     cd -
@@ -99,7 +115,7 @@ handle_frontend() {
     elif [[ "$action" == "freshstart" ]]; then
         freshstart_service "frontend" 3000
     else
-        echo "Frontend service does not support flush."
+        echo "Frontend service does not support this action."
     fi
     cd -
 }
