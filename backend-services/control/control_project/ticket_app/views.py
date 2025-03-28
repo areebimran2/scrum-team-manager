@@ -42,7 +42,6 @@ def ticket_get_delete_handler(request, tid_str):
         response = requests.get(url + f'/ticket/query/{tid}')
 
         if response.status_code == 404: # Ticket does not exist
-            print("actually 404")
             # Send 404 back to frontend
             return Response(status=status.HTTP_404_NOT_FOUND)
                 
@@ -129,7 +128,7 @@ def ticket_create_handler(request):
             project_data["tickets"].append(tid)
             update_response = requests.post(url + "/project/update/", json=project_data)
             if update_response.status_code == 200:
-                return Response(status=status.HTTP_201_CREATED, data=full_ticket_data)
+                return Response(status=status.HTTP_201_CREATED, json=full_ticket_data)
             else:
                 return Response(update_response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
