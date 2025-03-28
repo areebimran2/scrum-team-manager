@@ -131,6 +131,7 @@ def select_best_user_stats(chosen_users: list[str], users: list[dict] ) -> str:
     The stats represent the total story points of uncompleted tickets, vs the total story
     points of completed tickets. Your job is to decide who should be given this ticket.
     Consider the workload that each user currently has, as well as how qualified each user is.
+    YOU MUST CHOOSE 1 USER
 
     SORTED: {chosen_users}
 
@@ -171,7 +172,7 @@ def getBestUser(request):
     """
 
     description = request.data.get('description')
-    users = request.data.get("users")  # Expecting a dictionary
+    users = request.data.get("users")  
 
     # Validate description
     if not isinstance(description, str):
