@@ -63,7 +63,26 @@
     justify-items: center;
 }
 
-.sidebutton {
+.deletebutton {
+    margin-top: 20px;
+    color: #E4E6EB;
+    width: 90%;
+    min-width: 175px;
+    height: auto;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #3a3b3c;
+    box-shadow: 0px 0px 20px -20px rgba(0, 0, 0, 0.5);
+    align-self: center;
+    cursor: pointer;
+    background-color: #D12158;
+    transition: all 0.2s ease-in-out 0ms;
+    user-select: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+}
+
+.editbutton {
     margin-bottom: 20px;
     color: #E4E6EB;
     width: 90%;
@@ -102,12 +121,17 @@
     font-size: 20px;
 }
   
-.ticketbutton:hover, .sidebutton:hover {
+.ticketbutton:hover, .editbutton:hover {
     background-color: #005a4d;
     box-shadow: 0px 0px 20px -18px rgba(0, 0, 0, 0.5);
 }
+
+.deletebutton:hover {
+    background-color: #B11A4A;
+    box-shadow: 0px 0px 20px -18px rgba(0, 0, 0, 0.5);
+}
   
-.ticketbutton:active, .sidebutton:active {
+.ticketbutton:active, .delete:active, .editbutton:active {
     transform: scale(0.95);
 }
 

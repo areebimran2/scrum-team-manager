@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -6,13 +6,40 @@ import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import styles from "../styles/projectedit.module.css";
 import { Topbar } from "../components/topbar";
+import { GetProjects } from "../components/getProjects";
 
 export function ProjectEdit() {
     const navigate = useNavigate();
     const {register, handleSubmit} = useForm();
 
     const [searchParams, setSearchParams] = useSearchParams();
-    const pid = searchParams.get("pid")
+    let pid = [searchParams.get("pid")];
+
+    const [project, setProject] = useState({name:"", description:""});
+
+    useEffect (() => {
+
+        fetch(`http://127.0.0.1:10001/project/${pid}`, {method: "GET"})
+            .then(response => {
+                if (response.status === 401){
+                    throw new Error("Unauthorized request");
+                } else if (response.status !== 200){
+                    throw new Error(`API error: ${response.status}`);
+                } else {
+                    return response.json;
+                }
+            })
+            .then(data => {
+                setProject(data);
+            }).catch(e => {
+                if (e.message === "Unauthorized request"){
+                    navigate("/login");
+                } else {
+                    setProject({name:"Server Error", description:"Server Error"});
+                    alert(`${e.message}. Please reload the page`);
+                }
+            })
+    }, []);
 
     function onSubmit(data) {
         // write the POST request in here.
@@ -30,12 +57,22 @@ export function ProjectEdit() {
             })
         });
 
-        navigate("/project");
+        navigate(`/project?pid=${pid}`);
     }
 
     function deleteProject() {
         // write the function to pull up the confirm page for deleting the project.
-        alert("Project Deleted");
+        let response = fetch(`http://127.0.0.1:10001/project/delete/${pid}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                pid: pid,
+            })
+        });
+
+        navigate("/dashboard");
 
     }
 
@@ -52,10 +89,10 @@ export function ProjectEdit() {
             <Topbar page_name="Project Edit"/>
             <div className={styles.container}>
                 <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-                    <input type="text" placeholder="Project Name" name="projectName" {...register("projectName")} className={styles.projectName}/>
+                    <input type="text" placeholder="Project Name" value={project.name} name="projectName" {...register("projectName")} className={styles.projectName}/>
                     <hr className={styles.line}/>
                     <h1 className={styles.descriptiontitle}>Description: </h1>
-                    <textarea placeholder="Description" name="description" {...register("description")} className={styles.description}/>
+                    <textarea placeholder="Description" value={project.description} name="description" {...register("description")} className={styles.description}/>
                     <div className={styles.buttons}>
                         <Popup trigger={ <button type="button" className={styles.deletebutton}>Delete Project</button> } modal nested>
                         {
@@ -63,13 +100,13 @@ export function ProjectEdit() {
                             // out how to do it in the module.css file.
                             close => (
                                 <div className={styles.modal}>
-                                    <button onClick={()=>close()} type="button">Cancel</button>
-                                    <button onClick={handleSubmit(deleteProject)} type="button">Confirm</button>
+                                    <button className={styles.cancelbutton} onClick={()=>close()} type="button">Cancel Deletion</button>
+                                    <button className={styles.confirmbutton} onClick={handleSubmit(deleteProject)} type="button">Confirm Deletion</button>
                                 </div>
                             )
                         } 
                         </Popup>
-                        <button type="submit" className={styles.submitbutton}>Save Changes</button>                        
+                        <button type="submit" className={styles.submitbutton}>Save Changes</button>
                     </div>
                 </form>
             </div>

@@ -50,10 +50,10 @@ def ticket_get_delete_handler(request, tid_str):
             response_data = response.json()[0]
             pid = response_data["project"]
 
-            if response_data["assigned"]: #Ticket is assigned to a user
+            if response_data["assigned"] != -1: #Ticket is assigned to a user
 
                 #Remove ticket from user
-                uid = response_data["assigned_to"]
+                uid = response_data["assigned"]
                 user_response = requests.get(url + f'/user/query/{uid}')
                 user_data = user_response.json()[0]
                 user_data["assigned_tickets"][pid].remove(tid)
@@ -64,7 +64,7 @@ def ticket_get_delete_handler(request, tid_str):
                 
             #Remove ticket from project
             project_response = requests.get(url + f'/project/query/{pid}')
-            project_data = project_response.json[0]
+            project_data = project_response.json()[0]
             project_data["tickets"].remove(tid)
             #Send updated project back
             update_response = requests.post(url + "/project/update/", json=project_data)

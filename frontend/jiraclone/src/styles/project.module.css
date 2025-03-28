@@ -1,0 +1,50 @@
+.page {
+    margin-top: 64px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.container {
+    grid-column: 2;
+    width: 1000px;
+}
+
+.description {
+    font-size: 18px;
+    color: #B0B3B8;
+}
+
+.headers {
+    margin-bottom: 0;
+    font-size: 36px;
+    color: #E4E6EB;
+}
+
+.innerContainer {
+    background-color: #242526;
+
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    border-radius: 8px;
+
+    margin-bottom: 50px;
+}
+
+.ticketInfo {
+    display: grid;
+    grid-template-columns: auto 150px 150px 100px 75px;
+}
+  
+.ticketTitle {
+    color: #B0B3B8;
+    font-weight: bold;
+    font-size: 24px;
+    margin-left: 20px;
+}
+  
+.categories {
+    color: #B0B3B8;
+    font-weight: bold;
+    font-size: 24px;
+}

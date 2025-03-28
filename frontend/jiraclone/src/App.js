@@ -10,12 +10,12 @@ import PrivateRoute from "./components/privateRoute";
 import ProjectEdit from "./pages/projectedit"
 import AdminProject from "./pages/adminproject";
 import "./styles/Global.css";
-import ProjectList from "./pages/projectlist";
 import { BarGraphExample } from "./pages/bargraphexample";
 import FullTicket from "./pages/ticket";
 import TicketEdit from "./pages/ticketedit";
 import MessageSend from "./pages/messageSend";
 import ContactAdmin from "./pages/contactadmin";
+import Project from "./pages/project"
 
 export function App() {
 
@@ -30,14 +30,14 @@ export function App() {
             <Route path="/recoveryrequestsuccess" element={ <PrivateRoute> <RecoveryRequestSuccess /> </PrivateRoute> } />
             <Route path="/*" element={<NotFound />} />
             <Route path="/ticket" element={<FullTicket />} />
-            <Route path="/projectlist" element={<ProjectList />}></Route>
             <Route path="/barexample" element={<BarGraphExample />}></Route>
             <Route path="/projectedit" element={<ProjectEdit />} />
             <Route path="/adminproject" element={<AdminProject />} />
-            <Route path="/project" element={<ProjectList />} />
             <Route path="/ticketedit" element={<TicketEdit />} />
             <Route path="/message" element={< MessageSend />} />
             <Route path="/contactadmin" element={<ContactAdmin />} />
+            <Route path="/project" element={<Project />} />
+
         </Routes>
     </BrowserRouter >
     );

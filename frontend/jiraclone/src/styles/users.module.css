@@ -102,3 +102,7 @@
     display: block;
     margin: auto auto;
   }
+
+  .demote {
+    rotate: 180deg;
+  }

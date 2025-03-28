@@ -1,6 +1,6 @@
-import React from 'react';
+import { React, useEffect, useState } from "react";
 import ReactDOM from 'react-dom/client';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Topbar } from '../components/topbar';
 import { TicketView } from '../components/ticketview';
 import { UserView } from '../components/users';
@@ -9,22 +9,10 @@ import styles from '../styles/adminproject.module.css';
 
 export function AdminProject() {
     const navigate = useNavigate();
-
-    function onEditClick() {
-        // as always, edit this as needed
-        navigate("/projectedit", {replace: true});
-    }
-
-    function onNewClick() {
-        // definitely edit this, gotta make a new ticket and all that 
-        navigate("/ticketedit", {replace: true});
-    }
-
-
-    // This is for testing, but also 
-    // Assigned is currently an integer, I can only assume that's the user's uid
-    // I frankly do not know how to change that but good luck!
-    const tickets = [
+    const [searchParams, setSearchParams] = useSearchParams();
+    const pid = searchParams.get("pid")
+    const [project, setProject] = useState({name:"Test Project", description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ", admin:[4, 5], scrum_user:[1,2,3]});
+    const [tickets, setTickets] = useState([
         {
           tid: 1,
           title: 'Ticket 1',
@@ -61,17 +49,85 @@ export function AdminProject() {
           priority: 3,
           description: 'This is the description for ticket 4'
         }
-    ];
+    ]);
+
+    // useEffect (() => {
+
+    //     fetch(`http://127.0.0.1:10001/project/${pid}`, {method: "GET"})
+    //         .then(response => {
+    //             if (response.status === 401){
+    //                 throw new Error("Unauthorized request");
+    //             } else if (response.status !== 200){
+    //                 throw new Error(`API error: ${response.status}`);
+    //             } else {
+    //                 return response.json;
+    //             }
+    //         })
+    //         .then(data => {
+    //             setProject(data);
+    //             setTickets([]);
+    //         }).catch(e => {
+    //             if (e.message === "Unauthorized request"){
+    //                 navigate("/login");
+    //             } else {
+    //                 navigate("/dashboard");
+    //             }
+    //         });
+
+    //     let counter;
+    //     let tid;
+    //     for (counter = 0; counter < project.tickets.length; counter++){
+    //         tid = project.tickets[counter];
+    //         fetch(`http://127.0.0.1:10001/tickets/${tid}`, {method: "GET"})
+    //         .then(response => {
+    //             if (response.status === 401){
+    //                 throw new Error("Unauthorized request");
+    //             } else if (response.status !== 200){
+    //                 throw new Error(`API error: ${response.status}`);
+    //             } else {
+    //                 return response.json;
+    //             }
+    //         })
+    //         .then(data => {
+    //             setTickets([
+    //                 ...tickets,
+    //                 data
+    //             ]
+    //             )
+    //         }).catch(e => {
+    //             if (e.message === "Unauthorized request"){
+    //                 navigate("/login");
+    //             } else {
+    //                 navigate("/dashboard");
+    //             }
+    //         });
+    //     }
+
+    // }, []);
+
+    function onEditClick() {
+        // as always, edit this as needed
+        navigate(`/projectedit?pid=${pid}`);
+    }
+
+    function onNewClick(tid) {
+        // definitely edit this, gotta make a new ticket and all that 
+        navigate("/ticketedit?tid=new");
+    }
+
+    function onDeleteClick(){
+        
+    }
 
     // edit top bar's page name to be the name of the project 
     // will add the user's portion but that's a different feature 
     return (
         <div>
-            <Topbar page_name={"Project Name"}/>
+            <Topbar page_name={ project.name }/>
             <div className={styles.projectpage}>
                 <div className={styles.mainbody}>
                     <p className={styles.description}>
-                        Load the project description into this part by replacing this text with it. Wahooooooo
+                        {project.description}
                     </p>
                     <h1 className={styles.headings}>Performance</h1>
                     <div className={styles.innerContainer}>
@@ -95,10 +151,11 @@ export function AdminProject() {
                 </div>
 
                 <div className={styles.sidepanel}>
-                    <button onClick={onEditClick} className={styles.sidebutton}>Edit Project</button>
+                    <button onClick={onEditClick} className={styles.editbutton}>Edit Project</button>
                     <div className={styles.users}>
-                        <UserView />
+                        <UserView inputProject={ project }/>
                     </div>
+                    <button onClick={onDeleteClick} className={styles.deletebutton}>Delete Project</button>
                 </div>
             </div>
         </div>
