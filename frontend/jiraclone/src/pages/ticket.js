@@ -109,6 +109,10 @@ export function FullTicket() {
                     {isAssigned ? <button className={styles.completeButton} onClick={markCompleted(ticket)} type="button">Mark Ticket as Completed</button> : null}
                     {isAdmin ? <button className={styles.editButton} onClick={() => navigate(`/ticketedit?tid=${tid}&pid=${pid}`)} type="button">Edit Ticket</button> : null}
                 </div>
+                <div className={styles.buttonContainer}></div>
+                <div className={styles.buttonContainer}>
+                    <button className={styles.contactButton} onClick={() => navigate(`/contactadmin?tid=${tid}&pid=${pid}`)} type="button">Contact Admin</button>
+                </div>
             </div>
         </div>
     );

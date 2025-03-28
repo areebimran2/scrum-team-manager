@@ -112,7 +112,7 @@ export function TicketEdit() {
                     <h1 className={styles.descriptiontitle}>Description: </h1>
                     <textarea placeholder="Description" name="description" value={ticket.description} {...register("description")} className={styles.description}/>
                     <div className={styles.buttons}>
-                        <Popup trigger={ <button type="button" className={styles.deletebutton}>Delete Project</button> } modal nested>
+                        <Popup trigger={ <button type="button" className={styles.deletebutton}>Delete Ticket</button> } modal nested>
                         {
                             // https://react-popup.elazizi.com/css-styling <= Source for popup styling. Do in global.css, as I haven't yet figured
                             // out how to do it in the module.css file.
@@ -124,7 +124,7 @@ export function TicketEdit() {
                             )
                         } 
                         </Popup>
-                        <button type="submit" className={styles.submitbutton}>Save Changes</button>                        
+                        <button type="submit" className={styles.submitbutton}>Save Changes</button>
                     </div>
                 </form>
             </div>

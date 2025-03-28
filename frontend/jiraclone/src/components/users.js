@@ -80,24 +80,24 @@ export function UserView({ inputProject }) {
     function onPromote(uid) {
         return function () {
 
-            fetch(`http://127.0.0.1:10001/project/update/promote/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    pid:project.pid,
-                    uid: uid
-                })
-                })
-            .then(response => {
-                setHttpCode(response.status);
-            });
+            // fetch(`http://127.0.0.1:10001/project/update/promote/`, {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json",
+            //     },
+            //     body: JSON.stringify({
+            //         pid:project.pid,
+            //         uid: uid
+            //     })
+            //     })
+            // .then(response => {
+            //     setHttpCode(response.status);
+            // });
 
-            if (httpCode !== 200){
-                alert("Server Error, please try again");
-                return;
-            }
+            // if (httpCode !== 200){
+            //     alert("Server Error, please try again");
+            //     return;
+            // }
 
             let user = users.find(user => user.uid === uid);
     
@@ -118,24 +118,24 @@ export function UserView({ inputProject }) {
     function onDemote(uid) {
         return function () {
 
-            fetch(`http://127.0.0.1:10001/project/update/demote/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    pid:project.pid,
-                    uid: uid
-                })
-                })
-            .then(response => {
-                setHttpCode(response.status);
-            });
+            // fetch(`http://127.0.0.1:10001/project/update/demote/`, {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json",
+            //     },
+            //     body: JSON.stringify({
+            //         pid:project.pid,
+            //         uid: uid
+            //     })
+            //     })
+            // .then(response => {
+            //     setHttpCode(response.status);
+            // });
 
-            if (httpCode !== 200){
-                alert("Server Error, please try again");
-                return;
-            }
+            // if (httpCode !== 200){
+            //     alert("Server Error, please try again");
+            //     return;
+            // }
 
             let admin = admins.find(admin => admin.uid === uid);
     
@@ -156,24 +156,24 @@ export function UserView({ inputProject }) {
     function onDelete(uid) {
         return function () {
 
-            fetch(`http://127.0.0.1:10001/project/update/remove/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    pid:project.pid,
-                    uid: uid
-                })
-                })
-            .then(response => {
-                setHttpCode(response.status);
-            });
+            // fetch(`http://127.0.0.1:10001/project/update/remove/`, {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json",
+            //     },
+            //     body: JSON.stringify({
+            //         pid:project.pid,
+            //         uid: uid
+            //     })
+            //     })
+            // .then(response => {
+            //     setHttpCode(response.status);
+            // });
 
-            if (httpCode !== 200){
-                alert("Server Error, please try again");
-                return;
-            }
+            // if (httpCode !== 200){
+            //     alert("Server Error, please try again");
+            //     return;
+            // }
 
             // Remove user from users and admins
             setUsers(users => users.filter(user => user.uid !== uid));
