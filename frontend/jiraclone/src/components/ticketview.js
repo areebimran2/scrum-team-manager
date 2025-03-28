@@ -11,35 +11,35 @@ export function TicketView({ tickets, mode }) {
      * maybe add checkbox functionality in the future but I'm just leaving it for now 
      */
 
-    const TicketCard = ({ tickets }) => {
+    const TicketCard = ({ ticket }) => {
       if (mode === 'dashboard') {
        return (
         <div className={styles.DticketCard}>
-            <a className={styles.ticketTitle} onClick={() => navigate("/ticket")}>{tickets.title}</a>
-            <p className={styles.descriptors}>{tickets.project}</p>  
-            <input type="checkbox" checked={tickets.completed} readOnly className={styles.checkbox}/>          
-            <p className={styles.descriptors}>{tickets.priority}</p> 
-            <p className={styles.descriptors}>{tickets.story_points}</p>      
+            <a className={styles.ticketTitle} onClick={() => navigate(`/ticket?tid=${ticket.tid}`)}>{ticket.title}</a>
+            <p className={styles.descriptors}>{ticket.project}</p>  
+            <input type="checkbox" checked={ticket.completed} readOnly className={styles.checkbox}/>          
+            <p className={styles.descriptors}>{ticket.priority}</p> 
+            <p className={styles.descriptors}>{ticket.story_points}</p>      
         </div>
         ); 
       } else if (mode === 'project') {
           return (
             <div className={styles.PticketCard}>
-                <p className={styles.ticketTitle} onClick={() => navigate("/ticket")}>{tickets.title}</p>
-                <p className={styles.descriptors}>{tickets.assigned}</p>
-                <input type="checkbox" checked={tickets.completed} readOnly className={styles.checkbox}/>            
-                <p className={styles.descriptors}>{tickets.priority}</p> 
-                <p className={styles.descriptors}>{tickets.story_points}</p>         
+                <p className={styles.ticketTitle} onClick={() => navigate(`/ticket?tid=${ticket.tid}`)}>{ticket.title}</p>
+                <p className={styles.descriptors}>{ticket.assigned}</p>
+                <input type="checkbox" checked={ticket.completed} readOnly className={styles.checkbox}/>            
+                <p className={styles.descriptors}>{ticket.priority}</p> 
+                <p className={styles.descriptors}>{ticket.story_points}</p>         
             </div>
           );
         }
       };
-    
+      
       const TicketList = ({ tickets }) => {
         return (
           <div className={styles.ticketList}>
             {tickets.map(ticket => (
-              <TicketCard key={ticket.tid} tickets={ticket} />
+              <TicketCard key={ticket.tid} ticket={ticket} />
             ))}
           </div>
         );
