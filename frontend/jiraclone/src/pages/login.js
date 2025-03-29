@@ -9,25 +9,28 @@ export function Login() {
 
     const navigate = useNavigate();
     const {register, handleSubmit} = useForm();
-    function onSubmit(data){    
+    function onSubmit(data){
 
-        let user = {
-            email : data.email,
-            password : data.password 
-        }
-
-        let allowLogin = true;
+        // let user = {
+        //     email : data.email,
+        //     password : data.password
+        // }
+        //
+        // let allowLogin = true;
 
         let response = fetch("http://127.0.0.1:10001/login/", {
             method: "POST",
             headers : {
                 'Content-Type': 'application/json;charset=utf-8'
             },
-            body: JSON.stringify(user)
+            body: JSON.stringify({
+                email : data.email,
+                password : data.password
+            }),
+            credentials: 'include'
         });
 
-        // response.then(Response => {
-
+         response.then(Response => {
             if (Response.status == 401){
                 alert("Incorrect Password");
             } else if (Response.status == 404){
@@ -35,25 +38,24 @@ export function Login() {
             } else if (Response.status == 400){
                 alert("Invalid Parameters")
             } else if (Response.status == 200){
-                allowLogin = true;
+                // allowLogin = true;
                 navigate("/dashboard", {replace: true});
             } else {
                 alert("Unknown error, please try again later");
             }
+         });
 
-        // });
-
-        if (allowLogin) {
-            navigate("/dashboard", {replace: true});
-
-            let date = new Date();
-            date.setTime(date.getTime() + (12 * 60 * 60 * 1000));
-            let expires = "expires="+ date.toUTCString() + ";";
-            let uid = "jiraclonelogin=" + user.email + ";";
-
-            document.cookie = uid + expires + "path=/";
-
-        }
+        //  if (allowLogin) {
+        //     navigate("/dashboard", {replace: true});
+        //
+        //     let date = new Date();
+        //     date.setTime(date.getTime() + (12 * 60 * 60 * 1000));
+        //     let expires = "expires="+ date.toUTCString() + ";";
+        //     let uid = "jiraclonelogin=" + user.email + ";";
+        //
+        //     document.cookie = uid + expires + "path=/";
+        //
+        // }
 
     }
 

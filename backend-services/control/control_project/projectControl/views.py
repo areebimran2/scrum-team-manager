@@ -215,11 +215,11 @@ def deleteProject(request, pid_str):
                 del user["assigned_tickets"][f"{pid}"]
                 update_data = {
                     "uid" : user["uid"],
-                    "assgned_tickets" : user["assigned_tickets"]
+                    "assigned_tickets" : user["assigned_tickets"]
                 }
                 update_response = requests.post(url+"/user/update/", json=update_data)
                 if update_response.status_code != 200:
-                    err = f"Error updating {user["uid"]}: {update_response}"
+                    err = f"Error updating {user['uid']}: {update_response}"
                     return Response(err, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
             #Delete Project

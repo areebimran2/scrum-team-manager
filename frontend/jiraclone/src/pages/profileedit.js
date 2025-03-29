@@ -25,12 +25,11 @@ export function ProfileEdit() {
         const controller = new AbortController();
         const signal = controller.signal;   
 
-        fetch("http://127.0.0.1:10001/userprofile/" + userID, {method: "GET"})
-        .then(response => response.json())
+        fetch("http://127.0.0.1:10001/userprofile", {method: 'GET', credentials: 'include'})
+        .then(response => {console.log(response.status); return response.json()})
         .then(data => {
             console.log("Inside function:");
-            console.log(data[0]);
-            setUser(data[0]);
+            setUser(data);
         })
         .catch(error => {
             console.error("Error: ", error);

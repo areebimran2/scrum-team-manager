@@ -11,7 +11,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import *
 from .serializers import *
 
-@api_view(['POST'])
+@api_view(['POST', 'GET'])
 @permission_classes([IsAuthenticated])
 def userprofile_post_handler(request):
     if request.method == 'POST':
@@ -41,6 +41,10 @@ def userprofile_post_handler(request):
         else:
             # Data formatted wrong
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'GET':
+        serialized = UserFullSerializer(request.user)
+        print(serialized.data)
+        return Response(serialized.data, status=status.HTTP_200_OK)
     else:
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
 
