@@ -71,7 +71,8 @@ def userprofile_get_handler(request, uid_str):
             return Response(status=status.HTTP_404_NOT_FOUND)
                 
         elif response.status_code == 200: # Account exists
-            return Response(response.json(), status=status.HTTP_200_OK)
+            serialized = UserFullSerializer(response.json()[0])
+            return Response(serialized.data, status=status.HTTP_200_OK)
     else:
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
 
