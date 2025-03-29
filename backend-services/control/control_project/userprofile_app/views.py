@@ -74,3 +74,23 @@ def userprofile_get_handler(request, uid_str):
             return Response(response.json(), status=status.HTTP_200_OK)
     else:
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def skill_list(request):
+    if request.method == "GET":
+
+        skill_list = [
+            "SQL", "MongoDB", "MySQL", "PostgreSQL",
+            "Django", "React", "REST API",
+            "Back-end", "Front-end", "Full Stack",
+            "Networking", "Debugging", "Testing", "System Architecture", "Cyber Security",
+            "Python", "Java", "C", "C++", "C#", "Rust", "Javascript",
+            "Pandas", "Numpy",
+            "Html & CSS", "Bootstrap", "Tailwind",
+            "Optimization",
+        ]
+
+        return_data = {"skills" : skill_list}
+        return Response(return_data, status=status.HTTP_200_OK)
+    else:
+        return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
