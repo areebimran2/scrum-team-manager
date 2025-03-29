@@ -1,13 +1,22 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { React, useEffect, useState } from "react";
+import ReactDOM from "react-dom/client";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 import { Topbar } from '../components/topbar';
 import { TicketView } from '../components/ticketview.js';
 import { ProjectView } from '../components/projectview.js';
 import styles from '../styles/dashboard.module.css';
 import defaultProfilePic from '../assets/defaultProfilePic.png';
 
+
 export function Dashboard(props) {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [user, setUser] = useState({email:"", uid:null, assigned_tickets:{}});
+  const [tickets, setTickets] = useState([]);
+  const [projects, setProjects] = useState([]);
+  let temp;
 
   /**
    * I think what needs to be done here is:
@@ -17,67 +26,89 @@ export function Dashboard(props) {
    * REMEMBER TO EDIT ALL THE PLACEHOLDER VALUES 
    * Also uncomment the parts as they are added (skills page redirect button) 
    */
+        
 
-        // This will need to be changed when tickets are implemented and can be loaded for the specific user, this was just for testing
-        const tickets = [
-          {
-            tid: 1,
-            title: 'Ticket 1',
-            project: 'Project 1',
-            completed: true,
-            story_points: 32,
-            priority: 1,
-            description: 'This is the description for ticket 1. It has a lot of text in its description. This is because it is very long and needs to be long enough to test the layout of the ticket card. This is the description for ticket 1. It has a lot of text in its description. This is because it is very long and needs to be long enough to test the layout of the ticket card. This is the description for ticket 1. It has a lot of text in its description. This is because it is very long and needs to be long enough to test the layout of the ticket card.'
-          },
-          {
-            tid: 2,
-            title: 'Ticket 2',
-            project: 'Project 2',
-            completed: false,
-            story_points: 64,
-            priority: 1,
-            description: 'This is the description for ticket 2'
-          },
-          {
-            tid: 3,
-            title: 'Ticket 3',
-            project: 'Project 1',
-            completed: true,
-            story_points: 32,
-            priority: 2,
-            description: 'This is the description for ticket 3'
-          },
-          {
-            tid: 4,
-            title: 'Ticket 4',
-            project: 'Project 1',
-            completed: false,
-            story_points: 16,
-            priority: 3,
-            description: 'This is the description for ticket 4'
-          }
-        ];
+  function onProfileClick() {
+      navigate("/profile");
+  }
 
-        // Change this as well, this is just to test projects 
-        const projects = [
-          {
-            pid: 1,
-            name: 'Project 1'
-          },
-          {
-            pid: 2,
-            name: 'Project 2'
-          }
-        ];
+  function onSkillsClick() {
+      // page doesn't exist yet, hence the comment.
+      // navigate("skills", {replace: true}); 
+  }
 
-    function onProfileClick() {
-        navigate("/profile");
-    }
+  useEffect(() => {
+    fetch(`http://127.0.0.1:10001/userprofile/`, {method: "GET", credentials: "include",})
+    .then(response => {
+        if (response.status === 401){
+            throw new Error("Unauthorized request");
+        } else if (response.status !== 200){
+            throw new Error(`API error: ${response.status}`);
+        } else {
+            return response.json();
+        }})
+    .then(data => {
+        setProjects(data);
+    }).catch(e => {
+        if (e.message === "Unauthorized request"){
+            navigate("/login");
+            alert("Unauthorized Request");
+        } else {
+            alert(`${e.message}. Please reload the page`);
+        }
+    });
+  }, []);
 
-    function onSkillsClick() {
-        // page doesn't exist yet, hence the comment.
-        // navigate("skills", {replace: true}); 
-    }
+  useEffect(()=>{
+    fetch(`http://127.0.0.1:10001/userprojects/`, {method: "GET", credentials: "include",})
+    .then(response => {
+        if (response.status === 401){
+            throw new Error("Unauthorized request");
+        } else if (response.status !== 200){
+            throw new Error(`API error: ${response.status}`);
+        } else {
+            return response.json();
+        }})
+    .then(data => {
+        setProjects(data);
+    }).catch(e => {
+        if (e.message === "Unauthorized request"){
+            navigate("/login");
+            alert("Unauthorized Request");
+        } else {
+            alert(`${e.message}. Please reload the page`);
+        }
+    });
+
+    for (let counter = 0; counter < user.assigned_tickets; counter ++){
+      let tid = user.assigned_tickets[counter];
+
+      fetch(`http://127.0.0.1:10001/ticket/${tid}`, {method: "GET", credentials: "include",})
+        .then(response => {
+            if (response.status === 401){
+                throw new Error("Unauthorized request");
+            } else if (response.status !== 200){
+                throw new Error(`API error: ${response.status}`);
+            } else {
+                return response.json();
+            }})
+        .then(data => {
+            setTickets([
+              ...tickets,
+              data
+            ]);
+        }).catch(e => {
+            if (e.message === "Unauthorized request"){
+                navigate("/login");
+                alert("Unauthorized Request");
+            } else {
+                alert(`${e.message}. Please reload the page`);
+            }
+        });
+      }
+
+  }, [user])
+
 
 /**
  * REMEMBER TO CHANGE THE PLACEHOLDER VALUES 
@@ -92,7 +123,7 @@ export function Dashboard(props) {
             <div className={styles.projectContainer}>
                 <h1 className={styles.header}>Projects</h1>
                 <div className={styles.projectsOuter}>
-                  <ProjectView projects={projects}/>
+                  <ProjectView input={projects}/>
                 </div>
             </div>
 
@@ -112,13 +143,13 @@ export function Dashboard(props) {
                   <p className={styles.categories}>SP</p>
                 </div>
                 <div className={styles.innerContainer}>
-                    <TicketView tickets={tickets} mode="dashboard"/>
+                    <TicketView input={tickets} mode="dashboard"/>
                 </div>
             </div>
         
             <div className={styles.skillsContainer}>
                 <h2 className={styles.header2}>Skills</h2>
-                <button onClick={onSkillsClick} className={styles.button}>Edit Skills</button>
+                <button onClick={(onSkillsClick)} className={styles.button}>Edit Skills</button>
             </div>
         </div>
     </div>
