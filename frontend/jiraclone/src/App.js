@@ -13,6 +13,7 @@ import "./styles/Global.css";
 import { BarGraphExample } from "./pages/bargraphexample";
 import FullTicket from "./pages/ticket";
 import TicketEdit from "./pages/ticketedit";
+import Skills from "./pages/skills";
 import MessageSend from "./pages/messageSend";
 import ContactAdmin from "./pages/contactadmin";
 import Project from "./pages/project"
@@ -34,6 +35,7 @@ export function App() {
             <Route path="/projectedit" element={<ProjectEdit />} />
             <Route path="/adminproject" element={<AdminProject />} />
             <Route path="/ticketedit" element={<TicketEdit />} />
+            <Route path="/skills" element={<Skills />} />
             <Route path="/message" element={< MessageSend />} />
             <Route path="/contactadmin" element={<ContactAdmin />} />
             <Route path="/project" element={<Project />} />
