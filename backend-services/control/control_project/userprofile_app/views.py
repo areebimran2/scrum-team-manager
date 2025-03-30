@@ -63,7 +63,7 @@ def userprofile_get_handler(request, uid_str):
 
         url = "http://127.0.0.1:8001"
 
-        response = requests.get(url + '/user/query/UID/{0}'.format(uid))
+        response = requests.get(url + '/user/query/UID/{0}'.format(uid_str))
 
         if response.status_code == 404: # Account does not exist
             print("actually 404")
