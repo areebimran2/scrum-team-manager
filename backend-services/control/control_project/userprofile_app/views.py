@@ -54,12 +54,12 @@ def userprofile_get_handler(request, uid_str):
     if request.method == 'GET':
         print("is GET request")
 
-        try:
-            uid = int(uid_str)
-            if uid != request.user.uid:
-                return Response({"error": "User does not have access to this profile"}, status=status.HTTP_401_UNAUTHORIZED)
-        except:
-            return Response({"error": f"{uid_str} is not a number"}, status=status.HTTP_400_BAD_REQUEST)
+        # try:
+        #     uid = int(uid_str)
+        #     if uid != request.user.uid:
+        #         return Response({"error": "User does not have access to this profile"}, status=status.HTTP_401_UNAUTHORIZED)
+        # except:
+        #     return Response({"error": f"{uid_str} is not a number"}, status=status.HTTP_400_BAD_REQUEST)
 
         url = "http://127.0.0.1:8001"
 
