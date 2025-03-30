@@ -12,8 +12,8 @@ class Ticket(models.Model):
     priority = models.IntegerField(default=0)
     date_created = models.DateTimeField(auto_now_add=True)
     completed = models.BooleanField(default=False)
-    date_completed = models.DateTimeField()
-    date_assigned = models.DateTimeField()
+    date_completed = models.DateTimeField(null=True)
+    date_assigned = models.DateTimeField(null=True)
     project = models.IntegerField()
 
     def save(self, *args, **kwargs):

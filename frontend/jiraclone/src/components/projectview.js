@@ -1,10 +1,13 @@
-import React from 'react';
+import { React, useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from '../styles/projectview.module.css';
 
-export function ProjectView({ projects }) {
+export function ProjectView({ input }) {
     const navigate = useNavigate();
+    const [projects, setProjects] = useState([]);
+
+    useEffect(() => setProjects(input), []);
 
     function OnClick() {
         navigate("/projectedit");
@@ -27,19 +30,15 @@ export function ProjectView({ projects }) {
         );
     };
 
-    const ProjectList = ({ projects }) => {
-        return (
-            <div className={styles.projectList}>
-                <button onClick={OnClick} className={styles.button}>
-                    <h2 className={styles.createnew}>Create New Project</h2>
-                    <h1 className={styles.plus}>+</h1>
-                </button>
-                {projects.map(project => (
-                    <ProjectCard key={project.pid} project={project} />
-                ))}
-            </div>
-        )
-    }
-
-    return <ProjectList projects={projects} />;
+    return (
+        <div className={styles.projectList}>
+            <button onClick={OnClick} className={styles.button}>
+                <h2 className={styles.createnew}>Create New Project</h2>
+                <h1 className={styles.plus}>+</h1>
+            </button>
+            {projects.map(project => (
+                <ProjectCard key={project.pid} project={project} />
+            ))}
+        </div>
+    );
 }

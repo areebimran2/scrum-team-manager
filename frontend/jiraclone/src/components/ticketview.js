@@ -1,10 +1,13 @@
-import React from 'react';
+import { React, useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './styles/ticketview.module.css';
 
-export function TicketView({ tickets, mode }) {
+export function TicketView({ input, mode }) {
     const navigate = useNavigate();
+    const [tickets, setTickets] = useState([]);
+
+    useEffect(() => setTickets(input), []);
     /**
      * TODO:
      * change the link for ticket title (line 18) to work.
@@ -34,16 +37,12 @@ export function TicketView({ tickets, mode }) {
           );
         }
       };
-      
-      const TicketList = ({ tickets }) => {
-        return (
-          <div className={styles.ticketList}>
-            {tickets.map(ticket => (
-              <TicketCard key={ticket.tid} ticket={ticket} />
-            ))}
-          </div>
-        );
-      };
 
-  return <TicketList tickets={tickets} />;
+  return (
+    <div className={styles.ticketList}>
+      {tickets.map(ticket => (
+        <TicketCard key={ticket.tid} ticket={ticket} />
+      ))}
+    </div>
+  );
 }
