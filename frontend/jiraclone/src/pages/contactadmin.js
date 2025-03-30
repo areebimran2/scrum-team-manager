@@ -16,7 +16,6 @@ export function ContactAdmin() {
     // fill this with the admins of the project
 
     const [value, setValue] = useState("");
-    const [httpCode, setHttpCode] = useState();
     const [ticket, setTicket] = useState({});
     const [project, setProject] = useState({});
     const [projectMembers, setProjectMembers] = useState([]);
@@ -126,9 +125,8 @@ export function ContactAdmin() {
                 <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
                     <input
                         type="text"
-                        placeholder="Ticket Name"
+                        placeholder={`Issue: Ticket ${tid}`}
                         name="ticketName"
-                        value={`Issue: Ticket ${tid}`}
                         {...register("ticketName")}
                         className={styles.ticketName}
                     />

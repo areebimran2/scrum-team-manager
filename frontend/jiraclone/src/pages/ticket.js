@@ -17,13 +17,15 @@ export function FullTicket() {
     const [isAdmin, setAdmin] = useState(true);
     const [isAssigned, setAssigned] = useState(true);
     const [user, setUser] = useState({});
+    const [loggedIn, setLoggedIn] = useState({});
+    const [project, setProject] = useState({});
 
-    useEffect (() => {
-        fetch(`http://127.0.0.1:10001/ticket/${tid}`, {method: "GET", credentials: "include", })
+    useEffect(() => {
+        fetch(`http://127.0.0.1:10001/ticket/${tid}`, { method: "GET", credentials: "include", })
             .then(response => {
-                if (response.status === 401){
+                if (response.status === 401) {
                     throw new Error("Unauthorized request");
-                } else if (response.status !== 200){
+                } else if (response.status !== 200) {
                     throw new Error(`API error: ${response.status}`);
                 } else {
                     return response.json();
@@ -32,17 +34,17 @@ export function FullTicket() {
             .then(data => {
                 setTicket(data);
             }).catch(e => {
-                if (e.message === "Unauthorized request"){
+                if (e.message === "Unauthorized request") {
                     navigate("/login");
                 } else {
-                    setTicket({title:"Server Error", description:"Server Error"});
+                    setTicket({ title: "Server Error", description: "Server Error" });
                     alert(`${e.message}. Please reload the page`);
                 }
             })
     }, []);
 
     useEffect(() => {
-        if (typeof(ticket.assigned) !== "undefined"){
+        if (typeof (ticket.assigned) !== "undefined") {
             fetch(`http://127.0.0.1:10001/userprofile/${ticket.assigned}`, { method: "GET", credentials: "include", })
                 .then(response => {
                     if (response.status === 401) {
@@ -63,32 +65,85 @@ export function FullTicket() {
                         alert(`${e.message}. Please reload the page`);
                     }
                 });
-            }
+
+            fetch(`http://127.0.0.1:10001/userprofile/`, { method: "GET", credentials: "include", })
+                .then(response => {
+                    if (response.status === 401) {
+                        throw new Error("Unauthorized request");
+                    } else if (response.status !== 200) {
+                        throw new Error(`API error: ${response.status}`);
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then(data => {
+                    setLoggedIn(data);
+                }).catch(e => {
+                    if (e.message === "Unauthorized request") {
+                        //navigate("/login");
+                        alert("Unauthorized Request");
+                    } else {
+                        alert(`${e.message}. Please reload the page`);
+                    }
+                });
+
+            fetch(`http://127.0.0.1:10001/project/${ticket.project}`, { method: "GET", credentials: "include", })
+                .then(response => {
+                    if (response.status === 401) {
+                        throw new Error("Unauthorized request");
+                    } else if (response.status !== 200) {
+                        throw new Error(`API error: ${response.status}`);
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then(data => {
+                    setProject(data[0]);
+                }).catch(e => {
+                    if (e.message === "Unauthorized request") {
+                        navigate("/login");
+                        alert("Unauthorized Request");
+                    } else {
+                        alert(`${e.message}. Please reload the page`);
+                    }
+                });
+        }
     }, [ticket])
 
-    function markCompleted(ticket){
-        return function (){
+    useEffect(() => {
+        if (typeof (project.admin) !== 'undefined') {
+            console.log(loggedIn.uid)
+            console.log(user.uid);
+            setAssigned(loggedIn.uid === user.uid);
+            console.log(project.admin.includes(loggedIn.uid))
+            setAdmin(project.admin.includes(loggedIn.uid));
+        }
+    }, [project, loggedIn, user]);
+
+
+    function markCompleted(ticket) {
+        return function () {
             fetch("http://127.0.0.1:10001/ticket/update/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    tid:ticket.tid,
-                    title:ticket.title,
-                    description:ticket.description,
-                    assigned_to:ticket.assigned_to,
-                    story_points:ticket.story_points,
-                    creator:ticket.creator,
-                    priority:ticket.priority,
-                    date_created:ticket.date_created,
-                    completed:true,
-                    date_completed:ticket.date_completed,
-                    date_assigned:ticket.date_assigned,
-                    assigned:ticket.assigned
+                    tid: ticket.tid,
+                    title: ticket.title,
+                    description: ticket.description,
+                    assigned_to: ticket.assigned_to,
+                    story_points: ticket.story_points,
+                    creator: ticket.creator,
+                    priority: ticket.priority,
+                    date_created: ticket.date_created,
+                    completed: true,
+                    date_completed: ticket.date_completed,
+                    date_assigned: ticket.date_assigned,
+                    assigned: ticket.assigned
                 })
             });
-    
+
             //navigate(`/dashboard`);
         };
     }
@@ -96,9 +151,9 @@ export function FullTicket() {
 
     return (
         <div className={styles.outerContainer}>
-            <Topbar page_name="Ticket" className={styles.topbar}/>
+            <Topbar page_name="Ticket" className={styles.topbar} />
             <div className={styles.container}>
-            
+
                 {/* Title */}
                 <h1 className={styles.title}>{ticket.title}</h1>
 
@@ -112,7 +167,7 @@ export function FullTicket() {
                 </div>
 
                 {/*Assigned to*/}
-                    <div className={styles.metadataContainer}>
+                <div className={styles.metadataContainer}>
                     <span className={styles.metadataLabel}>Assigned to:</span>
                     <span className={styles.metadataValue}>{user.display_name}</span>
                 </div>
@@ -127,7 +182,7 @@ export function FullTicket() {
                 </div>
 
                 <div className={styles.buttonContainer}>
-                    <button className={styles.contactButton} onClick={() => navigate(`/contactadmin?tid=${tid}`)} type="button">Contact Admin</button>
+                    {isAssigned ? <button className={styles.contactButton} onClick={() => navigate(`/contactadmin?tid=${tid}`)} type="button">Contact Admin</button> : null}
                     {isAdmin ? <button className={styles.editButton} onClick={() => navigate(`/ticketedit?tid=${tid}`)} type="button">Edit Ticket</button> : null}
                     {isAssigned ? <button className={styles.completeButton} onClick={markCompleted(ticket)} type="button">Mark as Complete</button> : null}
                 </div>
