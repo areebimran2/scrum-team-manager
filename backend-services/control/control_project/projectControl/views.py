@@ -485,7 +485,7 @@ class ProjectTicketsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, **kwargs):
-        url = "http://127.0.0.1:8003"
+        url = "http://127.0.0.1:8001"
 
         # Signed in user is not apart of project and is therefore not authorized to access project info
         project_id = self.kwargs['pid']
@@ -496,10 +496,12 @@ class ProjectTicketsView(APIView):
 
         all_tickets = []
 
-        for ticket_id in project_response.json()[0]["tickets"]:
-            response = requests.get(url + "/ticket/query/{0}".format(ticket_id))
-            if response.status_code == 200:
-                all_tickets.extend(response.json())
+        print(project_response.status_code)
+
+        # for ticket_id in project_response.json()[0]["tickets"]:
+        #     response = requests.get(url + "/ticket/query/{0}".format(ticket_id))
+        #     if response.status_code == 200:
+        #         all_tickets.extend(response.json())
         return Response({"pid": project_id, "tickets": all_tickets}, status=status.HTTP_200_OK)
 
 class ProjectMembersView(APIView):
