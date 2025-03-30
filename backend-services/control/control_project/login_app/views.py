@@ -8,8 +8,11 @@ import requests
 import time
 
 from django.utils.crypto import get_random_string
+from django.contrib.auth import logout
+
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -106,6 +109,19 @@ def login_handler(request):
     # wrong request method
     else:
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def logout_handler(request):
+    # Log out the user and clear session data
+    logout(request)
+
+    # Create an HTTP response
+    response = Response(status=status.HTTP_200_OK)
+
+    # Delete specific HttpOnly cookies
+    response.delete_cookie('cookie_1', samesite='None')  # Example for Django's default session cookie
+    response.delete_cookie('cookie_2', samesite='None')  # Replace with your custom cookie name
+    return response
 
 class UserLoginRecoveryView(APIView):
     def post(self, request, *args, **kwargs):

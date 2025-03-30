@@ -12,8 +12,18 @@ export function Topbar({ page_name }) {
         navigate("/dashboard", {replace: true});
     }
 
-    function onLogoutClick() {
+    async function onLogoutClick() {
         // I think you'll need to add to this for clearing tokens and all the necessary actions that come with logging out
+        const response = await fetch('http://127.0.0.1:10001/logout/', {
+        method: 'POST',
+        credentials: 'include', // Include cookies in the request
+    });
+
+    if (response.ok) {
+        console.log('Logged out successfully');
+    } else {
+        console.error('Logout failed');
+    }
         navigate("/login", {replace: true});
     }
 

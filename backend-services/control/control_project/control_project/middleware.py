@@ -19,13 +19,14 @@ class AuthenticationTransformationLayer:
         # Obtain response from view logic
         response = self.get_response(request)
 
-        if cookie_1 and cookie_2:
+        if request.path.strip("/") != 'logout' and cookie_1 and cookie_2:
             # Refresh the token and send back in header (as a cookie)
             response.set_cookie(
                 key='cookie_1',
                 value=cookie_1,
                 max_age=settings.COOKIE_AGE.total_seconds(),
-                secure=True
+                secure=True,
+                samesite='None'
             )
 
         return response
