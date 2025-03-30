@@ -14,8 +14,30 @@ export function AdminProject() {
     const [project, setProject] = useState({name:"", description:"", admin:[], scrum_users :[]});
     const [tickets, setTickets] = useState([]);
     const [members, setMembers] = useState([]);
+    const [user, setUser] = useState({});
 
     useEffect (() => {
+
+        fetch(`http://127.0.0.1:10001/userprofile/`, { method: "GET", credentials: "include", })
+            .then(response => {
+                if (response.status === 401) {
+                    throw new Error("Unauthorized request");
+                } else if (response.status !== 200) {
+                    throw new Error(`API error: ${response.status}`);
+                } else {
+                    return response.json();
+                }
+            })
+            .then(data => {
+                setUser(data);
+            }).catch(e => {
+                if (e.message === "Unauthorized request") {
+                    navigate("/login");
+                    alert("Unauthorized Request");
+                } else {
+                    alert(`${e.message}. Please reload the page`);
+                }
+            });
 
         fetch(`http://127.0.0.1:10001/project/${pid}`, { method: "GET", credentials: "include", })
             .then(response => {
@@ -89,9 +111,22 @@ export function AdminProject() {
         navigate(`/projectedit?pid=${pid}`);
     }
 
-    function onNewClick(tid) {
-        // definitely edit this, gotta make a new ticket and all that 
-        navigate("/ticketedit?tid=new");
+    function onNewClick(uid, pid) {
+        return function () {
+            fetch("http://127.0.0.1:10001/ticket/create/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    project: pid,
+                    creator: uid
+                }),
+                credentials: "include"
+            })
+                .then(response => response.json())
+                .then(data => navigate(`/ticketedit?tid=${data.tid}`))
+        }
     }
 
     // edit top bar's page name to be the name of the project 
@@ -111,7 +146,7 @@ export function AdminProject() {
 
                     <div className={styles.ticketStuff}>
                         <h1 className={styles.headings}>Tickets</h1>
-                        <button onClick={onNewClick} className={styles.ticketbutton}>New Ticket +</button> 
+                        <button onClick={onNewClick(user.uid, project.pid)} className={styles.ticketbutton}>New Ticket +</button> 
                     </div>
                     <div className={styles.ticketInfo}>
                         <p className={styles.ticketTitle}>Ticket</p>

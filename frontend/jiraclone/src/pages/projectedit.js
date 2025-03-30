@@ -63,13 +63,8 @@ export function ProjectEdit() {
     function deleteProject() {
         // write the function to pull up the confirm page for deleting the project.
         let response = fetch(`http://127.0.0.1:10001/project/delete/${pid}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                pid: pid,
-            })
+            method: "DELETE",
+            credentials: "include"
         });
 
         navigate("/dashboard");

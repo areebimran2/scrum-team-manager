@@ -157,7 +157,7 @@ export function TicketEdit() {
 
     function deleteTicket() {
         // write the function to pull up the confirm page for deleting the project.
-        fetch(`http://127.0.0.1:10001/ticket/delete/${tid}`, { method: "GET" })
+        fetch(`http://127.0.0.1:10001/ticket/${tid}`, { method: "DELETE", credentials: "include" })
             .then(response => {
                 setHttpCode(response.status);
             });
