@@ -7,7 +7,8 @@ export function TicketView({ input, mode }) {
     const navigate = useNavigate();
     const [tickets, setTickets] = useState([]);
 
-    useEffect(() => setTickets(input), []);
+    useEffect(() => {setTickets(input)}, [input]);
+    useEffect(() => {console.log(input);}, [tickets]);
     /**
      * TODO:
      * change the link for ticket title (line 18) to work.
@@ -30,9 +31,9 @@ export function TicketView({ input, mode }) {
             <div className={styles.PticketCard}>
                 <p className={styles.ticketTitle} onClick={() => navigate(`/ticket?tid=${ticket.tid}`)}>{ticket.title}</p>
                 <p className={styles.descriptors}>{ticket.assigned}</p>
-                <input type="checkbox" checked={ticket.completed} readOnly className={styles.checkbox}/>            
+                <input type="checkbox" checked={ticket.completed} readOnly className={styles.checkbox}/>
                 <p className={styles.descriptors}>{ticket.priority}</p> 
-                <p className={styles.descriptors}>{ticket.story_points}</p>         
+                <p className={styles.descriptors}>{ticket.story_points}</p>
             </div>
           );
         }
@@ -40,9 +41,7 @@ export function TicketView({ input, mode }) {
 
   return (
     <div className={styles.ticketList}>
-      {tickets.map(ticket => (
-        <TicketCard key={ticket.tid} ticket={ticket} />
-      ))}
+      {tickets.map(ticket => ( <TicketCard key={ticket.tid} ticket={ticket} />))}
     </div>
   );
 }
