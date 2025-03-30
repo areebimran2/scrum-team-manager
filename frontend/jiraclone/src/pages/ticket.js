@@ -96,6 +96,12 @@ export function FullTicket() {
                     <span className={styles.metadataValue}>{ticket.story_points}</span>
                 </div>
 
+                {/*Assigned to*/}
+                    <div className={styles.metadataContainer}>
+                    <span className={styles.metadataLabel}>Assigned to:</span>
+                    <span className={styles.metadataValue}>{ticket.assigned_to}</span>
+                </div>
+
                 {/* Divider */}
                 <hr className={styles.divider} />
 
@@ -106,12 +112,9 @@ export function FullTicket() {
                 </div>
 
                 <div className={styles.buttonContainer}>
-                    {isAssigned ? <button className={styles.completeButton} onClick={markCompleted(ticket)} type="button">Mark Ticket as Completed</button> : null}
-                    {isAdmin ? <button className={styles.editButton} onClick={() => navigate(`/ticketedit?tid=${tid}&pid=${pid}`)} type="button">Edit Ticket</button> : null}
-                </div>
-                <div className={styles.buttonContainer}></div>
-                <div className={styles.buttonContainer}>
                     <button className={styles.contactButton} onClick={() => navigate(`/contactadmin?tid=${tid}&pid=${pid}`)} type="button">Contact Admin</button>
+                    {isAdmin ? <button className={styles.editButton} onClick={() => navigate(`/ticketedit?tid=${tid}&pid=${pid}`)} type="button">Edit Ticket</button> : null}
+                    {isAssigned ? <button className={styles.completeButton} onClick={markCompleted(ticket)} type="button">Mark as Complete</button> : null}
                 </div>
             </div>
         </div>

@@ -7,7 +7,9 @@
 
 .form {
     grid-column-start: 2;
-    width: 800px;
+    max-width: 800px;
+    display: grid;
+    grid-template-columns: 1fr;
 }
 
 .ticketName {
@@ -17,33 +19,98 @@
     width: 100%;
     padding-top: 8px;
     padding-bottom: 8px;
-    font-size: 36px;
+    resize: none;
+    font-size: 24px;
     font-weight: bold;
     color: #E4E6EB;
     text-align:center;
     background-color: #242526;
 }
+
+.prioritySP {
+    display: grid;
+    width: 600px;
+    margin-top: 20px;
+    grid-template-columns: auto auto auto auto;
+}
+
+.priorityDropdown {
+    justify-self: start;
+    align-self: center;
+}
+
+.dropdown {
+    justify-self: end;
+    align-self: center;
+    margin-right: 16px;
+}
+
+.priorityInput {
+    font-size: 18px;
+    width: 50px;
+}
+
+.priorityOptions {
+    width: 70px;
+}
+
+.storyInput {
+    font-size: 18px;
+    width: 100px;
+}
+
+.storyOptions {
+    width: 120px;
+}
+
+.assignments {
+    display: grid;
+    width: 600px;
+    grid-template-columns: auto auto;
+}
+
+
+.assignInput {
+    font-size: 16px;
+    width: 400px;
+}
+
+.assignOptions {
+    width: 420px;
+}
+
+.arrow {
+    right: 18px;
+    top: 14px;
+}
+
 .line {
     display: block;
     width: 100%;
     margin: 20px 0 5px -0.8px;
     color: #E4E6EB;
+    margin-top: 10px;
 }
 
-.descriptiontitle {
+.subtitles {
     color: #E4E6EB;
-    font-weight: normal;
+    font-weight: bold;
+    font-size: 18px;
     margin-bottom: 10px;
+    margin-left: 16px;
 }
 
 .description {
-    margin: 0 0 20px -2px;
+    justify-self: center;
+    align-self: center;
+    margin-bottom: 20px;
     border: 0;
-    width: 100%;
-    height: 400px;
+    width: 95%;
+    padding-top: 8px;
+    padding-bottom: 8px;
     resize: none;
     text-align: start;
-    font-size: 18px;
+    font-size: 16px;
     color: #B0B3B8;
     background-color: #242526;
 }

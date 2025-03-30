@@ -84,6 +84,10 @@ export function Skills() {
                                 label="name"
                                 selectedVal={value}
                                 handleChange={(val) => setValue(val)}
+                                className={styles.dropdown}
+                                inputClassName={styles.dropdownInput}
+                                optionsClassName={styles.dropdownOptions}
+                                arrowClassName={styles.dropdownArrow}
                             />
                             <button type="submit" className={styles.add}>Add +</button>
                         </div>

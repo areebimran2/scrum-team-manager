@@ -23,6 +23,24 @@
     justify-content: center;
     gap: 10px;
   }
+
+  .dropdown {
+
+  }
+
+  .dropdownInput {
+    font-size: 20px;
+    width: 620px;
+  }
+
+  .dropdownOptions {
+    width: 640px;
+  }
+
+  .dropdownArrow {
+    right: 20px;
+    top: 16px;
+  }
   
   .addSkill {
     margin: 40px 0px;

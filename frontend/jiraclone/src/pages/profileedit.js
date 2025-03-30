@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import getAuthCookie from "../components/getAuthCookie";
 import styles from "../styles/profileedit.module.css";
 import defaultPic from "../assets/defaultProfilePic.png";
+import { Topbar } from "../components/topbar";
 
 export function ProfileEdit() {
 
@@ -94,32 +95,36 @@ export function ProfileEdit() {
 
     const profileEdit = (
 
-            <div className={styles.background}>
+            <div>
+                <Topbar page_name="Edit Profile"/>
                 <div className={styles.container}>
-                    
-                    <img src={defaultPic} alt="Profile Picture" className={styles.profilePicture}/>
-                    <h1>Edit Profile</h1>                    
+                    <form onSubmit={handleSubmit(onSubmit)} className={styles.editableFields}>
+                        <h1 className={styles.formnames}>Display Name: </h1>
+                        <input type="text" placeholder="Name" name="name" {...register("name")} defaultValue={user.display_name} className={styles.input}/>
 
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <div>
-                            <p className={styles.formnames}>Name: </p>
-                            <input type="text" placeholder="Name" name="name" {...register("name")} value={user.display_name} className={styles.input}/>
-                            <p className={styles.formnames}>Email: </p>
-                            <input type="text" placeholder="Email" name="email" {...register("email")} value={user.email} className={styles.input}/>
-                            <div className={styles.passwords}>
-                                <p className={styles.formnames}>Password: </p>
-                                <input type="password" placeholder="Current Password" required name="currPassword" {...register("currPassword")} className={styles.input}/>
-                                <input type="password" placeholder="Password" name="password" {...register("password")} className={styles.input}/>
-                                <input type="password" placeholder="Confirm Password" name="password" {...register("password2")} className={styles.input}/>
-                            </div>
-                            <p className={styles.formnames}>Profile Picture</p>
-                            <input type="file" name="profilePic" {...register("profilePic")} className={styles.picinput}/>
-                            <br/>
-                            <div className={styles.buttons}>
-                                <button type="submit">Save</button>
-                            </div>
+                        <h1 className={styles.formnames}>Email: </h1>
+                        <input type="email" placeholder="Email" name="email" {...register("email")} defaultValue={user.email} className={styles.input}/>
+
+                        <h1 className={styles.formnames}>Profile Picture</h1>
+                        <input type="file" name="profilePic" {...register("profilePic")} className={styles.picinput}/>                        
+
+                        <div className={styles.passwordSection}>
+                            <h2 className={styles.resetPrompt}>Reset Password</h2>  
+                            <hr/>
                         </div>
+                        <h1 className={styles.formnames}>Password: </h1>
+                        <input type="password" placeholder="Current Password" name="currPassword" {...register("currPassword")} className={styles.input}/>
+                        <h1 className={styles.formnames}>New Password: </h1>
+                        <input type="password" placeholder="New Password" name="password" {...register("password")} className={styles.input}/>
+                        <h1 className={styles.formnames}>Confirm Password: </h1>
+                        <input type="password" placeholder="Confirm Password" name="password2" {...register("password2")} className={styles.input}/>
                     </form>
+
+                    <div className={styles.pfpAndButtons}>
+                        <img src={defaultPic} alt="Profile Picture" className={styles.profilePicture}/>
+                        <button type="submit" form="profileEdit" className={styles.submitButton}>Submit</button>
+                        <button type="button" onClick={() => {navigate("/dashboard")}} className={styles.cancelButton}>Cancel</button>
+                    </div>
                 </div>
             </div>
 

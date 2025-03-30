@@ -13,8 +13,6 @@
     height: 0;
     margin-top: 0.3rem;
     position: absolute;
-    right: 20px;
-    top: 16px;
     width: 0;
   }
   
@@ -25,7 +23,6 @@
   
   .dropdown .selected-value input {
     line-height: 1.5;
-    font-size: 24px;
     background-color: #242526;
     border: 1px solid #b0b3b8;
     border-radius: 2px;
@@ -34,7 +31,6 @@
     outline: none;
     padding: 8px 52px 8px 10px;
     transition: all 200ms ease;
-    width: 620px;
   }
   
   .dropdown .options {
@@ -47,7 +43,6 @@
     overflow-y: auto;
     position: absolute;
     top: 100%;
-    width: 620px;
     z-index: 1000;
     -webkit-overflow-scrolling: touch;
   }
@@ -71,10 +66,8 @@
   }
 
   .input {
-    width: 600px;
     background-color: #242526;
     border: 0;    
-    font-size: 20px;
     color: #E4E6EB;
     padding: 10px;
   }

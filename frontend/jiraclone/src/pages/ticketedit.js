@@ -6,17 +6,33 @@ import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import styles from "../styles/ticketedit.module.css";
 import { Topbar } from "../components/topbar";
+import SearchableDropdown from "../components/SearchableDropdown";
 
 export function TicketEdit() {
     const navigate = useNavigate();
     const {register, handleSubmit} = useForm();
 
     const [ticket, setTicket] = useState({title:"temp", description:"temp"});
+
+    const [priority, setPriority] = useState(ticket.priority);
+    const [storyPoints, setStoryPoints] = useState(ticket.story_points);
+    const [assignedTo, setAssignedTo] = useState(ticket.assigned_to);
+
     const [httpCode, setHttpCode] = useState();
 
     const [searchParams, setSearchParams] = useSearchParams();
     const pid = searchParams.get("pid")
     const tid = searchParams.get("tid");
+
+    // load in the possible users to assign the ticket to 
+    const [users, setUsers] = useState(["temp1", "temp2", "temp3"]);
+
+    // SORRY THIS IS SO JANK BUT THE DROPDOWN NEEDS TO BE A STRING AND I DON'T KNOW HOW TO CHANGE THE DROPDOWN SEARCH FUNCTION 
+    // SO YOU MIGHT NEED TO CHANGE THE VALUE TO AN INTEGER BEFORE YOU SEND IT TO BACKEND 
+    // possible story points 
+    const storyPointsOptions = ["1", "2", "4", "8", "16", "32", "64", "128", "256", "512", "1024"];
+    // possible priorities 
+    const priorityOptions = ["1", "2", "3", "4", "5"];
 
     useEffect (() => {
     
@@ -91,26 +107,63 @@ export function TicketEdit() {
         }
 
         navigate("/dashboard");
-
     }
 
-    // I don't know how the page knows what project it is so I can't do it myself but 
-    // in the inputs add an attribute "value={WHATEVER IT IS}"
-    // so like if it's a variable called "project" with field "name" do 
-    // value={project.name}
-    // you get the point 
+    // this is for that super cool auto-resizing text area I wanted to make :3
+    const handleInput = (e) => { 
+        e.target.style.height = "auto"; // Reset the height to auto to calculate the new height
+        e.target.style.height = `${e.target.scrollHeight - 16}px`; // Set the height to the scroll height
+    }
 
-    // Also it would be cool if you could make the text area adjust its height according to the amount of text that's in it. 
-    // There's tutorials online and also an npm package i think? But I'm gonna be honest I have no idea how to do that. 
     return (
         <div>
             <Topbar page_name="Ticket Edit"/>
             <div className={styles.container}>
                 <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-                    <input type="text" placeholder="Ticket Name" name="ticketName" value={ticket.title} {...register("ticketName")} className={styles.ticketName}/>
+
+                    <textarea placeholder="Ticket Name" name="ticketName" defaultValue={ticket.title} onInput={handleInput} rows={1} {...register("ticketName")} className={styles.ticketName}/>
+
+                    <div className={styles.prioritySP}>
+                        <h1 className={styles.subtitles}>Priority:</h1>
+                        <SearchableDropdown
+                            options={priorityOptions.map((priority) => ({ name: priority }))} 
+                            label="name"
+                            selectedVal={priority}
+                            handleChange={(val) => setPriority(val)}
+                            className={styles.priorityDropdown}
+                            inputClassName={styles.priorityInput}
+                            optionsClassName={styles.priorityOptions}
+                            arrowClassName={styles.arrow}
+                        />
+                        <h1 className={styles.subtitles} style={{"justify-self": "end"}}>Story Point Estimate:</h1>
+                        <SearchableDropdown
+                            options={storyPointsOptions.map((points) => ({ name: points }))} 
+                            label="name"
+                            selectedVal={storyPoints}
+                            handleChange={(val) => setStoryPoints(val)}
+                            className={styles.dropdown}
+                            inputClassName={styles.storyInput}
+                            optionsClassName={styles.storyOptions}
+                            arrowClassName={styles.arrow}
+                        />
+                    </div>
+                    <div className={styles.assignments}>
+                        <h1 className={styles.subtitles}>Assigned to: </h1>
+                        <SearchableDropdown
+                            options={users.map((user) => ({ name: user }))} 
+                            label="name"
+                            selectedVal={assignedTo}
+                            handleChange={(val) => setAssignedTo(val)}
+                            className={styles.dropdown}
+                            inputClassName={styles.assignInput}
+                            optionsClassName={styles.assignOptions}
+                            arrowClassName={styles.arrow}
+                        />
+                    </div>    
+
                     <hr className={styles.line}/>
-                    <h1 className={styles.descriptiontitle}>Description: </h1>
-                    <textarea placeholder="Description" name="description" value={ticket.description} {...register("description")} className={styles.description}/>
+                    <h1 className={styles.subtitles}>Description: </h1>
+                    <textarea placeholder="Description" name="description" defaultValue={ticket.description} onInput={handleInput} {...register("description")} className={styles.description}/>
                     <div className={styles.buttons}>
                         <Popup trigger={ <button type="button" className={styles.deletebutton}>Delete Ticket</button> } modal nested>
                         {
