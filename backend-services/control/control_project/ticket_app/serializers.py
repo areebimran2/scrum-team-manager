@@ -13,13 +13,13 @@ class TicketOptionalFullSerializer(serializers.Serializer):
     story_points = serializers.IntegerField(required=False, allow_null=True, default=None)
     creator = serializers.IntegerField(required=False, allow_null=True, default=None)
     priority = serializers.IntegerField(required=False, allow_null=True, default=None)
-    assigned_to = serializers.IntegerField(required=False, allow_null=True, default=None)
+    assigned = serializers.IntegerField(required=False, allow_null=True, default=None)
 
     title = serializers.CharField(max_length=100, required=False, allow_null=True, default=None)
     description = serializers.CharField(max_length=500, required=False, allow_null=True, default=None)
 
     completed = serializers.BooleanField(required=False, allow_null=True, default=None)
-    assigned = serializers.BooleanField(required=False, allow_null=True, default=None)
+    #assigned_to = serializers.IntegerField(required=False, allow_null=True, default=None)
 
     date_created = serializers.DateTimeField(required=False, allow_null=True, default=None)
     date_completed = serializers.DateTimeField(required=False, allow_null=True, default=None)

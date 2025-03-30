@@ -492,9 +492,11 @@ class ProjectTicketsView(APIView):
         if request.user.assigned_tickets.get(project_id) is None:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+        project_response = requests.get(url + "/project/query/{0}".format(project_id))
+
         all_tickets = []
 
-        for ticket_id in request.user.assigned_tickets[project_id]:
+        for ticket_id in project_response.json()[0]["tickets"]:
             response = requests.get(url + "/ticket/query/{0}".format(ticket_id))
             if response.status_code == 200:
                 all_tickets.extend(response.json())

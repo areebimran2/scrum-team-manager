@@ -6,13 +6,13 @@ class TicketFullModel(models.Model):
     story_points = models.IntegerField("Project")
     creator = models.IntegerField("Creator")
     priority = models.IntegerField("Priority")
-    assigned_to = models.IntegerField("Assigned_to")
+    assigned = models.IntegerField("Completed")
 
     title = models.CharField("Title", max_length=100)
     description = models.CharField("Description", max_length=500)
 
     completed = models.BooleanField("Completed")
-    assigned = models.BooleanField("Completed")
+    # assigned_to = models.IntegerField("Assigned_to")
     
     date_created = models.DateTimeField("Date Created")
     date_completed = models.DateTimeField("Date Completed")
