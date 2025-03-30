@@ -496,12 +496,10 @@ class ProjectTicketsView(APIView):
 
         all_tickets = []
 
-        print(project_response.status_code)
-
-        # for ticket_id in project_response.json()[0]["tickets"]:
-        #     response = requests.get(url + "/ticket/query/{0}".format(ticket_id))
-        #     if response.status_code == 200:
-        #         all_tickets.extend(response.json())
+        for ticket_id in project_response.json()[0]["tickets"]:
+            response = requests.get(url + "/ticket/query/{0}".format(ticket_id))
+            if response.status_code == 200:
+                all_tickets.extend(response.json())
         return Response({"pid": project_id, "tickets": all_tickets}, status=status.HTTP_200_OK)
 
 class ProjectMembersView(APIView):
