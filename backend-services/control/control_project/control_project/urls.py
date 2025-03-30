@@ -41,6 +41,7 @@ urlpatterns = [
 
     # User Fillers
     path('userprojects/', views_project.UserAllProjectsView.as_view()),
+    path('usertickets/', views_ticket.UserAllTicketsView.as_view()),
     path('userprofile/skill-list/', views_userprofile.skill_list),
 
     # Project Object Endpoints
