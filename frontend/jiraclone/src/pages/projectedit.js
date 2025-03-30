@@ -13,7 +13,7 @@ export function ProjectEdit() {
     const {register, handleSubmit} = useForm();
 
     const [searchParams, setSearchParams] = useSearchParams();
-    let pid = [searchParams.get("pid")];
+    let pid = searchParams.get("pid");
 
     const [project, setProject] = useState({name:"", description:""});
 
@@ -26,11 +26,11 @@ export function ProjectEdit() {
                 } else if (response.status !== 200){
                     throw new Error(`API error: ${response.status}`);
                 } else {
-                    return response.json;
+                    return response.json();
                 }
             })
             .then(data => {
-                setProject(data);
+                setProject(data[0]);
             }).catch(e => {
                 if (e.message === "Unauthorized request"){
                     navigate("/login");
@@ -89,10 +89,10 @@ export function ProjectEdit() {
             <Topbar page_name="Project Edit"/>
             <div className={styles.container}>
                 <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-                    <input type="text" placeholder="Project Name" value={project.name} name="projectName" {...register("projectName")} className={styles.projectName}/>
+                    <input type="text" placeholder={project.name} name="projectName" {...register("projectName")} className={styles.projectName}/>
                     <hr className={styles.line}/>
                     <h1 className={styles.descriptiontitle}>Description: </h1>
-                    <textarea placeholder="Description" value={project.description} name="description" {...register("description")} className={styles.description}/>
+                    <textarea placeholder={project.description} name="description" {...register("description")} className={styles.description}/>
                     <div className={styles.buttons}>
                         <Popup trigger={ <button type="button" className={styles.deletebutton}>Delete Project</button> } modal nested>
                         {

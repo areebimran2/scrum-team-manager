@@ -90,30 +90,26 @@ export function UserView({ pid }) {
                     body: JSON.stringify({
                         pid: project.pid,
                         uid: uid
-                    })
+                    }),
+                    credentials: "include"
                 })
                     .then(response => {
                         setHttpCode(response.status);
                     });
 
-                if (httpCode !== 200) {
-                    alert("Server Error, please try again");
-                    return;
-                } else {
+                let user = users.find(user => user.uid === uid);
 
-                    let user = users.find(user => user.uid === uid);
+                // Update project state
+                setProject(project => ({
+                    ...project,
+                    admin: [...project.admin, user],
+                    scrum_user: project.scrum_users.filter(user => user.uid !== uid)
+                }));
 
-                    // Update project state
-                    setProject(project => ({
-                        ...project,
-                        admin: [...project.admin, user],
-                        scrum_user: project.scrum_users.filter(user => user.uid !== uid)
-                    }));
+                // Move user to admins
+                setAdmins([...admins, user]);
+                setUsers(users.filter(user => user.uid !== uid));
 
-                    // Move user to admins
-                    setAdmins([...admins, user]);
-                    setUsers(users.filter(user => user.uid !== uid));
-                }
             }
         };
     }
@@ -132,30 +128,25 @@ export function UserView({ pid }) {
                     body: JSON.stringify({
                         pid: project.pid,
                         uid: uid
-                    })
+                    }),
+                    credentials: "include"
                 })
                     .then(response => {
                         setHttpCode(response.status);
                     });
 
-                if (httpCode !== 200) {
-                    alert("Server Error, please try again");
-                    return;
-                } else {
+                let admin = admins.find(admin => admin.uid === uid);
 
-                    let admin = admins.find(admin => admin.uid === uid);
+                // Update project state
+                setProject(project => ({
+                    ...project,
+                    scrum_users: [...project.scrum_users, admin],
+                    admin: project.admin.filter(admin => admin.uid !== uid)
+                }));
 
-                    // Update project state
-                    setProject(project => ({
-                        ...project,
-                        scrum_users: [...project.scrum_users, admin],
-                        admin: project.admin.filter(admin => admin.uid !== uid)
-                    }));
-
-                    // Move admin back to users
-                    setUsers(users => [...users, admin]);
-                    setAdmins(admins => admins.filter(admin => admin.uid !== uid));
-                }
+                // Move admin back to users
+                setUsers(users => [...users, admin]);
+                setAdmins(admins => admins.filter(admin => admin.uid !== uid));
             }
         };
     }
@@ -177,28 +168,23 @@ export function UserView({ pid }) {
                     body: JSON.stringify({
                         pid: project.pid,
                         uid: uid
-                    })
+                    }),
+                    credentials: "include"
                 })
                     .then(response => {
                         setHttpCode(response.status);
                     });
 
-                if (httpCode !== 200) {
-                    alert("Server Error, please try again");
-                    return;
-                } else {
+                // Remove user from users and admins
+                setUsers(users => users.filter(user => user.uid !== uid));
+                setAdmins(admins => admins.filter(admin => admin.uid !== uid));
 
-                    // Remove user from users and admins
-                    setUsers(users => users.filter(user => user.uid !== uid));
-                    setAdmins(admins => admins.filter(admin => admin.uid !== uid));
-
-                    // Update project state to remove the user from both admin and scrum_user lists
-                    setProject(project => ({
-                        ...project,
-                        admin: project.admin.filter(admin => admin.uid !== uid),
-                        scrum_users: project.scrum_users.filter(user => user.uid !== uid)
-                    }));
-                }
+                // Update project state to remove the user from both admin and scrum_user lists
+                setProject(project => ({
+                    ...project,
+                    admin: project.admin.filter(admin => admin.uid !== uid),
+                    scrum_users: project.scrum_users.filter(user => user.uid !== uid)
+                }));
             }
         };
     }

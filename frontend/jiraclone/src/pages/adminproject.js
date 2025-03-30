@@ -59,6 +59,27 @@ export function AdminProject() {
                 }
             });
 
+            fetch(`http://127.0.0.1:10001/project/${pid}/members/`, { method: "GET", credentials: "include", })
+            .then(response => {
+                if (response.status === 401) {
+                    throw new Error("Unauthorized request");
+                } else if (response.status !== 200) {
+                    throw new Error(`API error: ${response.status}`);
+                } else {
+                    return response.json();
+                }
+            })
+            .then(data => {
+                setMembers(data.members);
+                console.log(data.members);
+            }).catch(e => {
+                if (e.message === "Unauthorized request") {
+                    navigate("/login");
+                } else {
+                    navigate("/dashboard");
+                }
+            });
+
     }, []);
 
     useEffect(() => console.log(tickets), [tickets])
@@ -71,10 +92,6 @@ export function AdminProject() {
     function onNewClick(tid) {
         // definitely edit this, gotta make a new ticket and all that 
         navigate("/ticketedit?tid=new");
-    }
-
-    function onDeleteClick(){
-        
     }
 
     // edit top bar's page name to be the name of the project 
@@ -104,7 +121,7 @@ export function AdminProject() {
                         <p className={styles.categories}>SP</p>
                     </div>
                     <div className={styles.innerContainer}>
-                        <TicketView input={ tickets } mode="project" pid={pid}/>
+                        <TicketView input={ tickets } mode="project" pid={pid} inputMembers={members}/>
                     </div>
                 </div>
 
@@ -113,7 +130,6 @@ export function AdminProject() {
                     <div className={styles.users}>
                         <UserView pid={ pid }/>
                     </div>
-                    <button onClick={onDeleteClick} className={styles.deletebutton}>Delete Project</button>
                 </div>
             </div>
         </div>

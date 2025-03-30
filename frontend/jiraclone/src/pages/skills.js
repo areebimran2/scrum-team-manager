@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useForm, handleSubmit } from "react-hook-form";
 import SearchableDropdown from "../components/SearchableDropdown";
 import { Topbar } from "../components/topbar";
 import styles from "../styles/skills.module.css";
 
 export function Skills() {
+    const navigate = useNavigate();
     var skill_list = [
         "SQL", "MongoDB", "MySQL", "PostgreSQL",
         "Django", "React", "REST API",
@@ -18,7 +20,7 @@ export function Skills() {
     ];
 
     // TODO: fill this with the user's current skills from the database 
-    const dbskills = ["Optimization", "Python"];   // filler items to check functionality 
+    const dbskills = [];   // filler items to check functionality 
 
     // get all the possible skills and take out any that the user already has
     const [allSkills, setAllSkills] = useState(
@@ -29,6 +31,34 @@ export function Skills() {
 
     const [skills, setSkills] = useState(dbskills);
     const [value, setValue] = useState("");
+    const [user, setUser] = useState({});
+
+    useEffect(() => {
+            //Load user profile
+            fetch(`http://127.0.0.1:10001/userprofile/`, { method: "GET", credentials: "include", })
+                .then(response => {
+                    if (response.status === 401) {
+                        throw new Error("Unauthorized request");
+                    } else if (response.status !== 200) {
+                        throw new Error(`API error: ${response.status}`);
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then(data => {
+                    setUser(data);
+                    setSkills(data.skills);
+                }).catch(e => {
+                    if (e.message === "Unauthorized request") {
+                        navigate("/login");
+                        alert("Unauthorized Request");
+                    } else {
+                        alert(`${e.message}. Please reload the page`);
+                    }
+                });
+
+        }, [])
+
     
     function onSubmit(data) {
         setSkills((prevSkills) => [...prevSkills, data.skill]);
@@ -49,6 +79,7 @@ export function Skills() {
     }
 
     const currentSkills = skills.map((skill) => {
+        console.log(skills)
         return (
             <div key={skill} className={styles.skill}>
                 <button onClick={() => onDelete(skill)} className={styles.delete}>{skill}</button>
@@ -57,8 +88,17 @@ export function Skills() {
     });
 
     function onConfirm() {
-        // send the skills to the database
+        let response = fetch("http://127.0.0.1:10001/userprofile/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(user),
+            credentials: "include"
+        });
     } 
+
+    useEffect(() => {setUser({...user, skills:skills});}, [skills]);
 
     return (
         <div>

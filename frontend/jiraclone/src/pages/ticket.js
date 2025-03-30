@@ -1,6 +1,5 @@
-import React, { useEffect, useState} from 'react';
-import ReactDOM from "react-dom/client";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams, } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import styles from "../styles/fullticket.module.css";
 import { Topbar } from '../components/topbar';
@@ -9,7 +8,6 @@ export function FullTicket() {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const tid = searchParams.get("tid");
-    const pid = searchParams.get("pid");
     const [ticket, setTicket] = useState({
         title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
@@ -18,17 +16,17 @@ export function FullTicket() {
     });
     const [isAdmin, setAdmin] = useState(true);
     const [isAssigned, setAssigned] = useState(true);
-    const [httpCode, setHttpCode] = useState();
+    const [user, setUser] = useState({});
 
     useEffect (() => {
-        fetch(`http://127.0.0.1:10001/ticket/${tid}`, {method: "GET"})
+        fetch(`http://127.0.0.1:10001/ticket/${tid}`, {method: "GET", credentials: "include", })
             .then(response => {
                 if (response.status === 401){
                     throw new Error("Unauthorized request");
                 } else if (response.status !== 200){
                     throw new Error(`API error: ${response.status}`);
                 } else {
-                    return response.json;
+                    return response.json();
                 }
             })
             .then(data => {
@@ -37,11 +35,36 @@ export function FullTicket() {
                 if (e.message === "Unauthorized request"){
                     navigate("/login");
                 } else {
-                    //setTicket({title:"Server Error", description:"Server Error"});
+                    setTicket({title:"Server Error", description:"Server Error"});
                     alert(`${e.message}. Please reload the page`);
                 }
             })
     }, []);
+
+    useEffect(() => {
+        if (typeof(ticket.assigned) !== "undefined"){
+            fetch(`http://127.0.0.1:10001/userprofile/${ticket.assigned}`, { method: "GET", credentials: "include", })
+                .then(response => {
+                    if (response.status === 401) {
+                        throw new Error("Unauthorized request");
+                    } else if (response.status !== 200) {
+                        throw new Error(`API error: ${response.status}`);
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then(data => {
+                    setUser(data);
+                }).catch(e => {
+                    if (e.message === "Unauthorized request") {
+                        //navigate("/login");
+                        alert("Unauthorized Request");
+                    } else {
+                        alert(`${e.message}. Please reload the page`);
+                    }
+                });
+            }
+    }, [ticket])
 
     function markCompleted(ticket){
         return function (){
@@ -64,17 +87,9 @@ export function FullTicket() {
                     date_assigned:ticket.date_assigned,
                     assigned:ticket.assigned
                 })
-            })
-            .then(response => {
-                setHttpCode(response.status);
             });
     
-            if (httpCode !== 200){
-                alert(`Server Error: ${httpCode}. Please try again`);
-                return;
-            }
-    
-            navigate(`/dashboard`);
+            //navigate(`/dashboard`);
         };
     }
 
@@ -99,7 +114,7 @@ export function FullTicket() {
                 {/*Assigned to*/}
                     <div className={styles.metadataContainer}>
                     <span className={styles.metadataLabel}>Assigned to:</span>
-                    <span className={styles.metadataValue}>{ticket.assigned_to}</span>
+                    <span className={styles.metadataValue}>{user.display_name}</span>
                 </div>
 
                 {/* Divider */}
@@ -112,8 +127,8 @@ export function FullTicket() {
                 </div>
 
                 <div className={styles.buttonContainer}>
-                    <button className={styles.contactButton} onClick={() => navigate(`/contactadmin?tid=${tid}&pid=${pid}`)} type="button">Contact Admin</button>
-                    {isAdmin ? <button className={styles.editButton} onClick={() => navigate(`/ticketedit?tid=${tid}&pid=${pid}`)} type="button">Edit Ticket</button> : null}
+                    <button className={styles.contactButton} onClick={() => navigate(`/contactadmin?tid=${tid}`)} type="button">Contact Admin</button>
+                    {isAdmin ? <button className={styles.editButton} onClick={() => navigate(`/ticketedit?tid=${tid}`)} type="button">Edit Ticket</button> : null}
                     {isAssigned ? <button className={styles.completeButton} onClick={markCompleted(ticket)} type="button">Mark as Complete</button> : null}
                 </div>
             </div>

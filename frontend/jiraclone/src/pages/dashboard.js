@@ -17,6 +17,7 @@ export function Dashboard(props) {
     const [tickets, setTickets] = useState([]);
     const [projects, setProjects] = useState([]);
     const [admins, setAdmins] = useState([]);
+    const [members, setMembers] = useState([]);
 
     function onProfileClick() {
         return function () {
@@ -25,8 +26,9 @@ export function Dashboard(props) {
     };
 
     function onSkillsClick() {
-        // page doesn't exist yet, hence the comment.
-        // navigate("skills", {replace: true}); 
+        return function () {
+        navigate("/skills" );
+        }
     };
 
     useEffect(() => {
@@ -127,7 +129,7 @@ export function Dashboard(props) {
                         <p className={styles.categories}>SP</p>
                     </div>
                     <div className={styles.innerContainer}>
-                        <TicketView input={tickets} mode="dashboard"/>
+                        <TicketView input={tickets} mode="dashboard" pid={0} inputMembers={[]}/>
                     </div>
                 </div>
 

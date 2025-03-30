@@ -10,6 +10,7 @@ export function Project() {
     const [total_tickets, setTotalTickets] = useState([]);
     const [uid, setUID] = useState();
     const [project, setProject] = useState({name:"", description:""});
+    const [members, setMembers] = useState([]);
 
     const [searchParams, setSearchParams] = useSearchParams();
     let pid = [searchParams.get("pid")];
@@ -81,6 +82,27 @@ export function Project() {
                 } 
             });
 
+        fetch(`http://127.0.0.1:10001/project/${pid}/members/`, { method: "GET", credentials: "include", })
+            .then(response => {
+                if (response.status === 401) {
+                    throw new Error("Unauthorized request");
+                } else if (response.status !== 200) {
+                    throw new Error(`API error: ${response.status}`);
+                } else {
+                    return response.json();
+                }
+            })
+            .then(data => {
+                setMembers(data.members);
+                console.log(data.members)
+            }).catch(e => {
+                if (e.message === "Unauthorized request") {
+                    navigate("/login");
+                } else {
+                    navigate("/dashboard");
+                }
+            });
+
     }, []);
 
     return (
@@ -98,7 +120,7 @@ export function Project() {
                         <p className={styles.categories}>SP</p>
                     </div>
                     <div className={styles.innerContainer}>
-                        <TicketView input={total_tickets.filter(ticket => ticket.assigned === uid)} mode="project" />
+                        <TicketView input={total_tickets.filter(ticket => ticket.assigned === uid)} mode="project" pid={pid} inputMembers={members}/>
                     </div>
                     <h1 className={styles.headers}>Other Tickets</h1>
                     <div className={styles.ticketInfo}>
@@ -109,7 +131,7 @@ export function Project() {
                         <p className={styles.categories}>SP</p>
                     </div>
                     <div className={styles.innerContainer}>
-                        <TicketView input={total_tickets.filter(ticket => ticket.assigned !== uid)} mode="project" />
+                        <TicketView input={total_tickets.filter(ticket => ticket.assigned !== uid)} mode="project" pid={pid} inputMembers={members}/>
                     </div>
                 </div>
             </div>

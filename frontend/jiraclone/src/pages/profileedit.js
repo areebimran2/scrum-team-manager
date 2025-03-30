@@ -13,20 +13,13 @@ export function ProfileEdit() {
     const navigate = useNavigate();
     const {register, handleSubmit} = useForm();
     const [user, setUser] = useState({ display_name: "", email: ""});
-    
-    let payload = getAuthCookie();
-
-    //let userID = payload.uid;
-    let userID = 1;
-
-    console.log(payload);
 
     useEffect(() => {
 
         const controller = new AbortController();
         const signal = controller.signal;   
 
-        fetch("http://127.0.0.1:10001/userprofile", {method: 'GET', credentials: 'include'})
+        fetch("http://127.0.0.1:10001/userprofile/", {method: 'GET', credentials: 'include'})
         .then(response => {console.log(response.status); return response.json()})
         .then(data => {
             console.log("Inside function:");
@@ -39,13 +32,6 @@ export function ProfileEdit() {
         return () => controller.abort();
 
     }, []);
-
-    // Ok idk how to do this but make a fetch request to the backend to get the user's information
-    // If this is their first time logging in, then the user object will be empty
-    // so do with that what you will
-
-    // add more to the user object according to the things needed for the profile
-
 
     function onSubmit(data){
 
@@ -88,7 +74,7 @@ export function ProfileEdit() {
             body: JSON.stringify(newUser)
         });
 
-        navigate("/profile", {replace: true});
+        navigate("/profile");
 
 
     };
