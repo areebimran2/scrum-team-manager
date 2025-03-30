@@ -105,4 +105,15 @@
 
   .demote {
     rotate: 180deg;
+    width: 25px;
+    height: 25px;
+    align-self: center;
+    justify-self: center;
+  }
+
+  .promote{
+    width: 25px;
+    height: 25px;
+    align-self: center;
+    justify-self: center;
   }
