@@ -32,7 +32,7 @@ def ticket_get_delete_handler(request, tid_str):
             return Response(status=status.HTTP_404_NOT_FOUND)
                 
         elif response.status_code == 200: # Ticket exists
-            return Response(response.json(), status=status.HTTP_200_OK)
+            return Response(response.json()[0], status=status.HTTP_200_OK)
         
     elif request.method == 'DELETE':
         try:
