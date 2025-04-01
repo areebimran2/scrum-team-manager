@@ -65,10 +65,16 @@ export function ProjectEdit() {
         let response = fetch(`http://127.0.0.1:10001/project/delete/${pid}`, {
             method: "DELETE",
             credentials: "include"
+        })
+        .then(response => {
+            if (response.status === 401) {
+                throw new Error("Unauthorized request");
+            } else if (response.status !== 200) {
+                throw new Error(`API error: ${response.status}`);
+            } else {
+                navigate("/dashboard");
+            }
         });
-
-        navigate("/dashboard");
-
     }
 
     // I don't know how the page knows what project it is so I can't do it myself but 
