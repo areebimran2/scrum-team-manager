@@ -57,7 +57,7 @@ export function ProjectEdit() {
             })
         });
 
-        navigate(`/project?pid=${pid}`);
+        navigate(`/adminproject?pid=${pid}`);
     }
 
     function deleteProject() {
