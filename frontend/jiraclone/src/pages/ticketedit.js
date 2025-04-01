@@ -64,26 +64,28 @@ export function TicketEdit() {
 
     useEffect(() => {
         if (typeof (ticket) !== "undefined" && typeof (pid) !== "undefined") {
-            fetch(`http://127.0.0.1:10001/userprofile/${ticket.assigned}`, { method: "GET", credentials: "include", })
-                .then(response => {
-                    if (response.status === 401) {
-                        throw new Error("Unauthorized request");
-                    } else if (response.status !== 200) {
-                        throw new Error(`API error: ${response.status}`);
-                    } else {
-                        return response.json();
-                    }
-                })
-                .then(data => {
-                    setUser(data);
-                }).catch(e => {
-                    if (e.message === "Unauthorized request") {
-                        //navigate("/login");
-                        alert("Unauthorized Request");
-                    } else {
-                        alert(`${e.message}. Please reload the page`);
-                    }
-                });
+            if (ticket.assigned !== -1) {
+                fetch(`http://127.0.0.1:10001/userprofile/${ticket.assigned}`, { method: "GET", credentials: "include", })
+                    .then(response => {
+                        if (response.status === 401) {
+                            throw new Error("Unauthorized request");
+                        } else if (response.status !== 200) {
+                            throw new Error(`API error: ${response.status}`);
+                        } else {
+                            return response.json();
+                        }
+                    })
+                    .then(data => {
+                        setUser(data);
+                    }).catch(e => {
+                        if (e.message === "Unauthorized request") {
+                            //navigate("/login");
+                            alert("Unauthorized Request");
+                        } else {
+                            alert(`${e.message}. Please reload the page`);
+                        }
+                    });
+            }
 
             fetch(`http://127.0.0.1:10001/project/${pid}`, { method: "GET", credentials: "include", })
                 .then(response => {
@@ -133,6 +135,7 @@ export function TicketEdit() {
 
     function onSubmit(data) {
         const body = { tid: ticket.tid };
+        const assign_body = { tid: ticket.tid }
 
         if (data.ticketName) {
             body.title = data.ticketName;
@@ -148,8 +151,9 @@ export function TicketEdit() {
         }
         if (assigned) {
             const assignedUser = projectMembers.find(member => member.display_name === assigned);
+
             if (assignedUser) {
-                body.assigned = assignedUser.uid;
+                assign_body.assigned = assignedUser.uid;
             }
         }
 
@@ -159,22 +163,30 @@ export function TicketEdit() {
             body: JSON.stringify(body)
         });
 
+        fetch(`http://127.0.0.1:10001/project/${pid}/assign/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(assign_body),
+            credentials: "include"
+        });
+
         navigate(`/ticket?tid=${tid}`);
     }
 
     function deleteTicket() {
-        // write the function to pull up the confirm page for deleting the project.
-        fetch(`http://127.0.0.1:10001/ticket/${tid}`, { method: "DELETE", credentials: "include" })
+        let response = fetch(`http://127.0.0.1:10001/ticket/${tid}`, {
+            method: "DELETE",
+            credentials: "include"
+        })
             .then(response => {
-                setHttpCode(response.status);
+                if (response.status === 401) {
+                    throw new Error("Unauthorized request");
+                } else if (response.status !== 200) {
+                    throw new Error(`API error: ${response.status}`);
+                } else {
+                    navigate("/dashboard");
+                }
             });
-
-        if (httpCode !== 200) {
-            alert(`Server Error: ${httpCode}. Please try again`);
-            return;
-        }
-
-        navigate("/dashboard");
     }
 
     // this is for that super cool auto-resizing text area I wanted to make :3
