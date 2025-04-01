@@ -73,7 +73,31 @@ export function UserView({ pid }) {
     function onSubmit(data) {
         // add user submit thing 
         // check if valid email, if so, send them an email. 
-        // if not, let the admin know in some way ig 
+        // if not, let the admin know in some way ig
+        const sendRequest = async () => {
+            console.log(data);
+            console.log("PID: " + pid)
+            const user = await fetch(`http://127.0.0.1:10001/project/${pid}/send-invite/`, {
+                method: "POST", credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: data.addUser })
+
+            })
+
+
+            if (!user.ok) {
+                alert("Error Inviting User. Please check your email " + user.status);
+                return;
+            }
+
+            console.log(await user.json());
+
+        }
+
+        sendRequest();
+
+
+
     }
 
     function onPromote(uid) {
