@@ -65,7 +65,11 @@ export function FullTicket() {
                         alert(`${e.message}. Please reload the page`);
                     }
                 });
+        }
+    }, [ticket]);
 
+    useEffect(() => {
+        if (typeof (ticket.project) !== "undefined") {
             fetch(`http://127.0.0.1:10001/userprofile/`, { method: "GET", credentials: "include", })
                 .then(response => {
                     if (response.status === 401) {

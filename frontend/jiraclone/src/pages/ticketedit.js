@@ -64,26 +64,28 @@ export function TicketEdit() {
 
     useEffect(() => {
         if (typeof (ticket) !== "undefined" && typeof(pid) !== "undefined") {
-            fetch(`http://127.0.0.1:10001/userprofile/${ticket.assigned}`, { method: "GET", credentials: "include", })
-                .then(response => {
-                    if (response.status === 401) {
-                        throw new Error("Unauthorized request");
-                    } else if (response.status !== 200) {
-                        throw new Error(`API error: ${response.status}`);
-                    } else {
-                        return response.json();
-                    }
-                })
-                .then(data => {
-                    setUser(data);
-                }).catch(e => {
-                    if (e.message === "Unauthorized request") {
-                        //navigate("/login");
-                        alert("Unauthorized Request");
-                    } else {
-                        alert(`${e.message}. Please reload the page`);
-                    }
-                });
+            if (ticket.assigned !== -1) {
+                fetch(`http://127.0.0.1:10001/userprofile/${ticket.assigned}`, { method: "GET", credentials: "include", })
+                    .then(response => {
+                        if (response.status === 401) {
+                            throw new Error("Unauthorized request");
+                        } else if (response.status !== 200) {
+                            throw new Error(`API error: ${response.status}`);
+                        } else {
+                            return response.json();
+                        }
+                    })
+                    .then(data => {
+                        setUser(data);
+                    }).catch(e => {
+                        if (e.message === "Unauthorized request") {
+                            //navigate("/login");
+                            alert("Unauthorized Request");
+                        } else {
+                            alert(`${e.message}. Please reload the page`);
+                        }
+                    });
+            }
 
             fetch(`http://127.0.0.1:10001/project/${pid}`, { method: "GET", credentials: "include", })
                 .then(response => {
