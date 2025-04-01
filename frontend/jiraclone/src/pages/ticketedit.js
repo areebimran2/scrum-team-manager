@@ -135,6 +135,7 @@ export function TicketEdit() {
 
     function onSubmit(data) {
         const body = { tid: ticket.tid };
+        const assign_body = { tid: ticket.tid}
 
         if (data.ticketName) {
             body.title = data.ticketName;
@@ -150,8 +151,9 @@ export function TicketEdit() {
         }
         if (assigned) {
             const assignedUser = projectMembers.find(member => member.display_name === assigned);
+
             if (assignedUser) {
-                body.assigned = assignedUser.uid;
+                assign_body.assigned = assignedUser.uid;
             }
         }
 
@@ -159,6 +161,13 @@ export function TicketEdit() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
+        });
+
+        fetch(`http://127.0.0.1:10001/project/${pid}/assign/`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(assign_body),
+            credentials: "include"
         });
 
         navigate(`/ticket?tid=${tid}`);
