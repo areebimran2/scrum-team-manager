@@ -13,11 +13,11 @@ export function TicketEdit() {
     const { register, handleSubmit } = useForm();
 
     const [ticket, setTicket] = useState({ title: "temp", description: "temp" });
-
+    const [dynamicDesc, setDesc] = useState(ticket.description)
     const [priority, setPriority] = useState();
     const [storyPoints, setStoryPoints] = useState();
     const [assigned, setAssigned] = useState();
-
+    const [autoAssigned, setAuto] = useState(-1);
     const [httpCode, setHttpCode] = useState();
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -48,6 +48,7 @@ export function TicketEdit() {
             })
             .then(data => {
                 setTicket(data);
+                setDesc(data.description);
                 setPid(data.project);
                 setPriority(data.priority);
                 setStoryPoints(data.story_points);
@@ -152,7 +153,11 @@ export function TicketEdit() {
         if (assigned) {
             const assignedUser = projectMembers.find(member => member.display_name === assigned);
 
-            if (assignedUser) {
+
+            if (autoAssigned !== -1) {
+                assign_body.assigned = autoAssigned;
+            }
+            else if (assignedUser) {
                 assign_body.assigned = assignedUser.uid;
             }
         }
@@ -193,6 +198,9 @@ export function TicketEdit() {
     const handleInput = (e) => {
         e.target.style.height = "auto"; // Reset the height to auto to calculate the new height
         e.target.style.height = `${e.target.scrollHeight - 16}px`; // Set the height to the scroll height
+        setDesc(e.target.value);
+
+
     }
 
     return (
@@ -266,7 +274,7 @@ export function TicketEdit() {
                 </form>
 
             </div>
-            <AutoAssignButton description={ticket.description} pid={pid} tid={tid} setAssigned={setAssigned}></AutoAssignButton>
+            <AutoAssignButton description={dynamicDesc} pid={pid} tid={tid} setAssigned={setAssigned} setAuto={setAuto} ></AutoAssignButton>
 
         </div>
     );

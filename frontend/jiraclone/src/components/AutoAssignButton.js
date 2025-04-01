@@ -1,10 +1,10 @@
 import React from "react";
 import { useState } from "react";
 
-export function AutoAssignButton({ description, pid, tid, setAssigned }) {
+export function AutoAssignButton({ description, pid, tid, setAssigned, setAuto }) {
     const autoAssign = async () => {
 
-        console.log(description);
+
 
         const response = await fetch("http://127.0.0.1:10001/agg/" + pid, {
             method: "GET",
@@ -20,7 +20,7 @@ export function AutoAssignButton({ description, pid, tid, setAssigned }) {
             return;
         }
 
-
+        console.log(description);
         const AIresponse = await fetch("http://127.0.0.1:10001/llm/", {
             method: "POST",
             headers: {
@@ -52,6 +52,7 @@ export function AutoAssignButton({ description, pid, tid, setAssigned }) {
 
         const username = (await userResponse.json()).display_name;
         setAssigned(username);
+        setAuto(parseInt(best_user));
         console.log(username);
 
 
