@@ -129,7 +129,7 @@ export function Dashboard(props) {
                         <p className={styles.categories}>SP</p>
                     </div>
                     <div className={styles.innerContainer}>
-                        <TicketView input={tickets} mode="dashboard" pid={0} inputMembers={[]}/>
+                        <TicketView input={tickets} mode="dashboard" pid={0} inputMembers={[]} projects={projects}/>
                     </div>
                 </div>
 

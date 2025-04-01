@@ -19,17 +19,10 @@ export function Skills() {
         "Optimization",
     ];
 
-    // TODO: fill this with the user's current skills from the database 
-    const dbskills = [];   // filler items to check functionality 
-
     // get all the possible skills and take out any that the user already has
-    const [allSkills, setAllSkills] = useState(
-        skill_list
-            .filter((skill) => !dbskills.includes(skill))
-            .sort((a, b) => (a > b ? 1 : -1))
-    );
+    const [allSkills, setAllSkills] = useState([]);
 
-    const [skills, setSkills] = useState(dbskills);
+    const [skills, setSkills] = useState([]);
     const [value, setValue] = useState("");
     const [user, setUser] = useState({});
 
@@ -48,6 +41,9 @@ export function Skills() {
                 .then(data => {
                     setUser(data);
                     setSkills(data.skills);
+                    setAllSkills(skill_list
+                        .filter((skill) => !data.skills.includes(skill))
+                        .sort((a, b) => (a > b ? 1 : -1)));
                 }).catch(e => {
                     if (e.message === "Unauthorized request") {
                         navigate("/login");
