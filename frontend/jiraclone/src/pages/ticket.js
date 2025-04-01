@@ -16,6 +16,7 @@ export function FullTicket() {
     });
     const [isAdmin, setAdmin] = useState(true);
     const [isAssigned, setAssigned] = useState(true);
+    const [isComplete, setComplete] = useState(true)
     const [user, setUser] = useState({});
     const [loggedIn, setLoggedIn] = useState({});
     const [project, setProject] = useState({});
@@ -33,6 +34,8 @@ export function FullTicket() {
             })
             .then(data => {
                 setTicket(data);
+                setComplete(ticket.completed);
+                console.log(`SET COMPLETE: ${isComplete}`)
             }).catch(e => {
                 if (e.message === "Unauthorized request") {
                     navigate("/login");
@@ -121,34 +124,32 @@ export function FullTicket() {
             setAssigned(loggedIn.uid === user.uid);
             console.log(project.admin.includes(loggedIn.uid))
             setAdmin(project.admin.includes(loggedIn.uid));
+            console.log(`Show MAC button: ${isAssigned && !isComplete}`)
         }
     }, [project, loggedIn, user]);
 
 
     function markCompleted(ticket) {
         return function () {
-            fetch("http://127.0.0.1:10001/ticket/update/", {
+            let response = fetch("http://127.0.0.1:10001/ticket/update/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     tid: ticket.tid,
-                    title: ticket.title,
-                    description: ticket.description,
-                    assigned_to: ticket.assigned_to,
-                    story_points: ticket.story_points,
-                    creator: ticket.creator,
-                    priority: ticket.priority,
-                    date_created: ticket.date_created,
                     completed: true,
-                    date_completed: ticket.date_completed,
-                    date_assigned: ticket.date_assigned,
-                    assigned: ticket.assigned
                 })
+            })
+            .then(response => {
+                if (response.status === 401) {
+                    throw new Error("Unauthorized request");
+                } else if (response.status !== 200) {
+                    throw new Error(`API error: ${response.status}`);
+                } else {
+                    navigate(`/dashboard`);
+                }
             });
-
-            //navigate(`/dashboard`);
         };
     }
 
@@ -188,7 +189,7 @@ export function FullTicket() {
                 <div className={styles.buttonContainer}>
                     {isAssigned ? <button className={styles.contactButton} onClick={() => navigate(`/contactadmin?tid=${tid}`)} type="button">Contact Admin</button> : null}
                     {isAdmin ? <button className={styles.editButton} onClick={() => navigate(`/ticketedit?tid=${tid}`)} type="button">Edit Ticket</button> : null}
-                    {isAssigned ? <button className={styles.completeButton} onClick={markCompleted(ticket)} type="button">Mark as Complete</button> : null}
+                    {(isAssigned && !isComplete) ? <button className={styles.completeButton} onClick={markCompleted(ticket)} type="button">Mark as Complete</button> : null}
                 </div>
             </div>
         </div>
