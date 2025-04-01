@@ -57,24 +57,25 @@ def ticket_get_delete_handler(request, tid_str):
 
                 #Remove ticket from user
                 uid = response_data["assigned"]
-                user_response = requests.get(url + f'/user/query/{uid}')
+                user_response = requests.get(url + f'/user/query/UID/{uid}')
                 user_data = user_response.json()[0]
-                user_data["assigned_tickets"][pid].remove(tid)
+                user_data["assigned_tickets"][f"{pid}"].remove(tid)
                 #Send updated user back
                 update_response = requests.post(url + '/user/update/', json=user_data)
                 if update_response.status_code != 200:
                     return Response(f"Error updating user {uid} when removing ticket {tid}: {update_response}", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                 
+
             #Remove ticket from project
             project_response = requests.get(url + f'/project/query/{pid}')
             project_data = project_response.json()[0]
             project_data["tickets"].remove(tid)
             #Send updated project back
             update_response = requests.post(url + "/project/update/", json=project_data)
-            if update_response.status_code != 200:
-                return Response("Ticket {tid} deleted succesfully", status=status.HTTP_200_OK)
+            if update_response.status_code == 200:
+                return Response(status=status.HTTP_200_OK)
             else:
-                return Response(f"Error updating project {pid} when removing ticket {tid}: {update_response}", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response(f"Error updating project {pid} when removing ticket {tid}: {update_response.text}", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     else:
