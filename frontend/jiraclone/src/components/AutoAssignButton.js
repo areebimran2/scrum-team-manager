@@ -33,7 +33,7 @@ export function AutoAssignButton({ description, pid, tid, setAssigned, setAuto }
         });
 
         if (!AIresponse.ok) {
-            alert("Error Occured while generating response")
+            alert("Error Occured while generating response. Please Try Again! :3")
             return;
         }
 
