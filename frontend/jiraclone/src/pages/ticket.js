@@ -16,10 +16,11 @@ export function FullTicket() {
     });
     const [isAdmin, setAdmin] = useState(true);
     const [isAssigned, setAssigned] = useState(true);
-    const [isComplete, setComplete] = useState(true)
+    const [isComplete, setComplete] = useState(false);
     const [user, setUser] = useState({});
     const [loggedIn, setLoggedIn] = useState({});
     const [project, setProject] = useState({});
+    const [macButton, setMacButton] = useState(true);
 
     useEffect(() => {
         fetch(`http://127.0.0.1:10001/ticket/${tid}`, { method: "GET", credentials: "include", })
@@ -34,7 +35,7 @@ export function FullTicket() {
             })
             .then(data => {
                 setTicket(data);
-                setComplete(ticket.completed);
+                setComplete(data.completed);
                 console.log(`SET COMPLETE: ${isComplete}`)
             }).catch(e => {
                 if (e.message === "Unauthorized request") {
@@ -124,7 +125,9 @@ export function FullTicket() {
             setAssigned(loggedIn.uid === user.uid);
             console.log(project.admin.includes(loggedIn.uid))
             setAdmin(project.admin.includes(loggedIn.uid));
-            console.log(`Show MAC button: ${isAssigned && !isComplete}`)
+            setMacButton(loggedIn.uid === user.uid && !isComplete);
+            console.log(`assigned ${isAssigned}`);
+            console.log(`complete ${isComplete}`)
         }
     }, [project, loggedIn, user]);
 
@@ -175,6 +178,9 @@ export function FullTicket() {
                 <div className={styles.metadataContainer}>
                     <span className={styles.metadataLabel}>Assigned to:</span>
                     <span className={styles.metadataValue}>{user.display_name}</span>
+                    <span style={{ flex: 1 }}></span> {/* Spacer */}
+                    <span className={styles.metadataLabel}>Completion status:</span>
+                    {isComplete ? <span className={styles.metadataValue}>Complete</span> : <span className={styles.metadataValue}>Incomplete</span>}
                 </div>
 
                 {/* Divider */}
@@ -189,7 +195,7 @@ export function FullTicket() {
                 <div className={styles.buttonContainer}>
                     {isAssigned ? <button className={styles.contactButton} onClick={() => navigate(`/contactadmin?tid=${tid}`)} type="button">Contact Admin</button> : null}
                     {isAdmin ? <button className={styles.editButton} onClick={() => navigate(`/ticketedit?tid=${tid}`)} type="button">Edit Ticket</button> : null}
-                    {(isAssigned && !isComplete) ? <button className={styles.completeButton} onClick={markCompleted(ticket)} type="button">Mark as Complete</button> : null}
+                    {macButton ? <button className={styles.completeButton} onClick={markCompleted(ticket)} type="button">Mark as Complete</button> : null}
                 </div>
             </div>
         </div>
