@@ -36,41 +36,54 @@ export function ProfileEdit() {
     function onSubmit(data){
 
         console.log(data);
-        if (data.password !== data.password2){
-            alert("Passwords do not match");
-            
-        } else if (data.password === ""){
-            alert("Password cannot be empty");
+        // Check if any password fields are filled
+        const isPasswordSectionTouched = 
+            data.currPassword !== "" || 
+            data.password !== "" || 
+            data.password2 !== "";
 
-        } else if (data.password === user.password){
-            alert("Cannot reuse old password");
-
-        } else if (data.currPassword !== user.password){
-            alert("Incorrect password");
-
+        // Password validation only if password fields are touched
+        if (isPasswordSectionTouched) {
+            if (data.password !== data.password2) {
+                alert("Passwords do not match");
+                return;
+            }
+            if (data.password === "") {
+                alert("New password cannot be empty");
+                return;
+            }
+            if (data.password === user.password) {
+                alert("Cannot reuse old password");
+                return;
+            }
+            if (data.currPassword !== user.password) {
+                alert("Incorrect current password");
+                return;
+            }
         }
 
-        let newUser = {
-            uid : user.uid,
-        };
+        // Check if all editable fields are empty
+        const isAllEmpty = 
+            data.name === "" && 
+            data.email === "" && 
+            data.password === "";
 
-        if (data.name !== ""){
-            newUser.display_name = data.name;
+        if (isAllEmpty) {
+            alert("No changes to submit");
+            return;
         }
 
-        if (data.email !== ""){
-            newUser.email = data.email;
-        }
+        // Proceed with updates
+        let newUser = { uid: user.uid };
 
-        if (data.password !== ""){
-            newUser.password = data.password;
-        }
+        if (data.name !== "") newUser.display_name = data.name;
+        if (data.email !== "") newUser.email = data.email;
+        if (data.password !== "") newUser.password = data.password;
 
-        let respone = fetch("http://127.0.0.1:10001/userprofile", {
+        fetch("http://127.0.0.1:10001/userprofile/", {
             method: "POST",
-            headers : {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
+            credentials: "include",
+            headers: { 'Content-Type': 'application/json;charset=utf-8' },
             body: JSON.stringify(newUser)
         });
 
@@ -84,7 +97,7 @@ export function ProfileEdit() {
             <div>
                 <Topbar page_name="Edit Profile"/>
                 <div className={styles.container}>
-                    <form onSubmit={handleSubmit(onSubmit)} className={styles.editableFields}>
+                    <form id="profileEdit" onSubmit={handleSubmit(onSubmit)} className={styles.editableFields}>
                         <h1 className={styles.formnames}>Display Name: </h1>
                         <input type="text" placeholder="Name" name="name" {...register("name")} defaultValue={user.display_name} className={styles.input}/>
 

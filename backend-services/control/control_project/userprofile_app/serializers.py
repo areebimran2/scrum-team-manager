@@ -10,3 +10,6 @@ class UserFullSerializer(serializers.Serializer):
     display_name = serializers.CharField(required=False, allow_null=True, default=None)
     skills = serializers.JSONField(required=False, allow_null=True, default=None)
     profile_picture = serializers.ImageField(required=False, allow_null=True, default=None)
+
+class PassCheckSerializer(serializers.Serializer):
+    password = serializers.CharField(required=True)

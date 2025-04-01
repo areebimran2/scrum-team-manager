@@ -2,6 +2,9 @@ from django.shortcuts import render
 import requests
 from rest_framework.permissions import IsAuthenticated
 
+from argon2 import PasswordHasher
+from argon2.exceptions import *
+
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
@@ -93,5 +96,34 @@ def skill_list(request):
 
         return_data = {"skills" : skill_list}
         return Response(return_data, status=status.HTTP_200_OK)
+    else:
+        return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def check_pass(request):
+    if request.method == "POST":
+        serializer = PassCheckSerializer(data = request.data)
+        if serializer.is_valid():
+            #check passwords match
+            given_pass = serializer.validated_data['password']
+            saved_pass = request.uid.password
+
+            password_hasher = PasswordHasher()
+            try:
+                is_match = password_hasher.verify(saved_pass, given_pass)
+            except VerifyMismatchError: #Password don't match
+                return Response("passwords do not match", status=status.HTTP_401_UNAUTHORIZED)
+            except: #Verification Error
+                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            if is_match:
+                return Response(status=200)
+            
+            else:
+                        return Response("passwords don't match", status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            # Data formatted wrong
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({"error": "Method not allowed"}, status=status.HTTP_400_BAD_REQUEST)
