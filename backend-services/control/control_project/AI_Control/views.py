@@ -76,16 +76,18 @@ def _formatUsers(users: list[dict]) -> str:
 def sort_user_skills(skills: list[str], users: list[dict[str, list[dict]]]) -> list[str]:
 
     
-    PROMPT = f"""You have a list of users and skills. Your job is to compare each user and their respective skills,
+    PROMPT = f"""You have a list of user ID's and skills. Your job is to compare each user and their respective skills,
     to the required skills. You will then output a sorted list of users from most to least qualified for the task.
 
     REQUIRED: {skills}
 
     USERS: \n{_formatUsers(users)}
 
-    OUTPUT EXACTLY LIKE THIS: ["name1", "name2","name3",...]
+    OUTPUT EXACTLY LIKE THIS: ["1", "2","3",...]
 
     DO NOT WRITE CODE, OUTPUT THE LIST AND INCLUDE ALL NAMES
+    DO NOT WRITE "NO ONE"
+    YOU MUST INCLUDE EVERYONE.
     
     """
     
@@ -127,18 +129,18 @@ def _format_user_stats(users):
     return "\n".join(formatted_users)
 
 def select_best_user_stats(chosen_users: list[str], users: list[dict] ) -> str:
-    PROMPT = f"""You have a list of sorted users, and their stats. The list is sorted from most qualified to least qualified
+    PROMPT = f"""You have a list of sorted user IDs, and their stats. The list is sorted from most qualified to least qualified
     The stats represent the total story points of uncompleted tickets, vs the total story
     points of completed tickets. Your job is to decide who should be given this ticket.
     Consider the workload that each user currently has, as well as how qualified each user is.
-    YOU MUST CHOOSE 1 USER
+    YOU MUST CHOOSE 1 USER. IF THE NAMES ARE NUMBERS, USE THE EXACT NUMBERS, NOT USER [NUMBER]. JUST THE NUMBER
 
     SORTED: {chosen_users}
 
     STATS:
     {_format_user_stats(users)}
 
-    OUTPUT EXACTLY LIKE THIS: "name1, description on why you chose name1"
+    OUTPUT EXACTLY LIKE THIS: "1, description on why you chose 1"
 
     DO NOT WRITE CODE OR OUTPUT ANYTHING BUT THE NAME AND DESCRIPTION JUST LIKE THE EXAMPLE FORMAT. DESCRIPTION SHOULD BE
     AT LEAST 2 SENTENCES
@@ -172,24 +174,26 @@ def getBestUser(request):
     """
 
     description = request.data.get('description')
-    users = request.data.get("users")  
+    users = request.data.get("users")
 
     # Validate description
     if not isinstance(description, str):
         return Response({"error": "Description must be a string."}, status=400)
 
     # Validate users (tickets)
-    if not isinstance(users, list):
-        return Response({"error": "Tickets must be a list"}, status=400)
+    # if not isinstance(users, list):
+    #     return Response({"error": "Users must be a list"}, status=400)
     
 
     try:
+        usersData = json.loads(users)
+        print(users)
         skills = get_skills(description)
-
-        sorted_users = sort_user_skills(skills, users)
-
-        best_user = select_best_user_stats(sorted_users, users)
-
+        print(skills)
+        sorted_users = sort_user_skills(skills, usersData)
+        print("SORTED: ", sorted_users)
+        best_user = select_best_user_stats(sorted_users, usersData)
+        print("BEST USER: ", best_user)
         return Response({"best_user_and_desc": best_user}, status=200)
     except:
         return Response({"error": "an error occured within the server"}, status=500)

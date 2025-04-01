@@ -7,7 +7,7 @@ import 'reactjs-popup/dist/index.css';
 import styles from "../styles/ticketedit.module.css";
 import { Topbar } from "../components/topbar";
 import SearchableDropdown from "../components/SearchableDropdown";
-
+import { AutoAssignButton } from "../components/AutoAssignButton";
 export function TicketEdit() {
     const navigate = useNavigate();
     const { register, handleSubmit } = useForm();
@@ -51,7 +51,7 @@ export function TicketEdit() {
                 setPid(data.project);
                 setPriority(data.priority);
                 setStoryPoints(data.story_points);
-                console.log(data);
+                // console.log(data);
             }).catch(e => {
                 if (e.message === "Unauthorized request") {
                     navigate("/login");
@@ -63,7 +63,7 @@ export function TicketEdit() {
     }, []);
 
     useEffect(() => {
-        if (typeof (ticket) !== "undefined" && typeof(pid) !== "undefined") {
+        if (typeof (ticket) !== "undefined" && typeof (pid) !== "undefined") {
             fetch(`http://127.0.0.1:10001/userprofile/${ticket.assigned}`, { method: "GET", credentials: "include", })
                 .then(response => {
                     if (response.status === 401) {
@@ -221,7 +221,10 @@ export function TicketEdit() {
                             options={users.map((user) => ({ name: user }))}
                             label="name"
                             selectedVal={assigned}
-                            handleChange={(val) => setAssigned(val)}
+                            handleChange={(val) => {
+                                console.log(val);
+                                setAssigned(val)
+                            }}
                             className={styles.dropdown}
                             inputClassName={styles.assignInput}
                             optionsClassName={styles.assignOptions}
@@ -247,8 +250,12 @@ export function TicketEdit() {
                         </Popup>
                         <button type="submit" className={styles.submitbutton}>Save Changes</button>
                     </div>
+
                 </form>
+
             </div>
+            <AutoAssignButton description={ticket.description} pid={pid} tid={tid} setAssigned={setAssigned}></AutoAssignButton>
+
         </div>
     );
 }

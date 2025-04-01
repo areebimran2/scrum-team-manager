@@ -1,13 +1,14 @@
 import React from "react";
 import { useState } from "react";
 
-export function AutoAssignButton({ description, pid, tid }) {
+export function AutoAssignButton({ description, pid, tid, setAssigned }) {
     const autoAssign = async () => {
 
+        console.log(description);
 
-        const url = "http://127.0.0.1:10001/"
-        const response = await fetch(url + "agg/" + pid, {
-            method: "GET"
+        const response = await fetch("http://127.0.0.1:10001/agg/" + pid, {
+            method: "GET",
+            credentials: "include"
         });
 
 
@@ -19,7 +20,8 @@ export function AutoAssignButton({ description, pid, tid }) {
             return;
         }
 
-        const AIresponse = await fetch(url + "llm", {
+
+        const AIresponse = await fetch("http://127.0.0.1:10001/llm/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -35,30 +37,23 @@ export function AutoAssignButton({ description, pid, tid }) {
             return;
         }
 
-        const best_user_and_desc = (await AIresponse.json()).get("best_user_and_desc");
+        const best_user_and_desc = (await AIresponse.json()).best_user_and_desc;
 
+        console.log(best_user_and_desc);
         const best_user = best_user_and_desc.split(",")[0]
 
-        const AssignResponse = await fetch(url + `project/${pid}/assign/`, {
-            method: "POST",
+        const userResponse = await fetch(`http://127.0.0.1:10001/userprofile/${best_user}`, {
+            method: "GET",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                tid: tid,
-                assigned: parseInt(best_user)
-            })
-        }
-        )
+            credentials: "include"
+        });
 
-        if (AssignResponse.status == 401) {
-            alert("You are not an admin!")
-        }
+        const username = (await userResponse.json()).display_name;
+        setAssigned(username);
+        console.log(username);
 
-        if (!AssignResponse.ok) {
-            alert("Error Occured while auto assigining. please try again or manually assign");
-            return;
-        }
 
         alert(`User with ID ${best_user} was assigned for this reason: \n ${best_user_and_desc.split(",").slice(1).join(",")}`)
 
@@ -70,7 +65,7 @@ export function AutoAssignButton({ description, pid, tid }) {
     return (
         <button
             onClick={autoAssign}
-            style={{ backgroundColor: "blue", color: "white", borderRadius: "10px", padding: "10px 20px", border: "none" }}
+            style={{ backgroundColor: "blue", color: "white", borderRadius: "10px", padding: "10px 20px", border: "none", position: "relative", left: "650px", bottom: "30px" }}
         >
             Auto Assign
         </button>

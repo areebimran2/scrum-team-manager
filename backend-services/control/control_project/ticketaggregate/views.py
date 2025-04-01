@@ -11,7 +11,6 @@ import json
 @api_view(['GET'])
 def getTickets(request, pid_str):
 
-
     if request.method == 'GET':
         print("is GET request")
 
@@ -23,9 +22,8 @@ def getTickets(request, pid_str):
         url = "http://127.0.0.1:8001"
 
         response = requests.get(url + f'/project/query/{pid}')
+        
 
-
-# http://127.0.0.1:10001/
         if response.status_code == 404: # Project does not exist
             print("actually 404")
             # Send 404 back to frontend
@@ -63,9 +61,9 @@ def getTickets(request, pid_str):
                     final_json.append(one_user_dict)
                 except Exception as e:
                     print(e)
-                    return Response(status=status.HTTP_200_OK)
+                    return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
-            return Response(json.dumps(final_json), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(json.dumps(final_json), status=status.HTTP_200_OK)
             
         else:
             return Response(status=response.status_code)
@@ -81,28 +79,28 @@ def getTickets(request, pid_str):
 
     
 
-                # for ticketID in project_dict[0].get("tickets"):
-            #     try:
-            #         print(ticketID)
-            #         ticketResponse = requests.get(url +  f'/ticket/query/{ticketID}')
+#                 # for ticketID in project_dict[0].get("tickets"):
+#             #     try:
+#             #         print(ticketID)
+#             #         ticketResponse = requests.get(url +  f'/ticket/query/{ticketID}')
                     
-            #         ticketResponse = ticketResponse.json()[0]
-            #         print(ticketResponse)
-            #         if (not uid_dict.get(ticketResponse["assigned_to"])):
-            #             if (ticketResponse["completed"]):
-            #                 uid_dict[ticketResponse["assigned_to"]] = [ticketResponse["story_points"], 0]
-            #             else:
-            #                 uid_dict[ticketResponse["assigned_to"]] = [0, ticketResponse["story_points"] ]
+#             #         ticketResponse = ticketResponse.json()[0]
+#             #         print(ticketResponse)
+#             #         if (not uid_dict.get(ticketResponse["assigned_to"])):
+#             #             if (ticketResponse["completed"]):
+#             #                 uid_dict[ticketResponse["assigned_to"]] = [ticketResponse["story_points"], 0]
+#             #             else:
+#             #                 uid_dict[ticketResponse["assigned_to"]] = [0, ticketResponse["story_points"] ]
 
-            #         else:
-            #             if (ticketResponse["completed"]):
-            #                 uid_dict[ticketResponse["assigned_to"]][0] += ticketResponse["story_points"]
-            #             else:
-            #                 uid_dict[ticketResponse["assigned_to"]][1] += ticketResponse["story_points"]
+#             #         else:
+#             #             if (ticketResponse["completed"]):
+#             #                 uid_dict[ticketResponse["assigned_to"]][0] += ticketResponse["story_points"]
+#             #             else:
+#             #                 uid_dict[ticketResponse["assigned_to"]][1] += ticketResponse["story_points"]
                             
-            #     except Exception as err:
-            #         print(err)
-            #         print("ID", ticketID)
-            #         return Response(status=status.HTTP_200_OK)
-            # print(uid_dict)
+#             #     except Exception as err:
+#             #         print(err)
+#             #         print("ID", ticketID)
+#             #         return Response(status=status.HTTP_200_OK)
+#             # print(uid_dict)
 
