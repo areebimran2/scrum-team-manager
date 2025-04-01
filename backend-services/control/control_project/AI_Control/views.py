@@ -83,13 +83,15 @@ def sort_user_skills(skills: list[str], users: list[dict[str, list[dict]]]) -> l
 
     USERS: \n{_formatUsers(users)}
 
-    OUTPUT EXACTLY LIKE THIS: ["1", "2","3",...]
+    OUTPUT EXACTLY LIKE THIS: ["2", "1","3",...]
 
     DO NOT WRITE CODE, OUTPUT THE LIST AND INCLUDE ALL NAMES
     DO NOT WRITE "NO ONE"
-    YOU MUST INCLUDE EVERYONE.
+    YOU MUST INCLUDE EVERYONE. DO NOT SORT THE NAMES BY APLHANUMERIC, DO SO BY MOST QUALIFIED
     
     """
+
+    print(PROMPT)
     
     data = {
     "contents": [
@@ -143,9 +145,11 @@ def select_best_user_stats(chosen_users: list[str], users: list[dict] ) -> str:
     OUTPUT EXACTLY LIKE THIS: "1, description on why you chose 1"
 
     DO NOT WRITE CODE OR OUTPUT ANYTHING BUT THE NAME AND DESCRIPTION JUST LIKE THE EXAMPLE FORMAT. DESCRIPTION SHOULD BE
-    AT LEAST 2 SENTENCES
+    AT LEAST 2 SENTENCES. IF USERS HAVE NO WORKLOAD DIFFERENCES, GO WITH THE FIRST IN THE LIST
     
     """
+
+    print(PROMPT)
     data = {
     "contents": [
         {
@@ -174,6 +178,7 @@ def getBestUser(request):
     """
 
     description = request.data.get('description')
+    print(description)
     users = request.data.get("users")
 
     # Validate description
@@ -194,8 +199,10 @@ def getBestUser(request):
         print("SORTED: ", sorted_users)
         best_user = select_best_user_stats(sorted_users, usersData)
         print("BEST USER: ", best_user)
+        best_user += f" \n SKILLS NEEDED: {skills}"
         return Response({"best_user_and_desc": best_user}, status=200)
-    except:
+    except Exception as e:
+        print(e)
         return Response({"error": "an error occured within the server"}, status=500)
 
 
