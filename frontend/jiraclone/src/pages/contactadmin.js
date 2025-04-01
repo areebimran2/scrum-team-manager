@@ -23,74 +23,85 @@ export function ContactAdmin() {
     const [admins, setAdmins] = useState([]);
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:10001/ticket/${tid}`, { method: "GET", credentials: "include", })
-            .then(response => {
-                if (response.status === 401) {
-                    throw new Error("Unauthorized request");
-                } else if (response.status !== 200) {
-                    throw new Error(`API error: ${response.status}`);
-                } else {
-                    return response.json();
-                }
-            })
-            .then(data => {
-                setTicket(data);
-            }).catch(e => {
-                if (e.message === "Unauthorized request") {
-                    navigate("/login");
-                } else {
-                    setTicket({ title: "Server Error", description: "Server Error" });
-                    alert(`${e.message}. Please reload the page`);
-                }
-            })
-    }, []);
+    const fetchTicket = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:10001/ticket/${tid}`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (response.status === 401) {
+          throw new Error("Unauthorized request");
+        } else if (response.status !== 200) {
+          throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setTicket(data);
+      } catch (error) {
+        if (error.message === "Unauthorized request") {
+          navigate("/login");
+        } else {
+          setTicket({ title: "Server Error", description: "Server Error" });
+          alert(`${error.message}. Please reload the page.`);
+        }
+      }
+    };
+
+    fetchTicket();
+  }, []);
 
     useEffect(() => {
-        if (typeof (ticket.project) !== "undefined") {
-            fetch(`http://127.0.0.1:10001/project/${ticket.project}`, { method: "GET", credentials: "include", })
-                .then(response => {
-                    if (response.status === 401) {
-                        throw new Error("Unauthorized request");
-                    } else if (response.status !== 200) {
-                        throw new Error(`API error: ${response.status}`);
-                    } else {
-                        return response.json();
-                    }
-                })
-                .then(data => {
-                    setProject(data[0]);
-                    setPid(data[0].pid);
-                }).catch(e => {
-                    if (e.message === "Unauthorized request") {
-                        navigate("/login");
-                        alert("Unauthorized Request");
-                    } else {
-                        alert(`${e.message}. Please reload the page`);
-                    }
-                });
+    const fetchProjectData = async () => {
+      if (typeof ticket.project === "undefined") return;
 
-            fetch(`http://127.0.0.1:10001/project/${ticket.project}/members`, { method: "GET", credentials: "include", })
-                .then(response => {
-                    if (response.status === 401) {
-                        throw new Error("Unauthorized request");
-                    } else if (response.status !== 200) {
-                        throw new Error(`API error: ${response.status}`);
-                    } else {
-                        return response.json();
-                    }
-                })
-                .then(data => {
-                    setProjectMembers(data.members);
-                }).catch(e => {
-                    if (e.message === "Unauthorized request") {
-                        navigate("/login");
-                        alert("Unauthorized Request");
-                    } else {
-                        alert(`${e.message}. Please reload the page`);
-                    }
-                });
+      try {
+        // Fetch project details
+        const projectResponse = await fetch(`http://127.0.0.1:10001/project/${ticket.project}`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (projectResponse.status === 401) {
+          throw new Error("Unauthorized request");
+        } else if (projectResponse.status !== 200) {
+          throw new Error(`API error: ${projectResponse.status}`);
         }
-    }, [ticket])
+
+        const projectData = await projectResponse.json();
+        if (projectData && projectData[0]) {
+          setProject(projectData[0]);
+          setPid(projectData[0].pid);
+        }
+
+        // Fetch project members
+        const membersResponse = await fetch(`http://127.0.0.1:10001/project/${ticket.project}/members`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (membersResponse.status === 401) {
+          throw new Error("Unauthorized request");
+        } else if (membersResponse.status !== 200) {
+          throw new Error(`API error: ${membersResponse.status}`);
+        }
+
+        const membersData = await membersResponse.json();
+        if (membersData && Array.isArray(membersData.members)) {
+          setProjectMembers(membersData.members);
+        }
+      } catch (error) {
+        if (error.message === "Unauthorized request") {
+          navigate("/login");
+          alert("Unauthorized Request");
+        } else {
+          alert(`${error.message}. Please reload the page`);
+        }
+      }
+    };
+
+    fetchProjectData();
+  }, [ticket]);
 
     useEffect(() => {
         if (typeof(projectMembers) !== "undefined" && typeof(project) !== "undefined"){
@@ -99,6 +110,7 @@ export function ContactAdmin() {
     }, [projectMembers])
 
     function onSubmit(data) {
+        console.log(data)
         fetch(`http://127.0.0.1:10001/project/${pid}/contact/`, {
             method: "POST",
             headers: {

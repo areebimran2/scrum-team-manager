@@ -144,8 +144,11 @@ class UserLoginRecoveryView(APIView):
             # accounts)
             user = response.json()[0]
 
+            password_hasher = PasswordHasher()
+
             # Generate a new temporary password that is 10 characters long
             temp_password = get_random_string(10)
+            hashed_pass = password_hasher.hash(temp_password)
 
             try:
                 subject = "JirAI Login Recovery"
@@ -157,7 +160,7 @@ class UserLoginRecoveryView(APIView):
             except SMTPException as e:
                 return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-            response = requests.post(url + "/user/update/", data={"uid": user["uid"], "password": temp_password})
+            response = requests.post(url + "/user/update/", json={"uid": user["uid"], "password": hashed_pass})
 
             return Response({"response": "Recovery instructions email sent to {0}".format(user["email"])},
                             status=status.HTTP_200_OK)

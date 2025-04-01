@@ -83,13 +83,15 @@ def sort_user_skills(skills: list[str], users: list[dict[str, list[dict]]]) -> l
 
     USERS: \n{_formatUsers(users)}
 
-    OUTPUT EXACTLY LIKE THIS: ["1", "2","3",...]
+    OUTPUT EXACTLY LIKE THIS: ["2", "1","3",...]
 
     DO NOT WRITE CODE, OUTPUT THE LIST AND INCLUDE ALL NAMES
     DO NOT WRITE "NO ONE"
-    YOU MUST INCLUDE EVERYONE.
+    YOU MUST INCLUDE EVERYONE. DO NOT SORT THE NAMES BY APLHANUMERIC, DO SO BY MOST QUALIFIED
     
     """
+
+    print(PROMPT)
     
     data = {
     "contents": [
@@ -129,23 +131,31 @@ def _format_user_stats(users):
     return "\n".join(formatted_users)
 
 def select_best_user_stats(chosen_users: list[str], users: list[dict] ) -> str:
-    PROMPT = f"""You have a list of sorted user IDs, and their stats. The list is sorted from most qualified to least qualified
+    PROMPT = f"""You have a list of sorted user IDs, and their stats. The list is sorted from most qualified to least qualified,
+    indicating that being higher on the list is bad.
     The stats represent the total story points of uncompleted tickets, vs the total story
     points of completed tickets. Your job is to decide who should be given this ticket.
-    Consider the workload that each user currently has, as well as how qualified each user is.
-    YOU MUST CHOOSE 1 USER. IF THE NAMES ARE NUMBERS, USE THE EXACT NUMBERS, NOT USER [NUMBER]. JUST THE NUMBER
+    Consider the workload that each user currently has, as well as how qualified each user is. Consider looking directly
+    at what skill each user has as well.
+    YOU MUST CHOOSE A USER. IF THE NAMES ARE NUMBERS, USE THE EXACT NUMBERS, NOT USER [NUMBER]. JUST THE NUMBER
 
     SORTED: {chosen_users}
 
     STATS:
     {_format_user_stats(users)}
 
-    OUTPUT EXACTLY LIKE THIS: "1, description on why you chose 1"
+    SKILLS EACH USER HAS:  \n{_formatUsers(users)}
+
+
+    OUTPUT EXACTLY LIKE THIS: "number, description on why you chose number"
 
     DO NOT WRITE CODE OR OUTPUT ANYTHING BUT THE NAME AND DESCRIPTION JUST LIKE THE EXAMPLE FORMAT. DESCRIPTION SHOULD BE
-    AT LEAST 2 SENTENCES
+    AT LEAST 2 SENTENCES. IF USERS HAVE NO WORKLOAD DIFFERENCES, GO WITH THE ONE AT INDEX 0 IN THE LIST. BEING CLOSER TO 
+    THE ZERO INDEX INDICATES MORE APPROPRIATE SKILLS. BEING HIGHER ON THE LIST IS BAD
     
     """
+
+    print(PROMPT)
     data = {
     "contents": [
         {
@@ -158,7 +168,8 @@ def select_best_user_stats(chosen_users: list[str], users: list[dict] ) -> str:
     }
 
     response = requests.post(API_LINK, headers=headers, json=data)
-   
+    
+    print(response)
 
 
     response_text = response.json().get('candidates')[0].get("content").get("parts")[0].get('text')
@@ -174,6 +185,7 @@ def getBestUser(request):
     """
 
     description = request.data.get('description')
+    print(description)
     users = request.data.get("users")
 
     # Validate description
@@ -194,8 +206,10 @@ def getBestUser(request):
         print("SORTED: ", sorted_users)
         best_user = select_best_user_stats(sorted_users, usersData)
         print("BEST USER: ", best_user)
+        best_user += f" \n SKILLS NEEDED: {skills}"
         return Response({"best_user_and_desc": best_user}, status=200)
-    except:
+    except Exception as e:
+        print(e)
         return Response({"error": "an error occured within the server"}, status=500)
 
 
