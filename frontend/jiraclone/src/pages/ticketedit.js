@@ -174,18 +174,19 @@ export function TicketEdit() {
     }
 
     function deleteTicket() {
-        // write the function to pull up the confirm page for deleting the project.
-        fetch(`http://127.0.0.1:10001/ticket/${tid}`, { method: "DELETE", credentials: "include" })
-            .then(response => {
-                setHttpCode(response.status);
-            });
-
-        if (httpCode !== 200) {
-            alert(`Server Error: ${httpCode}. Please try again`);
-            return;
-        }
-
-        navigate("/dashboard");
+        let response = fetch(`http://127.0.0.1:10001/ticket/${tid}`, {
+            method: "DELETE",
+            credentials: "include"
+        })
+        .then(response => {
+            if (response.status === 401) {
+                throw new Error("Unauthorized request");
+            } else if (response.status !== 200) {
+                throw new Error(`API error: ${response.status}`);
+            } else {
+                navigate("/dashboard");
+            }
+        });
     }
 
     // this is for that super cool auto-resizing text area I wanted to make :3
