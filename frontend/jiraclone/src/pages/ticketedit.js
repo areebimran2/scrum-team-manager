@@ -132,25 +132,32 @@ export function TicketEdit() {
     }, [pid])
 
     function onSubmit(data) {
-        // write the POST request in here.
-        // also replace this with whatever it takes to go to the correct project page.
+        const body = { tid: ticket.tid };
+
+        if (data.ticketName) {
+            body.title = data.ticketName;
+        }
+        if (data.description) {
+            body.description = data.description;
+        }
+        if (priority) {
+            body.priority = priority;
+        }
+        if (storyPoints) {
+            body.story_points = storyPoints;
+        }
+        if (assigned) {
+            const assignedUser = projectMembers.find(member => member.display_name === assigned);
+            if (assignedUser) {
+                body.assigned = assignedUser.uid;
+            }
+        }
 
         fetch("http://127.0.0.1:10001/ticket/update/", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                tid: ticket.tid,
-                title: data.ticketName,
-                description: data.description,
-                assigned: projectMembers.find(member => member.display_name === assigned).uid,
-                story_points: storyPoints,
-                creator: ticket.creator,
-                priority: priority,
-                completed: ticket.completed,
-            })
-        })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
 
         navigate(`/ticket?tid=${tid}`);
     }
