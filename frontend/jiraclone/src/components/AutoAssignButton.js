@@ -65,7 +65,7 @@ export function AutoAssignButton({ description, pid, tid, setAssigned }) {
     return (
         <button
             onClick={autoAssign}
-            style={{ backgroundColor: "blue", color: "white", borderRadius: "10px", padding: "10px 20px", border: "none", position: "relative", left: "650px", bottom: "30px" }}
+            style={{ backgroundColor: "blue", color: "white", borderRadius: "10px", padding: "10px 20px", border: "none", gridColumnStart: 2 }}
         >
             Auto Assign
         </button>

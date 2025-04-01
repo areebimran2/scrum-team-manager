@@ -157,20 +157,34 @@ export function TicketEdit() {
             }
         }
 
-        fetch("http://127.0.0.1:10001/ticket/update/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body)
-        });
-
         fetch(`http://127.0.0.1:10001/project/${pid}/assign/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(assign_body),
             credentials: "include"
+        }).then(response => {
+            if (response.status === 401) {
+                throw new Error("Unauthorized request");
+            } else if (response.status !== 200) {
+                throw new Error(`API error: ${response.status}`);
+            } else {
+                fetch("http://127.0.0.1:10001/ticket/update/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(body),
+                    credentials: "include"
+                }).then(response => {
+                    if (response.status === 401) {
+                        throw new Error("Unauthorized request");
+                    } else if (response.status !== 200) {
+                        throw new Error(`API error: ${response.status}`);
+                    } else {
+                        navigate(`/ticket?tid=${tid}`);
+                    }
+                });
+            }
         });
 
-        navigate(`/ticket?tid=${tid}`);
     }
 
     function deleteTicket() {
@@ -247,6 +261,7 @@ export function TicketEdit() {
                     <hr className={styles.line} />
                     <h1 className={styles.subtitles}>Description: </h1>
                     <textarea name="description" placeholder={ticket.description} onInput={handleInput} {...register("description")} className={styles.description} />
+
                     <div className={styles.buttons}>
                         <Popup trigger={<button type="button" className={styles.deletebutton}>Delete Ticket</button>} modal nested>
                             {
@@ -265,8 +280,12 @@ export function TicketEdit() {
 
                 </form>
 
+                <div className={styles.autoassign}>
+                    <AutoAssignButton description={ticket.description} pid={pid} tid={tid} setAssigned={setAssigned}></AutoAssignButton>
+                </div>
+
             </div>
-            <AutoAssignButton description={ticket.description} pid={pid} tid={tid} setAssigned={setAssigned}></AutoAssignButton>
+            
 
         </div>
     );

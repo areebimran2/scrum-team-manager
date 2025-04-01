@@ -54,10 +54,18 @@ export function ProjectEdit() {
                 pid: pid,
                 name: data.projectName,
                 description: data.description
-            })
+            }),
+            credentials: "include"
+        }).then(response => {
+            if (response.status === 401) {
+                throw new Error("Unauthorized request");
+            } else if (response.status !== 201) {
+                throw new Error(`API error: ${response.status}`);
+            } else {
+                navigate(`/adminproject?pid=${pid}`);
+            }
         });
 
-        navigate(`/adminproject?pid=${pid}`);
     }
 
     function deleteProject() {

@@ -117,6 +117,7 @@
 
 .buttons {
     display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 .deletebutton {
@@ -125,7 +126,7 @@
     color: #E4E6EB;
     width: auto;
     height: 45px;
-    padding: 2px 20px;
+    padding: 2px 20px;  
     border-radius: 8px;
     border: 1px solid #3a3b3c;
     box-shadow: 0px 0px 20px -20px rgba(0, 0, 0, 0.5);
@@ -135,6 +136,7 @@
     user-select: none;
     font-family: 'Poppins', sans-serif;
     font-size: 16px;
+    grid-column-start: 1;
 }
 
 .deletebutton:hover {
@@ -162,6 +164,7 @@
     user-select: none;
     font-family: 'Poppins', sans-serif;
     font-size: 16px;   
+    grid-column-start: 3;
 }
 
 .submitbutton:hover {
@@ -235,4 +238,11 @@
     user-select: none;
     font-family: 'Poppins', sans-serif;
     font-size: 16px;
+ }
+ 
+ .autoassign{
+    grid-column-start: 2;
+    grid-row-start: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
  }
