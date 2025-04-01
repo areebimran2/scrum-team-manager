@@ -44,7 +44,7 @@ export function FullTicket() {
     }, []);
 
     useEffect(() => {
-        if (typeof (ticket.assigned) !== "undefined") {
+        if (typeof (ticket.assigned) !== "undefined" && ticket.assigned !== -1) {
             fetch(`http://127.0.0.1:10001/userprofile/${ticket.assigned}`, { method: "GET", credentials: "include", })
                 .then(response => {
                     if (response.status === 401) {
