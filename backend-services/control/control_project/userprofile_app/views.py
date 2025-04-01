@@ -35,7 +35,13 @@ def userprofile_post_handler(request):
                 return Response(status=status.HTTP_404_NOT_FOUND)
                     
             elif exists_response.status_code == 200: # Account exists
-                update_response = requests.post(url + '/user/update/', json=serializer.validated_data)
+                # Hash new password if there
+                update_data = serializer.validated_data
+                if update_data["password"]:
+                    password_hasher = PasswordHasher()
+                    update_data["password"] = password_hasher.hash(update_data["password"])
+
+                update_response = requests.post(url + '/user/update/', json=update_data)
                 if update_response.status_code == 200:
                     return Response(status=status.HTTP_200_OK)
                 else:
