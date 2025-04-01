@@ -88,13 +88,24 @@ export function Skills() {
     });
 
     function onConfirm() {
-        let response = fetch("http://127.0.0.1:10001/userprofile/", {
+        fetch("http://127.0.0.1:10001/userprofile/", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(user),
             credentials: "include"
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to save skills (status: ${response.status})`);
+            }
+            return response;
+        })
+        .then(() => {
+            navigate("/dashboard");
+        })
+        .catch(error => {
+            console.error("Confirmation failed:", error);
+            alert("Failed to save skills: " + error.message);
         });
     } 
 
