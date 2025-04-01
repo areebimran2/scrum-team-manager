@@ -134,17 +134,7 @@ export function FullTicket() {
                 },
                 body: JSON.stringify({
                     tid: ticket.tid,
-                    title: ticket.title,
-                    description: ticket.description,
-                    assigned_to: ticket.assigned_to,
-                    story_points: ticket.story_points,
-                    creator: ticket.creator,
-                    priority: ticket.priority,
-                    date_created: ticket.date_created,
                     completed: true,
-                    date_completed: ticket.date_completed,
-                    date_assigned: ticket.date_assigned,
-                    assigned: ticket.assigned
                 })
             });
 
