@@ -52,9 +52,9 @@ def get_skills(description: str) -> list[str]:
     response = requests.post(API_LINK, headers=headers, json=data)
 
     response_text = response.json().get('candidates')[0].get("content").get("parts")[0].get('text')
-    
+    print("RESPONSE TEXT: ", response_text)
     actual_list =  ast.literal_eval(response_text)
-
+    
     return actual_list
 
 
@@ -91,7 +91,7 @@ def sort_user_skills(skills: list[str], users: list[dict[str, list[dict]]]) -> l
     
     """
 
-    print(PROMPT)
+
     
     data = {
     "contents": [
@@ -111,7 +111,7 @@ def sort_user_skills(skills: list[str], users: list[dict[str, list[dict]]]) -> l
 
 
     response_text = response.json().get('candidates')[0].get("content").get("parts")[0].get('text')
-    
+    print("LIST, ", response_text)
 
     actual_list =  ast.literal_eval(response_text)
     
@@ -155,7 +155,7 @@ def select_best_user_stats(chosen_users: list[str], users: list[dict] ) -> str:
     
     """
 
-    print(PROMPT)
+
     data = {
     "contents": [
         {
@@ -169,7 +169,6 @@ def select_best_user_stats(chosen_users: list[str], users: list[dict] ) -> str:
 
     response = requests.post(API_LINK, headers=headers, json=data)
     
-    print(response)
 
 
     response_text = response.json().get('candidates')[0].get("content").get("parts")[0].get('text')
@@ -185,7 +184,7 @@ def getBestUser(request):
     """
 
     description = request.data.get('description')
-    print(description)
+
     users = request.data.get("users")
 
     # Validate description
@@ -196,24 +195,35 @@ def getBestUser(request):
     # if not isinstance(users, list):
     #     return Response({"error": "Users must be a list"}, status=400)
     
+    i = 0
+    while i < 5:
+        try:
+            
+            return Response({"best_user_and_desc": tryResponse(request)}, status=200)
+        except Exception as e:
+            print(e)
+            i+= 1
+    
+    return Response({"error": "an error occured within the server"}, status=500)
 
-    try:
+
+def tryResponse(request):
+        description = request.data.get('description')
+
+        users = request.data.get("users")
+        
+        print("here1")
         usersData = json.loads(users)
-        print(users)
+
         skills = get_skills(description)
-        print(skills)
+        print("here2")
         sorted_users = sort_user_skills(skills, usersData)
-        print("SORTED: ", sorted_users)
+        print("here3")
         best_user = select_best_user_stats(sorted_users, usersData)
-        print("BEST USER: ", best_user)
+
         best_user += f" \n SKILLS NEEDED: {skills}"
-        return Response({"best_user_and_desc": best_user}, status=200)
-    except Exception as e:
-        print(e)
-        return Response({"error": "an error occured within the server"}, status=500)
-
-
-
+        return best_user
+    
 
 # tickets = [
 #     {"name": "user1", "skills": "Numpy, sklearn", "stats": [100, 21]},

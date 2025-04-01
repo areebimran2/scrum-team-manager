@@ -289,11 +289,11 @@ export function TicketEdit() {
                 </form>
 
                 <div className={styles.autoassign}>
-                    <AutoAssignButton description={ticket.description} pid={pid} tid={tid} setAssigned={setAssigned}></AutoAssignButton>
+                    <AutoAssignButton description={dynamicDesc} pid={pid} tid={tid} setAssigned={setAssigned} setAuto={setAuto} ></AutoAssignButton>
                 </div>
 
             </div>
-            
+
 
         </div>
     );
