@@ -36,13 +36,12 @@ export function ProfileEdit() {
     function onSubmit(data){
 
         console.log(data);
-        // Check if any password fields are filled
         const isPasswordSectionTouched = 
-            data.currPassword !== "" || 
-            data.password !== "" || 
-            data.password2 !== "";
+        data.currPassword !== "" || 
+        data.password !== "" || 
+        data.password2 !== "";
 
-        // Password validation only if password fields are touched
+        // Client-side validations
         if (isPasswordSectionTouched) {
             if (data.password !== data.password2) {
                 alert("Passwords do not match");
@@ -52,17 +51,9 @@ export function ProfileEdit() {
                 alert("New password cannot be empty");
                 return;
             }
-            if (data.password === user.password) {
-                alert("Cannot reuse old password");
-                return;
-            }
-            if (data.currPassword !== user.password) {
-                alert("Incorrect current password");
-                return;
-            }
         }
 
-        // Check if all editable fields are empty
+        // Check if all fields are empty
         const isAllEmpty = 
             data.name === "" && 
             data.email === "" && 
@@ -73,23 +64,53 @@ export function ProfileEdit() {
             return;
         }
 
-        // Proceed with updates
-        let newUser = { uid: user.uid };
+        // Password validation promise chain
+        const passwordValidation = isPasswordSectionTouched 
+            ? fetch("http://127.0.0.1:10001/userprofile/check-password/", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify({ password: data.currPassword })
+            }).then(response => {
+                if (response.status === 200) return true;
+                if (response.status === 401) {
+                    alert("Incorrect current password");
+                    throw new Error("Abort");
+                }
+                throw new Error("Password check failed");
+            })
+            : Promise.resolve(true);
 
-        if (data.name !== "") newUser.display_name = data.name;
-        if (data.email !== "") newUser.email = data.email;
-        if (data.password !== "") newUser.password = data.password;
+        // Main processing chain
+        passwordValidation
+            .then(() => {
+                // Build update payload
+                const newUser = { uid: user.uid };
+                if (data.name !== "") newUser.display_name = data.name;
+                if (data.email !== "") newUser.email = data.email;
+                if (data.password !== "") newUser.password = data.password;
 
-        fetch("http://127.0.0.1:10001/userprofile/", {
-            method: "POST",
-            credentials: "include",
-            headers: { 'Content-Type': 'application/json;charset=utf-8' },
-            body: JSON.stringify(newUser)
-        });
+                return fetch("http://127.0.0.1:10001/userprofile/", {
+                    method: "POST",
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+                    body: JSON.stringify(newUser)
+                });
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Update failed");
+                navigate("/profile");
+            })
+            .catch(error => {
+                if (error.message !== "Abort") {
+                    console.error("Error:", error);
+                    alert("Operation failed: " + error.message);
+                }
+            });
 
-        navigate("/profile");
-
-
+        return;
     };
 
     const profileEdit = (

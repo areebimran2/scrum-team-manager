@@ -107,7 +107,7 @@ def check_pass(request):
         if serializer.is_valid():
             #check passwords match
             given_pass = serializer.validated_data['password']
-            saved_pass = request.uid.password
+            saved_pass = request.user.password
 
             password_hasher = PasswordHasher()
             try:
