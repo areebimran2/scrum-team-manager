@@ -1,0 +1,61 @@
+.ticketContainer{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+  }
+  
+  .DticketCard{
+    width: auto;
+    border-radius: 4px;
+    background-color: #3A3B3C;
+    margin: 2px 10px;
+    display: grid;
+    grid-template-columns: auto 150px 150px 100px 55px;
+    padding: 5px;
+  }
+
+  .PticketCard{
+    width: auto;
+    border-radius: 4px;
+    background-color: #3A3B3C;
+    margin: 2px 10px;
+    display: grid;
+    grid-template-columns: auto 150px 150px 100px 55px;
+    padding: 5px;
+  }
+  
+  .ticketTitle{
+    color: #E4E6EB;
+    font-size: 20px;
+    margin: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ticketTitle:hover {
+    text-decoration: underline;
+  }
+  
+  .ticketDescription{
+    color: #B0B3B8;
+    font-size: 16px;
+    margin: 10px;
+    display: flex;
+    grid-column-start: 1;
+    grid-column-end: 6;
+  }
+
+  .checkbox{
+    height: 20px;
+    margin: 10px 25px 10px 0;
+  }
+
+  .descriptors{
+    color: #E4E6EB;
+    font-size: 20px;
+    margin: 10px 0 10px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }

@@ -2,7 +2,6 @@ from django.db import models
 
 # Create your models here.
 
-class UserSignInModel(models.Model):
-    #TODO Max Length to be confirmed
-    email = models.EmailFieldField()
-    password = models.CharField()
+class UserSignUpModel(models.Model):
+    email = models.EmailField()
+    password = models.CharField(max_length=100)

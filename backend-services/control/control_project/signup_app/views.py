@@ -6,15 +6,15 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
-from .models import UserSignUpModel
 from .serializers import *
 
+from argon2 import PasswordHasher
 
 # Create your views here.
 @api_view(['POST'])
 def signup_handler(request):
     if request.method == 'POST':
-        serializer = UserSignInSerializer(data=request.data)
+        serializer = UserSignUpSerializer(data=request.data)
         if serializer.is_valid():
             
             # Check if user exists
@@ -22,21 +22,25 @@ def signup_handler(request):
             attempts = 0 # attempts to reach ISCS
             while attempts <= 5:
                 #TODO configure URL for ISCS
-                url = ""
+                url = "http://127.0.0.1:8001"
 
-                response = requests.get(url + f"/user/query/{serializer.validated_data["email"]}")
+                response = requests.get(url + "/user/query/EMAIL/{0}".format(serializer.validated_data["email"]))
 
                 if response.status_code == 404: # Account does not exist
+                    #Hash Password
+
+                    password_hasher = PasswordHasher()
+                    password = serializer.validated_data["password"]
+                    hashed_pass = password_hasher.hash(password)
+
                     # Send Data to UserService through ISCS
 
                     user_create_data = {
                         'email' : serializer.validated_data["email"],
-                        'password' : serializer.validated_data["password"],
-                        'display_name': None,  # Empty display_name
-                        'profile_picture': None  # Empty profile_picture
+                        'password' : hashed_pass
                     }
 
-                    response = requests.post(url + f"/user/add", user_create_data)
+                    response = requests.post(url + f"/user/add/", json=user_create_data)
 
                     # Send 201 back
                     return Response(status=status.HTTP_201_CREATED)

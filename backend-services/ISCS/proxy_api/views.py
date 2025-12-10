@@ -26,14 +26,14 @@ class ProxyAPIView(APIView):
 
         # Relay request to resource and return the response
         service = self._get_target_url(request) + request.path
-        service_response = requests.request(method, service, data=request.data, headers=request.headers)
+        service_response = requests.request(method, service, json=request.data, headers=request.headers)
         return service_response
 
     def _get_target_url(self, request):
         # Tentative approach: Assumes the path remains unchanged from frontend -> control -> iscs -> resource.
         # A 'catch-all' url is used to resolve the request from the control.
         # The target url is determined from the path in this implementation, hence the reason it must be unchanged.
-        service = request.path.split('/')[0]
+        service = request.path.split('/')[1]
 
         # The '<host>:<port>' of each (resource) microservice is kept in a dictionary in settings.py
         # Currently assumes all services in MICROSERVICES are running

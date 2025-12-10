@@ -15,44 +15,6 @@ def query(request, case, input):
    if not case or not input:
       return Response({"error": "Missing required parameters"}, status=400)
 
-   # email = data.get("email")
-   # if email:
-   #    if case == "AND":
-   #       query &= Q(email__exact=email)
-   #    elif case == "OR":
-   #       query |= Q(email__exact=email)
-
-   # uid = data.get("uid")
-   # if uid:
-   #    if case == "AND":
-   #       query &= Q(email__exact=email)
-   #    elif case == "OR":
-   #       query |= Q(email__exact=email)
-
-
-   # assigned_tickets = data.get("assigned_tickets")
-   # if assigned_tickets:
-   #    if case == "AND":
-   #       query &= Q(assigned_tickets__contains=assigned_tickets)
-   #    elif case == "OR":
-   #       query |= Q(assigned_tickets__contains=assigned_tickets)
-
-
-   # display_name = data.get("display_name")
-   # if display_name:
-   #    if case == "AND":
-   #       query &= Q(display_name__exact=display_name)
-   #    elif case == "OR":
-   #       query |= Q(display_name__exact=display_name)
-   
-   # skills = data.get("skills")
-   # if skills:
-   #    if case == "AND":
-   #       query &= Q(skills__contains=skills)
-   #    elif case == "OR":
-   #       query |= Q(skills__contains=skills)
-
-
    if case == "EMAIL":
       users = ScrumUser.objects.filter(email__exact=input)
    elif case == "UID":
@@ -95,7 +57,7 @@ def add_user(request):
    elif profile_picture:
       new_user = ScrumUser(email=email, password=password, profile_picture = profile_picture)
    else:
-      new_user = ScrumUser(email=email, password=password, num_tickets=0)
+      new_user = ScrumUser(email=email, password=password)
    
    new_user.save()
    serialized =ScrumUserSerializer(new_user)
@@ -107,10 +69,7 @@ update a user based on its uid
 """
 @api_view(['POST'])
 def update_user(request):
-   try:
-      data = json.loads(request.body)
-   except json.decoder.JSONDecodeError:
-      return Response({"error":"Body required for this request"}, status=400)
+   data = request.data
    uid = data.get("uid")
    if (not uid):
       return Response({"error": "no identification give"}, status=400)
@@ -120,7 +79,7 @@ def update_user(request):
       user = ScrumUser.objects.get(uid=uid)
 
       assigned_tickets = data.get("assigned_tickets")
-      if assigned_tickets:
+      if assigned_tickets is not None:
          user.assigned_tickets = assigned_tickets
 
 
