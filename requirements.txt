@@ -1,0 +1,8 @@
+django
+djangorestframework
+django-cors-headers
+pillow
+requests
+argon2-cffi
+djangorestframework-simplejwt
+django-invitations
